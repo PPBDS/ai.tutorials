@@ -1,10 +1,33 @@
 Package: ai.tutorials
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Tutorials for Learning R by Using AI
+Version: 0.0.9001
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    c(
+    person(given = "David",
+           family = "Kane",
+           role = c("aut", "cre"),
+           email = "dave.kane@gmail.com",
+           comment = c(ORCID = "0000-0002-6660-3934")))    
+Description: Collection of tutorials for learning R which make
+    use of generative AI. Makes extensive use of the tools in 'tutorial.helpers'
+    package. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Imports:
+    learnr,
+    tutorial.helpers
+Suggests: 
+    babynames,
+    nycflights13,
+    quarto,
+    rsconnect,
+    tidyverse
+VignetteBuilder: 
+    quarto  
+Config/testthat/edition: 3 
+Remotes: 
+    PPBDS/primer.data,
+BugReports: https://github.com/ppbds/ai.tutorials/issues
+URL: https://ppbds.github.io/ai.tutorials/

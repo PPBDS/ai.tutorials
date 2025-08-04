@@ -3,3 +3,7 @@
 ^LICENSE\.md$
 TODO.txt
 ^inst/extdata$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
