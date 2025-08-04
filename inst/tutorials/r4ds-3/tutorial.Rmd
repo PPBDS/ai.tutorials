@@ -180,7 +180,7 @@ question_text(NULL,
 
 ###
 
-Typing out `flights` is the same as typing out `print(flights)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and Tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
+Typing out `flights` is the same as typing out `print(flights)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
 
 ### Exercise 3
 
@@ -638,7 +638,7 @@ question_text(NULL,
 
 ###
 
-Typing out `babynames` is the same as typing out `print(babynames)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and Tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
+Typing out `babynames` is the same as typing out `print(babynames)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
 <!-- SG: Is it necessary to have the same knowledge drop twice? -->
 
 ### Exercise 3
@@ -1299,7 +1299,7 @@ STRING KNOWLEDGE DROPS
 
 ### 1
 
-You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and Tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
+You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
 
 ### 2
 
