@@ -2,7 +2,7 @@
 title: Using AI With R
 author: Luke Li and David Kane
 tutorial:
-  id: ai-tutorial-test
+  id: r4ds-3
 output:
   learnr::tutorial:
     progressive: yes
@@ -352,7 +352,7 @@ flights_clean |>
 
 ### Exercise 8
 
-Now assign the pipe to the variable `x`. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
 
 In the Console, run:
 
@@ -363,6 +363,39 @@ show_file("analysis.qmd", chunk = "Last")
 CP/CR.
 
 ```{r numbers-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 6)
+```
+
+
+### Exercise 9
+
+Within the recent code chunk, add the
+option: `#| cache: true`. Assign the result of our pipe to 
+`x`. 
+
+`Cmd/Ctrl + Shift + K`. By including `#| cache: true` 
+you cause Quarto to cache the results of the chunk. 
+The next time you render your QMD, as long as you have not changed 
+the code, Quarto will just load up the saved fitted object.
+
+Place your cursor on the line where the pipe is assigned to `x`,
+run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy
+of `x`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r numbers-9}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -387,33 +420,38 @@ x <- flights_clean |>
         count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
 ```
 
-### Exercise 9
-
-Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-9}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
 
 ###
 
 <!-- XX: Insert a knowledge drop related to this project. -->
-
-
 ### Exercise 10
+
+Within the Console, type `x`, which we previously assigned to a pipe
+and ran in the Console. Hit `Enter`.
+
+CP/CR.
+
+```{r ai-usage-10}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 8)
+```
+
+###
+
+Our code:
+
+```{r, echo=TRUE}
+x
+...
+```
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+<!-- SG: Missing cache:true exercise and type x in console exercise-->
+### Exercise 11
 
 Go to the AI and ask it to generate R code that plots a clean and insightful heatmap that shows where delays tend to cluster by scheduled vs. actual departure hour. Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -427,7 +465,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r numbers-10}
+```{r numbers-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -471,7 +509,7 @@ ggplot(x, aes(x = sched_hour, y = dep_hour, fill = total_delay)) +
   )
 ```
 
-### Exercise 11
+### Exercise 12
 
 Now, using AI, ask it to generate code that rounds the `total_delay` column to the hundreds place using `round()`. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into a new code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
 
@@ -496,7 +534,7 @@ x |>
   mutate(total_delay = round(total_delay, -2))
 ```
 
-### Exercise 12
+### Exercise 13
 
 Now, using AI, ask it to generate code that applies `min_rank()` to the `total_delay` column in `x` to see the ranks of the highest total delay times per combination of scheduled departure hour and actual departure hour. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into the same code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
 
@@ -521,7 +559,7 @@ x |>
   mutate(rank_total_delay = min_rank(desc(total_delay)))
 ```
 
-### Exercise 13
+### Exercise 14
 
 Now, using AI, ask it to generate code that uses summarize() in your `x` dataset to calculate the mean, median, and 95th percentile (quantile) of `true_dep_delay`. In this case, copy and paste the pipe that is assigned to `x`, change it to `y`, and then remove the `count()`. Then, run the AI generated code on `y`. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into same the code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
 
@@ -560,7 +598,7 @@ y |>
   )
 ```
 
-### Exercise 14
+### Exercise 15
 
 Now that we have all these functions in the same code cell, we can see all of the functions we have learned, and we can run any of them at will with `Cmd/Ctrl + Enter`.
 
@@ -600,6 +638,7 @@ You will learn about some of the power of the [**stringr**](https://stringr.tidy
 In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
 <!-- SG: Why are we working on the same QMD? -->
+<!-- SG: Should we change this so we start by making a new repo and QMD? -->
 ### Exercise 1
 
 In the setup chunk of the QMD, load `babynames` with the `library()` function. 

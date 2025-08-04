@@ -1,10 +1,10 @@
 ## Sruthi
 
-create_from_github()
+create_from_github() Done
 
-Submit one PR which puts your name on the bottom of this file. 
+Submit one PR which puts your name on the bottom of this file. Done
 
-Replacing current r4ds-3/tutorial.Rmd wit your version. Submit a second PR with that. Email me when you do so.
+Replacing current r4ds-3/tutorial.Rmd wit your version. Submit a second PR with that. Email me when you do so. Done
 
 Figure out to change GitHub repo settings so that you (everyone?) gets notified with there is a new PR or new comment on a PR or new anything.
 
