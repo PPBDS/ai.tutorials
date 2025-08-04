@@ -1,3 +1,5 @@
 ^ai\.tutorials\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+TODO.txt
+^inst/extdata$

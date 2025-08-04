@@ -1,0 +1,66 @@
+This package will hold all of our new breed AI tutorials.
+
+
+
+## Plan for R4DS
+
+We will have 5 one hour tutorials which cover the material in R4DS. It is tricky to figure out the best way to organize this since so many of the later tutorials cover stand-alone topics like spreadsheets and databases. Placing the chapters in order does not make a lot of sense. 
+
+In essence, each of our five tutorials should start with a get-the-data section which makes use of one of the later chapters. It then also covers the material in some of the middle chapters. The intro chapters are all covered in the first tutorial.
+
+We don't cover any of the workflow chapters, or chapters 27-29.
+
+### r4ds-1
+
+data visualization
+data transformations
+data tidying
+data import
+
+### r4ds-2
+
+spreadsheets
+layers
+exploratory data analysis
+communication
+
+### r4ds-3
+
+databases
+logical vectors
+numbers
+strings
+regular expressions
+
+### r4ds-4
+
+arrow
+factors
+dates-times
+missing values
+joins
+
+### r4ds-5
+
+hierarchical-data
+web-scraping
+functions
+iterations
+
+### R4DS tutorial structure
+
+The introduction and summary are like any AI tutorial: Github, GH Pages and so on.
+
+There are 3 to 5 Sections, each begins with some data processing and/or manipulation, questions which cover the important packages and functions in the relevant chapters. 
+
+### Data storage
+
+Most R4DS tutorials require the use of some strange data structures, like arrow files, spreadsheets and what not. We want to maintain our own copies of those starter files, even though they originally come from the web somewhere. 
+
+* These are stored in `inst/extdata`. 
+
+* Document where these files come from in a brief note in `inst/extdata/README.txt`.
+
+* The files should be much less than 100 megabytes each because we want students to be able to easily download them and back them up in their personal repos.
+
+* We exclude `inst/extdata` from the R package. Which is OK! We need to keep the size of the package down if we want this to be on CRAN someday. 
