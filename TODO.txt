@@ -95,3 +95,4 @@ Most R4DS tutorials require the use of some strange data structures, like arrow 
 * The files should be much less than 100 megabytes each because we want students to be able to easily download them and back them up in their personal repos.
 
 * We exclude `inst/extdata` from the R package. Which is OK! We need to keep the size of the package down if we want this to be on CRAN someday. 
+Sruthi
