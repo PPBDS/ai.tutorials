@@ -1448,5 +1448,46 @@ KNOWLEDGE DROPS FROM tutorials 9, 10, 11
 
 (Not all of them!) Just the 20 or so you think are best. No need to number them.
 ```
+The [**ggrepel**](https://ggrepel.slowkow.com) package will automatically adjust labels so that they don’t overlap. To help others quickly build up a good mental model of the data, you will need to invest considerable effort in making your plots as self-explanatory as possible.
 
+Another handy function for adding annotations to plots is `annotate()`. As a rule of thumb, geoms are generally useful for highlighting a subset of the data while `annotate()` is useful for adding one or few annotation elements to a plot.
+
+We can see that the two plots are the same. Note the naming scheme for scales: `scale_` followed by the name of the aesthetic, then `_`, then the name of the scale. The default scales are named according to the type of variable they align with: `continuous`, `discrete`, `datetime`, or `date`.
+
+Another scale that is frequently customized is color. The default categorical scale picks colors that are evenly spaced around the color wheel. Useful alternatives are the ColorBrewer scales which have been hand-tuned to work better for people with common types of color blindness.
+
+You can use labels in the same way (a character vector the same length as breaks), but you can also set it to NULL to suppress the labels altogether. This can be useful for maps, or for publishing plots where you do want to share the absolute numbers.
+
+In addition to `geom_text()` and `geom_label()`, you have many other geoms in **ggplot2** available to help annotate your plot. For example, you can use `geom_hline()` and `geom_vline()` to add reference lines. We often make them thick (`linewidth = 2`) and white (`color = "white"`), and draw them underneath the primary data layer. That makes them easy to see, without drawing attention away from the data.
+
+As always, `ggplot()` alone, without the use of the `aes()` function as an argument to `mapping`, produces an empty rectangle.
+
+
+
+The function, `geom_freqpoly()`, visualizes the distribution of a single continuous variable by dividing the x-axis into bins and counting the number of observations in each bin. Frequency polygons display the counts with lines. Frequency polygons are more suitable when you want to compare the distribution across the levels of a categorical variable.
+
+`geom_bin2d()` and `geom_hex()` divide the coordinate plane into 2d bins and then use a fill color to display how many points fall into each bin. `geom_bin2d()` creates rectangular bins. `geom_hex()` creates hexagonal bins. You will need to install the **hexbin** package to use `geom_hex()`.
+
+If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.
+
+The function [`linear_reg()`](https://parsnip.tidymodels.org/reference/linear_reg.html) defines a model that can predict numeric values from predictors using a linear function. This function can fit regression models. There are different ways to fit this model, and the method of estimation is chosen by setting the model `engine`.
+
+EDA is not a formal process with a strict set of rules. More than anything, EDA is a state of mind. During the initial phases of EDA you should feel free to investigate every idea that occurs to you. Some of these ideas will pan out, and some will be dead ends.
+
+Covariation is the tendency for the values of two or more variables to vary together in a related way. The best way to spot covariation is to visualize the relationship between two or more variables.
+
+If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.
+
+
+Mapping an unordered discrete (categorical) variable, like `class`, to an ordered aesthetic, like `size` is generally not a good idea because it implies a ranking that does not in fact exist, hence the warning.
+
+Once you map an aesthetic, **ggplot2** takes care of the rest. It selects a reasonable scale to use with the aesthetic, and it constructs a legend that explains the mapping between levels and values. For x and y aesthetics, **ggplot2** does not create a legend, but it creates an axis line with tick marks and a label. The axis line provides the same information as a legend; it explains the mapping between locations and values.
+
+The `geom_smooth()` geom is applied to each category of color separately. With one call to a geom, we get three different plots, all on the same graph. There are no front-wheel drive cars with a `displ` value greater than 5, so the green line does not extend to the right-side of the graphic. 
+
+To facet your plot by a single variable, use `facet_wrap()`. The first argument of `facet_wrap()` is a formula, which you create with `~` followed by a variable name. The variable that you pass to `facet_wrap()` should be categorical, i.e., either character or factor.
+
+Adding randomness seems like a strange way to improve your plot, but while it makes your graph less accurate at small scales, it makes your graph more revealing at large scales. Because this is such a useful operation, **ggplot2** comes with a shorthand for `geom_point(position = "jitter")`: `geom_jitter()`.
+
+We use scale_y_continuous when we want to modify the y-axis for continuous data. [This documentation here](https://ggplot2.tidyverse.org/reference/scale_continuous.html) will tell you more, and all the possible arguments you can use with `scale_y_continuous`
 
