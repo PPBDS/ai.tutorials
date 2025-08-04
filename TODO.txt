@@ -1,5 +1,36 @@
-This package will hold all of our new breed AI tutorials.
+## Sruthi
 
+create_from_github()
+
+Submit one PR which puts your name on the bottom of this file. 
+
+Replacing current r4ds-3/tutorial.Rmd wit your version. Submit a second PR with that. Email me when you do so.
+
+Figure out to change GitHub repo settings so that you (everyone?) gets notified with there is a new PR or new comment on a PR or new anything.
+
+Read bottom of this documents
+
+Read (again): https://ppbds.github.io/tutorial.helpers/articles/ai.html
+
+Change `r4ds-3/tutorial.Rmd` in accordance with these new instructions.
+
+Read this document.
+
+Read inst/extdata/README.txt
+
+Find some data sources. 
+
+    * Begin by re-reading these three data source chapters: spreadsheets, (duck) databases, and arrow. Maybe we really just start with looking for data that we like, data that we know makes a cool plot.
+
+    * Go looking for cool examples these data sources, stuff that would be fun to play with and make a cool plot. 
+
+    * We will probably turn the babynames data into a duck db ourselves.
+
+
+
+# Introductions
+
+This package will hold all of our new breed AI tutorials.
 
 
 ## Plan for R4DS
@@ -26,7 +57,7 @@ communication
 
 ### r4ds-3
 
-databases
+databases (duck)
 logical vectors
 numbers
 strings
