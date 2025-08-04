@@ -599,7 +599,7 @@ You will learn about some of the power of the [**stringr**](https://stringr.tidy
 
 In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
-
+<!-- SG: Why are we working on the same QMD? -->
 ### Exercise 1
 
 In the setup chunk of the QMD, load `babynames` with the `library()` function. 
@@ -639,7 +639,7 @@ question_text(NULL,
 ###
 
 Typing out `babynames` is the same as typing out `print(babynames)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and Tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
-
+<!-- SG: Is it necessary to have the same knowledge drop twice? -->
 
 ### Exercise 3
 
