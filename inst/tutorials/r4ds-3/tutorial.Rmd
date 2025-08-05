@@ -130,7 +130,7 @@ question_text(NULL,
 
 
 
-## Plotting **flights**
+## Flights
 ###
 
 
@@ -450,7 +450,7 @@ x
 ```
 
 <!-- XX: Insert a knowledge drop related to this project. -->
-<!-- SG: Missing cache:true exercise and type x in console exercise-->
+
 ### Exercise 11
 
 Go to the AI and ask it to generate R code that plots a clean and insightful heatmap that shows where delays tend to cluster by scheduled vs. actual departure hour. Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
@@ -625,7 +625,7 @@ Commit/push everything.
 
 
 
-## Plotting **babynames**
+## Baby names
 ### 
 
 This section covers [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. 
@@ -637,8 +637,6 @@ You will learn about some of the power of the [**stringr**](https://stringr.tidy
 
 In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
-<!-- SG: Why are we working on the same QMD? -->
-<!-- SG: Should we change this so we start by making a new repo and QMD? -->
 ### Exercise 1
 
 In the setup chunk of the QMD, load `babynames` with the `library()` function. 
@@ -677,8 +675,7 @@ question_text(NULL,
 
 ###
 
-Typing out `babynames` is the same as typing out `print(babynames)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
-<!-- SG: Is it necessary to have the same knowledge drop twice? -->
+
 
 ### Exercise 3
 
@@ -1175,7 +1172,7 @@ The function `separate_wider_position(col, widths)` makes the input data frame w
 
 The function `separate_wider_delim(col, delim, names)` makes the input data frame wider through increased columns, with the string split up with a specified deliminator.
 
-<!-- SG: This knowledge drop seems too long. -->
+<!-- This knowledge drop seems too long. -->
 
 
 
