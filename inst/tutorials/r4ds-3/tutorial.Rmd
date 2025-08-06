@@ -30,6 +30,15 @@ options(tutorial.exercise.timelimit = 600,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+<!-- DK: Make this look like: https://ppbds.github.io/tutorial.helpers/articles/ai.html -->
+
+<!-- That means, there are Introduction; Summary and, in between, there are three Topics. -->
+
+<!-- DK: `SG:` is only for things we need to discuss, not reminders. -->
+
+<!-- DK: Give them instructions to download the duckdb. -->
+
+
 ### Exercise 3
 
 Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
@@ -559,13 +568,13 @@ You will learn about some of the power of the [**stringr**](https://stringr.tidy
 In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
 ### Exercise 1
+
 We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial.
 
 Go to https://github.com/PPBDS/ai.tutorials and navigate to inst → extdata → babynames.duckdb.
 Click on babynames.duckdb, right click the "Raw" button and choose Copy Link.
 
-Now, ask AI how to use the download.file() function to save the babynames.duckdb file in your current working directory. Paste this code into your console.
-<!-- SG: Should we have them ask AI or just copy paste-->
+Now, ask AI how to use the `download.file()` function to save the `babynames.duckdb` file in your current working directory. Paste this code into your console.
 
 CP/CR.
 
@@ -578,8 +587,9 @@ question_text(NULL,
 	rows = 3)
 ```
 
-To stay up to date with us, use our code:
-```{r, echo=TRUE}
+Use our code:
+
+```{r, echo=TRUE, eval = FALSE}
 download.file(
   "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/babynames.duckdb",
   destfile = "babynames.duckdb"
@@ -702,7 +712,7 @@ babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) 
 ```
 
-<!-- SG: Strings knowdlege drop-->
+<!--  Strings knowdlege drop-->
 
 
 ```{r strings-5}
@@ -730,7 +740,7 @@ question_text(NULL,
 	rows = 8)
 ```
 
-<!-- SG: logical vectors knowledge drop -->
+<!--  logical vectors knowledge drop -->
 
 Our code:
 ```{r, echo=TRUE}
@@ -764,7 +774,7 @@ question_text(NULL,
 	rows = 7)
 ```
 
-<!-- SG: knowledge drop-->
+<!--  knowledge drop-->
 
 ###
 
@@ -814,7 +824,7 @@ babynames_db |>
   collect()
 ```
 
-<!-- SG: knowledge drop, maybe about the sql equivalent-->
+<!--  knowledge drop, maybe about the sql equivalent-->
 
 ### Exercise 9
 
@@ -839,7 +849,7 @@ question_text(NULL,
 
 ###
 
-<!-- SG: knowledge drop-->
+<!--  knowledge drop-->
 
 
 ### Exercise 10
@@ -874,7 +884,7 @@ x <- babynames_db |>
   collect()
 ```
 
-<!-- SG: knowledge drop-->
+<!--  knowledge drop-->
 
 ### Exercise 11
 
@@ -900,7 +910,7 @@ Our code:
 x
 ```
 
-<!-- SG: knowledge drop-->
+<!--  knowledge drop-->
 
 
 ### Exercise 12
@@ -928,7 +938,7 @@ question_text(NULL,
 	rows = 12)
 ```
 
-<!-- SG: knowledge drop-->
+<!--  knowledge drop-->
 
 
 ###
@@ -1017,7 +1027,7 @@ One variation of `str_flatten()` is `str_flatten_comma()` is a variation designe
 
 
 
-<!-- SG: end the tutorial here-->
+<!--  end the tutorial here-->
 
 
 ### Exercise 15
