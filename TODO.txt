@@ -1,34 +1,16 @@
 ## Sruthi
 
-* Why do I not get an email when you submit a PR to ai.tutorials? Ask AI. Google. My settings seem fine. For example, I get an email when a PR is accepted. Done
+* Install development version of tutorial.helpers with remotes::install_github("PPBDS/tutorial.helpers). Now a simple `make_exercises()` will give the no-answer type and also add the test code chunk.
 
-For someone to receive emails when a PR is opened, they must be watching the repository with “All Activity” enabled.
-Your instructor should do the following:
+* Why do I not get an email when you submit a PR to ai.tutorials? Ask AI. Google. My settings seem fine. For example, I get an email when a PR is accepted. 
 
-Go to the ai.tutorials GitHub repository page.
-Click the 🔔 “Watch” button near the top right.
-Select "All Activity" — this ensures GitHub will notify them of:
-Issues opened
-Pull requests opened
-Comments
-Pushes
-...and more.
-❗ If it's set to "Participating and @mentions", they’ll only get notified when:
-They’re assigned
-They’re mentioned directly
-Or after the PR is merged
+* Make each Section (babynames and flights) about 20 questions.
 
-* Turn babynames data into a duck db ourselves. And then the first few questions involve downloading this object and using it. Read the Databases R4DS chapter for background. Done
+* Make the tutorial excellent!
 
-* Do the same for flights. Done
 
-* Put data we want into inst/extdata. Have students download that data (which might be in db format or xls or whatever) to their current project. This can either be done by hand or, probably better, using download.file(). Then, the student can put code in the QMD for reading that data and playing with it. Done
 
-* In extdata/README.txt, include the description (and maybe the code) which you used to create the data objects. write_xls(flights, "flights.xls"). Done
 
-Write code which creates a new duck db. (Before, you might want to redo the Database tutorial. Or you might closely read the chapter and type all the code. there.) You load up babynames into this db. Then, you save a copy of the db with a function like dbExecute(con, "EXPORT DATABASE 'backup_directory'"). (NOT SURE THAT WORKS.) Put the resulting file (or maybe its an entire directory into extdata. (And write the above steps, with code, the README)). (Submit a PR and email me, and I will accept.) Done?
-
-Then, in the QMD, have the student download this file/directory into the current project. Then add code to the QMD which connects to the database, and then ask various questions. Sort of done?
 
 Find some data sources. 
 
