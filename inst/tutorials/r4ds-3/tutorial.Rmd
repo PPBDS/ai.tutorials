@@ -1,6 +1,6 @@
 ---
 title: Using AI With R
-author: Luke Li and David Kane
+author: Luke Li, David Kane, and Sruthi Gandhi
 tutorial:
   id: r4ds-3
 output:
