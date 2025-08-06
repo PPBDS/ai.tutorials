@@ -30,85 +30,6 @@ options(tutorial.exercise.timelimit = 600,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-
-
-## Introduction
-### 
-
-
-This tutorial covers [Chapter 12: Logical vectors](https://r4ds.hadley.nz/logicals.html), [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html), [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html), [Chapter 15: Regular expressions](https://r4ds.hadley.nz/regexps.html), and [Chapter 16: Factors](https://r4ds.hadley.nz/factors.html), from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. 
-
-
-You will learn about how to work with numbers using commands such as [`pmin()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extremes.html) with the **nycflights13** package.
-
-You will learn about some of the power of the [**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings with the [**babynames**](https://hadley.github.io/babynames/) package.
-
-### Exercise 1
-
-Create a Github repo called `transformation`. Make sure to click the "Add a README file" check box.
-
-Connect the repo to a project on your computer using `File -> New Folder from Git ...`. Make sure to select the "Open in a new window" box. 
-
-You need two Positon windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
-
-Select `File -> New File -> Quarto Document ...`. Provide a title -- `"Transforming Data"` -- and an author (you). Render the document and save it as `analysis.qmd`.
-
-Create a `.gitignore` file with `analysis_files` on the first line and then a blank line. Save and push.
-
-In the Console, run:
-
-```         
-show_file(".gitignore")
-```
-
-If that fails, it is probably because you have not yet loaded `library(tutorial.helpers)` in the Console.
-
-CP/CR.
-```{r introduction-1}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-### 
-
-
-
-### Exercise 2
-
-
-In your QMD, put `library(tidyverse)` in a new code chunk. Render the file with `Cmd/Ctrl + Shift + K`.
-
-Notice that the file does not look good because the code is visible and there are annoying messages. To take care of this, add `#| message: false` to remove all the messages in this `setup` chunk. Also add the following to the YAML header to remove all code echos from the HTML:
-
-```         
-execute: 
-  echo: false
-```
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r introduction-2}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-###
-
-
 ### Exercise 3
 
 Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
@@ -638,10 +559,13 @@ You will learn about some of the power of the [**stringr**](https://stringr.tidy
 In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
 ### Exercise 1
+We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial.
 
-In the setup chunk of the QMD, load `babynames` with the `library()` function. 
+Go to https://github.com/PPBDS/ai.tutorials and navigate to inst → extdata → babynames.duckdb.
+Click on babynames.duckdb, right click the "Raw" button and choose Copy Link.
 
-Place your cursor on that line and run `Cmd/Ctrl + Enter` to load the package in the Console.
+Now, ask AI how to use the download.file() function to save the babynames.duckdb file in your current working directory. Paste this code into your console.
+<!-- SG: Should we have them ask AI or just copy paste-->
 
 CP/CR.
 
@@ -654,16 +578,24 @@ question_text(NULL,
 	rows = 3)
 ```
 
+To stay up to date with us, use our code:
+```{r, echo=TRUE}
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/babynames.duckdb",
+  destfile = "babynames.duckdb"
+)
+```
+
 ###
 
-We load **babynames** into our current QMD so it is accessible to use with the rest of the code in the document. The `babynames` is a data set which contained names used for babies from 1880 to 2017. If you want to explore the data set, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html).
-
-
-
 ### Exercise 2
+Next, ask AI how to connect and write the database as a table so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
-Type `babynames` in the Console to view the dataset. Copy and paste the resulting tibble.
+In the Console, run:
 
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
 ```{r strings-2}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -673,21 +605,23 @@ question_text(NULL,
 	rows = 8)
 ```
 
-###
+Our code:
+```{r, echo=TRUE}
+con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "babynames.duckdb"
+  )
 
+DBI::dbWriteTable(con, "babynames", babynames::babynames, overwrite = TRUE)
+```
+
+This creates a connection to the database and assigns it to the variable con, short for connection. This connection acts like a bridge between R and the DuckDB file. **DBI** is a low-level interface that connects to databases and executes SQL; **dbplyr** is a high-level interface that translates your **dplyr** code to SQL queries then executes them with **DBI**.
 
 
 ### Exercise 3
 
-Using your favorite AI, prompt it to generate R code that takes `babynames` and filters the dataset to show all names that have a first name starting with A. Make sure to provide a tibble of **babynames** for the AI to use. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
+Now, ask AI how you can view the babynames.duckdb dataset using dbReadTable. Add this code to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Copy and paste the resulting tibble.
 
 ```{r strings-3}
 question_text(NULL,
@@ -695,27 +629,28 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 8)
 ```
-
-
-###
 
 Our code:
-
 ```{r, echo=TRUE}
-babynames |> 
-  filter(str_starts(name, "A"))
+con |> 
+    dbReadTable("babynames") |> 
+    as_tibble()
 ```
 
 
-
-The function `str_starts()` takes a column (in this case it is `name`), and selects the rows where the string of name starts with A. To check for `NA` values, use `any()` function with argument `is.na()`, argument of which should be the dataset babynames. 
-
-
+Knowledge drop
+###
 ### Exercise 4
 
-Now edit the previous code so that the letter is not `"A"`, but rather `"As"`. Place your cursor on a line of the code and run `Cmd/Ctrl + Enter`.
+Using your favorite AI, prompt it to generate R code that takes `babynames` and filters the dataset to show all names that have a first name starting with A after the year 2000, using SQL. Make sure to provide some lines of **babynames** for the AI to use. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
 
 CP/CR.
 
@@ -728,31 +663,89 @@ question_text(NULL,
 	rows = 4)
 ```
 
+
 ###
 
 Our code:
 
 ```{r, echo=TRUE}
-babynames |> 
-  filter(str_starts(name, "As"))
+sql <- "
+  SELECT name, year, sex, n, prop
+  FROM babynames
+  WHERE name LIKE 'A%' AND year > 2000
+"
 ```
 
-Strings can be created using either single quotes (') or double quotes ("). If you wanted to include single quotes in a string you could put the outer quotes as double quotes.
 
-Now there’s no difference in behavior between the single quotes and double quotes, but in the interests of consistency, the [*Tidyverse*](https://style.tidyverse.org/syntax.html#character-vectors) style guide recommends using `"`, unless the string itself contains double quotes.
+A query is made up of **clauses**. There are five important clauses: `SELECT`, `FROM`, `WHERE`, `ORDER BY`, and `GROUP BY`. Every query must have the `SELECT` and `FROM` clauses and the simplest query is `SELECT * FROM table`, which selects all columns from the specified table. `WHERE` and `ORDER BY` control which rows are included and how they are ordered, and `GROUP BY` converts the query to a summary, causing aggregation to happen.
+
+### Exercise 5
+
+You just used SQL to filter the babynames database directly. Although, instead of writing raw SQL yourself, we can do the exact same task using dbplyr. dbplyr is a dplyr backend, which means that you keep writing dplyr code but the backend executes it differently. In this, dbplyr translates to SQL; other backends include dbplyr which translates to data.table, and multidplyr which executes your code on multiple cores.
+
+Paste this code into a new chunk in your QMD:
+```         
+babynames_db <- tbl(con, "babynames")
+```
+To use dbplyr, you must first use tbl() to create an object that represents a database table. 
+Ask AI how to use dbplyr to filter the data to show all names start with A after the year 2000. Paste this code into the same code chunk and place your cursor on a line of the code and run `Cmd/Ctrl + Enter`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+``` 
+Our code:
+```{r, echo=TRUE}
+babynames_db <- tbl(con, "babynames")
+babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) 
+```
+
+<!-- SG: Strings knowdlege drop-->
+
+
+```{r strings-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 4)
+```
+
+### Exercise 6
+Next, prompt AI to give you code that creates a new column of names classified as "Short" or "Long". Anything less than or equal to 5 can be classifed as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the average length of an American name (5.44) truncated. 
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+``` 
+```{r strings-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 8)
+```
+
+<!-- SG: logical vectors knowledge drop -->
+
+Our code:
+```{r, echo=TRUE}
+babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
+```
 
 
 ###
 
-Within the QMD, revert back to the original code with just the `"A"`.
 
-### Exercise 5
+### Exercise 7
 
-Next, prompt AI to continue the pipe to make a subset that shows the total proportion of babies with first names starting with A for each sex, from each year. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
-If your AI uses `group_by()`, get rid of it and add `.by = c(...)` as an argument within `summarize()`. This is because `group_by()` changes the structure of the resulting tibble in a way which might mess up later steps in the pipe. As a rule, you should not use `group_by()` unless you have a good reason for doing so.
-
-<!-- because `group_by()` changes the structure of the resulting tibble in a way which might mess up later steps in the pipe. As a rule, you should not use `group_by()` unless you have a good reason for doing so. DONE -->
+Next, prompt AI to continue the pipe to summarize the data by grouping by year and length_class, calculating the total number of babies in each group by summing n. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -762,7 +755,43 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-5}
+```{r strings-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 7)
+```
+
+<!-- SG: knowledge drop-->
+
+###
+
+Our code:
+
+```{r, echo=TRUE}
+babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+```
+
+###
+
+### Exercise 8
+
+Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r strings-8}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -777,14 +806,17 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-babynames |> 
-  filter(str_starts(name, "A")) |>
-  summarize(total_prop = sum(prop), .by = c(year, sex))
+babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+  arrange(year) |>
+  collect()
 ```
 
-###
+<!-- SG: knowledge drop, maybe about the sql equivalent-->
 
-### Exercise 6
+### Exercise 9
 
 Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
 
@@ -796,7 +828,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-6}
+```{r strings-9}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -807,10 +839,10 @@ question_text(NULL,
 
 ###
 
-Knowledge drop
+<!-- SG: knowledge drop-->
 
 
-### Exercise 7
+### Exercise 10
 
 Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to  `x`. 
 
@@ -820,7 +852,7 @@ Place your cursor on the line where the pipe is assigned to x, run `Cmd/Ctrl + E
 
 CP/CR.
 
-```{r strings-7}
+```{r strings-10}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -834,20 +866,24 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-x <- babynames |> 
-  filter(str_starts(name, "A")) |>
-  summarize(total_prop = sum(prop), .by = c(year, sex))
+x <- babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+  arrange(year) |>
+  collect()
 ```
 
+<!-- SG: knowledge drop-->
 
-### Exercise 8
+### Exercise 11
 
 Within the Console, type `x`, which we previously assigned to a pipe
 and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r strings-8}
+```{r strings-11}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -864,14 +900,14 @@ Our code:
 x
 ```
 
-Insert a knowledge drop related to this project.
+<!-- SG: knowledge drop-->
 
 
-### Exercise 9
+### Exercise 12
 
 <!-- https://pkgs.rstudio.com/learnr/articles/exercises.html -->
 
-Go to the AI and ask it to generate R code that plots a basic graph showing the proportion of names starting with A over the years for each sex. Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
+Go to the AI and ask it to generate R code that plots a basic line graph showing the proportion of "Short" vs. "Long" names starting with A over the years (after 2000). Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
 
 Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code to a new code cell. Run `Cmd/Ctrl + Shift + K`.
 
@@ -883,7 +919,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-9}
+```{r strings-12}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -892,165 +928,44 @@ question_text(NULL,
 	rows = 12)
 ```
 
+<!-- SG: knowledge drop-->
+
 
 ###
 
 Our code:
 
 ```{r echo=FALSE}
-x <- babynames |> 
-  filter(str_starts(name, "A")) |>
-  summarize(total_prop = sum(prop), .by = c(year, sex))
+x <- babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+  arrange(year) |>
+  collect()
+
 ```
 
 ```{r, echo=TRUE}
-ggplot(x, aes(x = year, y = total_prop, color = sex)) +
+ggplot(a_names, aes(x = year, y = total, color = length_class)) +
   geom_line(size = 1.2) +
   labs(
-    title = "Proportion of Babies with Names Starting with 'A' Over Time",
-    subtitle = "Data from 1880 to 2017 shows that the proportion of names starting with 'A' was lowest around the 1950s",
-    x = NULL,
-    y = NULL,
-    caption = "Source: the USA social security administration",
-    color = "Sex"
+    title = "Trends in Short vs Long A-Names Since 2000",
+	subtitle = "Long baby names starting with A are becoming less popular"
+    x = "Year", y = "Total Babies",
+    color = "Name Length",
+	caption = "Source: Babynames"
   ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   theme_minimal()
 ```
 
 ###
 
 
-### Exercise 10
-
-Now, we are going to create a new title using string functions. Using AI, ask it to generate code for creating the title of your plot using the function `str_c()` and assign the result to the variable `title1`. The title should stay the same, but they way it is made should be through `str_c()`. Add this code to a the same code cell with the plot, but before the code for the plot. Then, set the argument `title` equal to `title1` within the call to `labs()`.
-
-Place your cursor on the line with the code, and then run `Cmd/Ctrl + Enter`. Then type `title1` in the Console.
-
-CP/CR.
-
-```{r strings-10}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 4)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-title1 <- str_c("Proportion of Babies with Names Starting with ", "'A'", " Over Time")
-title1
-```
-
-`str_c()` is a function in the `stringr` package in R that combines multiple character vectors into a single character vector. It is similar to the `paste()` function, but it uses `tidyverse` recycling and NA rules. `str_c()` is vectorized, which means it can take multiple arguments and combine them element-wise. 
-
-###
-
-If you were to not use `str_c()`, double quotes "" or single quotes '' will also create a string. To include a literal single or double quote, you can use the backslash `\` to escape it. For example, `"\""` will return `'"'`. To include a literal backlash in your string, it is pretty simple and all you need to do is have two backslashes in a string to have one literal one. 
-
-
-### Exercise 11
-
-Once again, place your cursor on the line with the new `str_c()` code and hit `Cmd/Ctrl + Enter`, but don't run it yet. Now edit the code so that within `str_c()`, the strings include a backslash `\` at the start and doublequotes `""` at the end. Change the assigned variable to `title2` and press `Enter` to run the code. 
-
-Then, type `str_view(title2)` in the Console, and press `Enter` to view the string.
-
-CP/CR.
-
-```{r strings-11}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-###
-
-```{r, echo=TRUE}
-title2 <- str_c("\\Proportion of Babies with Names Starting with ", "'A'", " Over Time\"\"")
-str_view(title2)
-```
-
-The printed representation of a string is not the same as the string itself because the printed representation shows the escapes. To see the raw contents of the string, we use `str_view()`
-
-###
-
-If you find yourself dealing with a complex situation where you have many backslashes and quotes to include, it can become confusing to keep track of them. (This is sometimes called [leaning toothpick syndrome](https://en.wikipedia.org/wiki/Leaning_toothpick_syndrome).)
-
-To solve the issue, we utilized a raw string, which is a specific type of string literal that doesn't interpret any special characters or escape sequences.
-
-Typically, a raw string starts with `r"(, ends with )"`, and allows for any text representation. However, if the string contains )", alternatives like `r"[]"` or `r"{}"` can be used. Furthermore, you can add dashes to ensure unique opening and closing pairs, such as `r"--()--"`, `r"---()---"`, and so on. Raw strings offer flexibility to handle any text without problems.
-
-
-### Exercise 12
-
-Now, we are going to do the same, but for a subtitle, and we will use str_glue(). Using AI, ask it to generate code for creating the subtitle of your plot using the the function `str_glue()` and assign the result to the variable `subtitle1`. The subtitle should stay the same, but they way it is made should be through `str_glue()`. Add this code to a the same code cell with the plot, but before the code for the plot. Then, set the argument `subtitle` equal to `subtitle1` within the call to `labs()`.
-
-Place your cursor on the line with the code, and then run `Cmd/Ctrl + Enter`. Then type `subtitle1` in the Console.
-
-CP/CR.
-
-```{r strings-12}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 4)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-subtitle1 <- str_glue("Data from {min(x$year)} to {max(x$year)} shows that the proportion of names starting with 'A' was lowest around the 1950s")
-subtitle1
-```
-
-If you are mixing many fixed and variable strings with `str_c()`, you’ll notice that you type a lot of `"`s, making it hard to see the overall goal of the code. An alternative approach is provided by the glue package via `str_glue()`. How `str_glue()` works is that if you give it a single string that has a special feature: anything inside `{}` will be evaluated like it’s outside of the quotes. However, `str_glue()` currently converts missing values to the string "NA" unfortunately making it inconsistent with `str_c()`.
-
 ### Exercise 13
 
-Copy and paste the new `str_glue()` code into the Console, but don't run it yet. Now manually edit the code so that at the start, there is `\t`, and there is `\n` before the final word. Change the assigned variable to `subtitle2` and press `Enter` to run the code.
+Using the same AI, ask it to generate code for finding the top five longest names beginning with 'A' in 2009. 
 
-Then, type `str_view(subtitle2)` in the Console, and press `Enter` to view the string.
-
-CP/CR.
-
-```{r strings-13}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 5)
-```
-
-###
-
-```{r, echo=TRUE}
-subtitle2 <- str_glue("\tData from {min(x$year)} to {max(x$year)} shows that the proportion of names starting with 'A' was lowest around the \n1950s")
-str_view(subtitle2)
-```
-
-Besides `\"`, `\'`, and `\\`, there are a few other special characters that can be useful. The most common ones are `\n` for a new line and `\t` for a tab. If you want to check out a complete list of other special characters, check out in [Quotes](https://rdrr.io/r/base/Quotes.html).
-
-
-### Exercise 14
-
-Using the same AI, ask it to generate code for finding the top five most common names beginning with 'A' in 1950. 
-
-Here is the prompt we used: using R, create code that finds the top five most common names beginning with 'A' in 1950. First use `filter()` and `slice_head()` to get the top names of the 'A' name column ordered by highest proportion, then use `pull()` to create a vector of the column, and finally use `str_flatten()` to create a string. Use `str_c()` to print out a coherent sentence at the end. 
+Here is the prompt we used: using R, create code that finds the top five longest names beginning with 'A' in 2009. First use `filter()` and `slice_head()` to get the top names of the 'A' name column ordered by highest proportion, then use `pull()` to create a vector of the column, and finally use `str_flatten()` to create a string. Use `str_c()` to print out a coherent sentence at the end. 
 
 Make sure you also provide the modified tibble `x` from earlier.
 
@@ -1064,7 +979,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-14}
+```{r strings-13}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -1080,8 +995,9 @@ Our code:
 
 ```{r, echo=TRUE}
 top_a_1950 <- babynames |>
-  filter(year == 1950, str_starts(name, "A")) |>
-  arrange(desc(prop)) |>
+  filter(year == 2009, str_starts(name, "A")) |>
+  mutate(name_length = str_length(name)) |>
+  arrange(desc(name_length)) |>
   slice_head(n = 5)
 
 insight_text <- top_a_1950 |>
@@ -1089,8 +1005,8 @@ insight_text <- top_a_1950 |>
   str_flatten(collapse = ", ", last = " and ") # combines vector into a string
 
 insight <- str_c(
-  "In 1950, the most common 'A' names were ", insight_text, 
-  ", which drove the total proportion for that year."
+  "In 2009, the longest 'A' names were ", insight_text, 
+  "."
 )
 insight
 ```
@@ -1098,6 +1014,10 @@ insight
 `str_c()` and `str_glue()` are suitable for use with `mutate()` since their output matches the length of their inputs. However, if you need a function that works well with `summarize()` and always returns a single string, `str_flatten()` comes into play. It takes a character vector as input and combines each element of the vector into a single string.
 
 One variation of `str_flatten()` is `str_flatten_comma()` is a variation designed specifically for flattening with commas. It automatically recognizes if last uses the Oxford comma and handles the special case of 2 elements.
+
+
+
+<!-- SG: end the tutorial here-->
 
 
 ### Exercise 15
@@ -1289,6 +1209,10 @@ question_text(NULL,
 ### 
 
 Commit/push everything.
+
+
+
+
 
 
 ## Summary
