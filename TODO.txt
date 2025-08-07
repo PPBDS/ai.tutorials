@@ -1,13 +1,24 @@
 ## Sruthi
 
-* Install development version of tutorial.helpers with remotes::install_github("PPBDS/tutorial.helpers). Now a simple `make_exercises()` will give the no-answer type and also add the test code chunk.
+One week left!
 
-* Why do I not get an email when you submit a PR to ai.tutorials? Ask AI. Google. My settings seem fine. For example, I get an email when a PR is accepted. 
+Get rid of extra newline text wrap.
 
-* Make each Section (babynames and flights) about 20 questions.
+Backticks around functions or anything else which you can type at the Console or Terminal.
 
-* Make the tutorial excellent!
+Add blank lines around things like ###, code chunks and so on. 
 
+No "Next, we .."
+
+Our goal is to finish the other 4 tutorials in this collection.
+
+Let's do r4ds-2 next. Need to find some data you like, then create speadhseets versions of that data, then put those xls files in extdata, editing README.txt as you see fit. Think about how you want to structure the spreadsheets, given what you want students to learn. Perhaps the only concrete example is that it may be nice to use more than one sheet in the book. Then those spreadsheets serve as the basis of the two or three sections.
+
+Where data? Find some plots you think are cool which have the data available.
+
+* https://r-graph-gallery.com/
+
+Think ahead about r4ds-4. Note that it explores date-times, missing, joins. 
 
 
 
