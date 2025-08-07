@@ -1153,7 +1153,7 @@ ggplot(x, aes(x = sched_hour, y = dep_hour, fill = total_delay)) +
 ```
 
 ###
-<!-- XX: Insert a knowledge drop related to this project. -->
+Once you map an aesthetic, **ggplot2** takes care of the rest. It selects a reasonable scale to use with the aesthetic, and it constructs a legend that explains the mapping between levels and values. For x and y aesthetics, **ggplot2** does not create a legend, but it creates an axis line with tick marks and a label. The axis line provides the same information as a legend; it explains the mapping between locations and values.
 
 
 ## Summary
