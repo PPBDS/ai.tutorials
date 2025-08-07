@@ -1,6 +1,6 @@
 ---
 title: Using AI With R
-author: Luke Li and David Kane
+author: Luke Li, David Kane, and Sruthi Gandhi
 tutorial:
   id: r4ds-3
 output:
@@ -38,12 +38,119 @@ options(tutorial.exercise.timelimit = 600,
 
 <!-- DK: Give them instructions to download the duckdb. -->
 
+## Baby names
+
+### Introduction
+
+This section covers [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html), [Chapter 12: Logical Vectors](https://r4ds.hadley.nz/logicals.html), and [Chapter 21: Databases](https://r4ds.hadley.nz/databases.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. 
+You will learn about some of the power of the [**dbplyr**](https://dbplyr.tidyverse.org/) package and how it helps to connect and work with duck databases and SQL. You will also learn about some of the[**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings, and logicial operations with `if_else()`. Some important functions which we will learn include:
+[`str_c()`](https://stringr.tidyverse.org/reference/str_c.html),
+[`str_flatten()`](https://stringr.tidyverse.org/reference/str_flatten.html),
+[`dbWriteTable()`](https://rdrr.io/cran/DBI/man/dbWriteTable.html), 
+[`dbConnect()`](https://rdrr.io/cran/DBI/man/dbConnect.html)and more.
+
+In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
+###
+### Exercise 1
+
+Create a Github repo called `analysis`. Make sure to click the 
+"Add a README file" check box.
+
+Connect the repo to a project on your computer using 
+`File -> New Folder from Git ...`.  Make sure to select the 
+"Open in a new window" box. 
+
+You need two Positon windows: this one for running the tutorial 
+and the one you just created for writing your code and interacting 
+with the Console.
+
+Select `File -> New File -> Quarto Document ...`. Provide a 
+title -- `"Analyzing Baby Names and Flights"` -- and an author (you). Render the document 
+and save it as `analysis.qmd`.
+
+Create a `.gitignore` file with `analysis_files` on the first 
+line and then a blank line. Save and push.
+
+In the Console, run:
+
+```         
+show_file(".gitignore")
+```
+
+If that fails, it is probably because you have not yet loaded
+ `library(tutorial.helpers)` in the Console.
+
+CP/CR.
+
+```{r introduction-1}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 3)
+```
+
+### 
+We will be working with databases in this tutorial. There are three high level differences between data frames and database tables:
+
+* Database tables are stored on disk and can be arbitrarily large. Data frames are stored in memory, and are fundamentally limited (although that limit is still plenty large for many problems).
+
+* Database tables almost always have indexes. Much like the index of a book, a database index makes it possible to quickly find rows of interest without having to look at every single row. Data frames and tibbles don’t have indexes, but data.tables (from the [**data.table**](https://rdatatable.gitlab.io/data.table/) package) do, which is one of the reasons that they’re so fast.
+
+* Most classical databases are optimized for rapidly collecting data, not analyzing existing data. These databases are called row-oriented because the data is stored row-by-row, rather than column-by-column like R. More recently, there’s been much development of column-oriented databases that make analyzing the existing data much faster.
+
+
+
+### Exercise 2
+
+In your QMD, put `library(tidyverse)` in a new code chunk. 
+Render the file using `Cmd/Ctrl + Shift + K`.
+
+Notice that the file does not look good because the code 
+is visible and there are annoying messages. To take care 
+of this, add `#| message: false` to remove all the messages 
+in this `setup` chunk. Also add the following to the YAML 
+header to remove all code echos from the HTML:
+
+```         
+execute: 
+  echo: false
+```
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r introduction-2}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 6)
+```
+
+### 
+Databases are run by database management systems (DBMS’s for short), which come in three basic forms:
+
+* Client-server DBMS’s run on a powerful central server, which you connect from your computer (the client). They are great for sharing data with multiple people in an organization.
+
+* Cloud DBMS’s, are similar to client server DBMS’s, but they run in the cloud. This means that they can easily handle extremely large datasets and can automatically provide more compute resources as needed.
+
+* In-process DBMS’s run entirely on your computer. They’re great for working with large datasets where you’re the primary user.
 
 ### Exercise 3
 
-Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
+Place your cursor in the QMD file on the `library(tidyverse)` 
+line. Use `Cmd/Ctrl + Enter` to execute that line.
 
-Note that this causes `library(tidyverse)` to be copied down to the Console and then executed. 
+Note that this causes `library(tidyverse)` to be copied down 
+to the Console and then executed. 
 
 CP/CR.
 
@@ -57,445 +164,22 @@ question_text(NULL,
 ```
 
 ###
+For this tutorial, we will be working with the babynames database. At the simplest level, you can think about a database as a collection of data frames, called tables in database terminology. Like a data frame, a database table is a collection of named columns, where every value in the column is the same type. 
 
-
-
-## Flights
-###
-
-
-This section covers [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. We will be utilizing two core packages of Tidyverse, [**readr**](https://readr.tidyverse.org/) and [**dplyr**](https://dplyr.tidyverse.org/). Key commands of this section will include [`parse_double()`](https://readr.tidyverse.org/reference/parse_atomic.html) for parsing numbers directly from strings, [`parse_number()`](https://readr.tidyverse.org/reference/parse_number.html) for removing useless characters and parsing numbers from strings, [`count()`](https://dplyr.tidyverse.org/reference/count.html) which counts the unique values of one or more variables, [`pmin()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extremes.html) which take one or more vectors in and returns the minima or maxima of these vectors, 
-[`round()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html) which rounds values in its first argument to the specified number of decimal places, and [`min_rank()`](https://dplyr.tidyverse.org/reference/row_number.html) which gives every tie the same value and ranks an inputted vector.
-
-
-### Exercise 1
-
-In the same setup chunk with **tidyverse**, load `nycflights13` with the `library()` function. 
-
-Place your cursor on that line and run `Cmd/Ctrl + Enter` to load the package in the Console.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-1}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-### 
-
-This dataset from the contains information about all flights that departed from NYC (e.g. EWR, JFK and LGA) to destinations in the United States, Puerto Rico, and the American Virgin Islands) in 2013.
-
-### Exercise 2
-
-Type `flights` in the Console to view the dataset. Copy and paste the resulting tibble.
-
-```{r numbers-2}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 8)
-```
-
-###
-
-Typing out `flights` is the same as typing out `print(flights)`. You might be wondering what tibble is, A tibble is a new form of a data frame in R that is part of the tidyverse library, and tibbles print the data in a more efficient format than a data frame, showing the values of the columns, their datatype, and the size of the dataset.
-
-### Exercise 3
-
-Now, ask your favorite  AI to generate R code that creates a new column from `flights` that just contains the numbers from the `tailnum` column. Then, only show that new column. Copy the code into the Console and hit `Enter` to run it.
-
-CP/CR.
-
-```{r numbers-3}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 4)
-```
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-flights |>
-  mutate(tailnum_num = parse_number(tailnum)) |> 
-  select(tailnum_num)
-```
-
-Knowledge drop on parse_number(), parse_integer(), and parse_double().
 
 ### Exercise 4
 
-Now, ask your favorite AI to use `select()` on `flights` to obtain only the columns `dep_time`, `sched_dep_time`, and `dep_delay`.
-Make sure to provide a tibble of **flights** for the AI to use.
-
-Assign the result of this pipe to `flights_clean`, and then add your code to a new chunk in the QMD.
-Place your cursor on that line and run `Cmd/Ctrl + Enter` to load `flights_clean` in the Console.
-Then, type `flights_clean` in the Console and hit `Enter`.
-
-CP/CR the resulting tibble.
-
-```{r numbers-4}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-flights_clean <- flights |>
-  select(dep_time:dep_delay)
-flights_clean
-```
-
-
-### Exercise 5
-
-Next, prompt the AI to generate R code that takes `flights_clean` and breaks scheduled and actual departure times into hours and minutes using %/% and %%. If you have not done so before, provide a tibble of **flights_clean** for the AI to use. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in a new chunk. Save the file. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
+We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial. 
 In the Console, run:
 
-```         
-show_file("analysis.qmd", chunk = "Last")
+```   
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/babynames.duckdb",
+  destfile = "babynames.duckdb"
+)
 ```
-
-CP/CR.
-
-```{r numbers-5}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 4)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100)
-```
-
-
-### Exercise 6
-
-Next, prompt the AI to generate R code that continues the pipe and adds a new column `true_dep_delay`, treating early departures (negative values) as 0 using `mutate()` and `pmax()`. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in the same chunk. Save the file. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-6}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100) |>
-      mutate(true_dep_delay = pmax(dep_delay, 0))
-```
-
-### Exercise 7
-
-Next, prompt the AI to generate R code that finishes the pipe and collapses the dataset, grouping by hour pairs and summing delay using `count(..., wt=...)`. Essentially, we want to sum the total number of minutes of positive departure delay for each combination of scheduled hour and actual departure hour.
-If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-7}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 7)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100) |>
-      mutate(true_dep_delay = pmax(dep_delay, 0))|>
-        count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
-```
-
-### Exercise 8
-
-Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-8}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
-
-
-### Exercise 9
-
-Within the recent code chunk, add the
-option: `#| cache: true`. Assign the result of our pipe to 
-`x`. 
-
-`Cmd/Ctrl + Shift + K`. By including `#| cache: true` 
-you cause Quarto to cache the results of the chunk. 
-The next time you render your QMD, as long as you have not changed 
-the code, Quarto will just load up the saved fitted object.
-
-Place your cursor on the line where the pipe is assigned to `x`,
-run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy
-of `x`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-9}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-x <- flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100) |>
-      mutate(true_dep_delay = pmax(dep_delay, 0)) |>
-        count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
-```
-
-
-###
-
-<!-- XX: Insert a knowledge drop related to this project. -->
-### Exercise 10
-
-Within the Console, type `x`, which we previously assigned to a pipe
-and ran in the Console. Hit `Enter`.
-
-CP/CR.
-
-```{r ai-usage-10}
-question_text(NULL,
-    answer(NULL, correct = TRUE),
-    allow_retry = TRUE,
-    try_again_button = "Edit Answer",
-    incorrect = NULL,
-    rows = 8)
-```
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-x
-...
-```
-
-<!-- XX: Insert a knowledge drop related to this project. -->
-
-### Exercise 11
-
-Go to the AI and ask it to generate R code that plots a clean and insightful heatmap that shows where delays tend to cluster by scheduled vs. actual departure hour. Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
-
-Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code for the plot to any variable. Add this code to a new code cell. Run `Cmd/Ctrl + Shift + K`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-11}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 12)
-```
-
-
-###
-
-Our code:
-
-```{r echo=FALSE}
-x <- flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100) |>
-      mutate(true_dep_delay = pmax(dep_delay, 0)) |>
-        count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
-```
-
-```{r, echo=TRUE}
-ggplot(x, aes(x = sched_hour, y = dep_hour, fill = total_delay)) +
-  geom_tile(color = "white") +
-  scale_fill_viridis_c(option = "plasma", name = "Total Delay (min)") +
-  labs(
-    title = "Total Departure Delay by Scheduled Hour and Actual Hour",
-    subtitle = "The most total delay time occurs around 5 PM with a 1 hour delay",
-    x = "Scheduled Departure Hour",
-    y = "Actual Departure Hour",
-    caption = "Source: nycflights13::flights"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    panel.grid = element_blank(),
-    plot.title = element_text(face = "bold", size = 18),
-    axis.text = element_text(face = "bold")
-  )
-```
-
-### Exercise 12
-
-Now, using AI, ask it to generate code that rounds the `total_delay` column to the hundreds place using `round()`. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into a new code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
-
-CP/CR.
-
-```{r numbers-11}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-x |>
-  mutate(total_delay = round(total_delay, -2))
-```
-
-### Exercise 13
-
-Now, using AI, ask it to generate code that applies `min_rank()` to the `total_delay` column in `x` to see the ranks of the highest total delay times per combination of scheduled departure hour and actual departure hour. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into the same code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
-
-CP/CR.
-
-```{r numbers-12}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-x |>
-  mutate(rank_total_delay = min_rank(desc(total_delay)))
-```
-
-### Exercise 14
-
-Now, using AI, ask it to generate code that uses summarize() in your `x` dataset to calculate the mean, median, and 95th percentile (quantile) of `true_dep_delay`. In this case, copy and paste the pipe that is assigned to `x`, change it to `y`, and then remove the `count()`. Then, run the AI generated code on `y`. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into same the code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
-
-CP/CR.
-
-```{r numbers-13}
+CP/CR
+```{r baby-names-4}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -504,92 +188,9 @@ question_text(NULL,
 	rows = 5)
 ```
 
-
 ###
-
 Our code:
-
-```{r echo=TRUE}
-y <- flights_clean |>
-  mutate(
-    sched_hour = sched_dep_time %/% 100,
-    sched_minute = sched_dep_time %% 100,
-    dep_hour = dep_time %/% 100,
-    dep_minute = dep_time %% 100) |>
-      mutate(true_dep_delay = pmax(dep_delay, 0))
-```
-
-```{r, echo=TRUE}
-y |>
-  summarize(
-    mean_delay   = mean(true_dep_delay, na.rm = TRUE),
-    median_delay = median(true_dep_delay, na.rm = TRUE),
-    q95_delay    = quantile(true_dep_delay, 0.95, na.rm = TRUE)
-  )
-```
-
-### Exercise 15
-
-Now that we have all these functions in the same code cell, we can see all of the functions we have learned, and we can run any of them at will with `Cmd/Ctrl + Enter`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-```{r numbers-14}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 15)
-``` 
-
-###
-
-Commit/push everything.
-
-
-
-## Baby names
-### 
-
-This section covers [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. 
-You will learn about some of the power of the [**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings, and about some of the challenges you might face with non-English strings. Some important functions which we will learn include:
-[`str_c()`](https://stringr.tidyverse.org/reference/str_c.html),
-[`str_glue()`](https://stringr.tidyverse.org/reference/str_glue.html),
-[`str_flatten()`](https://stringr.tidyverse.org/reference/str_flatten.html),
-[`separate_longer_delim()`](https://tidyr.tidyverse.org/reference/separate_longer_delim.html), and more.
-
-In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
-
-### Exercise 1
-
-We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial.
-
-Go to https://github.com/PPBDS/ai.tutorials and navigate to inst → extdata → babynames.duckdb.
-Click on babynames.duckdb, right click the "Raw" button and choose Copy Link.
-
-Now, ask AI how to use the `download.file()` function to save the `babynames.duckdb` file in your current working directory. Paste this code into your console.
-
-CP/CR.
-
-```{r strings-1}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-Use our code:
-
-```{r, echo=TRUE, eval = FALSE}
+```{r baby-names-1-test, echo = TRUE}
 download.file(
   "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/babynames.duckdb",
   destfile = "babynames.duckdb"
@@ -598,25 +199,25 @@ download.file(
 
 ###
 
-### Exercise 2
+### Exercise 5
 Next, ask AI how to connect and write the database as a table so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
 In the Console, run:
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
-```
-```{r strings-2}
+```         
+```{r baby-names-5}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 8)
+	rows = 5)
 ```
 
+###
 Our code:
-```{r, echo=TRUE}
+```{r baby-names-2-test, echo = TRUE}
 con <- DBI::dbConnect(
     duckdb::duckdb(),
     dbdir = "babynames.duckdb"
@@ -625,35 +226,37 @@ con <- DBI::dbConnect(
 DBI::dbWriteTable(con, "babynames", babynames::babynames, overwrite = TRUE)
 ```
 
+When we use `dbWriteTable()` we need to supply three arguments: a database connection, the name of the table to create in the database, and a data frame of data.
+
 This creates a connection to the database and assigns it to the variable con, short for connection. This connection acts like a bridge between R and the DuckDB file. **DBI** is a low-level interface that connects to databases and executes SQL; **dbplyr** is a high-level interface that translates your **dplyr** code to SQL queries then executes them with **DBI**.
 
+###
 
-### Exercise 3
-
+### Exercise 6
 Now, ask AI how you can view the babynames.duckdb dataset using dbReadTable. Add this code to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 Copy and paste the resulting tibble.
 
-```{r strings-3}
+```{r baby-names-3}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 8)
+	rows = 6)
 ```
 
+###
 Our code:
-```{r, echo=TRUE}
+```{r baby-names-3-test, echo = TRUE}
 con |> 
     dbReadTable("babynames") |> 
     as_tibble()
 ```
 
-
-Knowledge drop
 ###
-### Exercise 4
+`dbReadTable()` returns a data frame, not a tibble. 
 
+### Exercise 7
 Using your favorite AI, prompt it to generate R code that takes `babynames` and filters the dataset to show all names that have a first name starting with A after the year 2000, using SQL. Make sure to provide some lines of **babynames** for the AI to use. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
@@ -663,22 +266,18 @@ show_file("analysis.qmd", chunk = "Last")
 ```
 
 CP/CR.
-
-```{r strings-4}
+```{r baby-names-7}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 4)
+	rows = 5)
 ```
 
-
 ###
-
 Our code:
-
-```{r, echo=TRUE}
+```{r baby-names-7-test, echo = TRUE}
 sql <- "
   SELECT name, year, sex, n, prop
   FROM babynames
@@ -686,11 +285,12 @@ sql <- "
 "
 ```
 
-
 A query is made up of **clauses**. There are five important clauses: `SELECT`, `FROM`, `WHERE`, `ORDER BY`, and `GROUP BY`. Every query must have the `SELECT` and `FROM` clauses and the simplest query is `SELECT * FROM table`, which selects all columns from the specified table. `WHERE` and `ORDER BY` control which rows are included and how they are ordered, and `GROUP BY` converts the query to a summary, causing aggregation to happen.
 
-### Exercise 5
 
+###
+
+### Exercise 8
 You just used SQL to filter the babynames database directly. Although, instead of writing raw SQL yourself, we can do the exact same task using dbplyr. dbplyr is a dplyr backend, which means that you keep writing dplyr code but the backend executes it differently. In this, dbplyr translates to SQL; other backends include dbplyr which translates to data.table, and multidplyr which executes your code on multiple cores.
 
 Paste this code into a new chunk in your QMD:
@@ -705,56 +305,55 @@ In the Console, run:
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ``` 
+
+```{r baby-names-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
 Our code:
-```{r, echo=TRUE}
+```{r baby-names-8-test, echo = TRUE}
 babynames_db <- tbl(con, "babynames")
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) 
 ```
 
-<!--  Strings knowdlege drop-->
+###
+**dplyr**’s `case_when()` is inspired by SQL’s `CASE` statement and provides a flexible way of performing different computations for different conditions. It has a special syntax that unfortunately looks like nothing else you’ll use in the tidyverse. It takes pairs that look like `condition ~ output`. `condition` must be a logical vector; when it’s `TRUE`, `output` will be used.
 
-
-```{r strings-5}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 4)
-```
-
-### Exercise 6
+### Exercise 9
 Next, prompt AI to give you code that creates a new column of names classified as "Short" or "Long". Anything less than or equal to 5 can be classifed as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the average length of an American name (5.44) truncated. 
 In the Console, run:
-
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ``` 
-```{r strings-6}
+CP/CR
+```{r baby-names-9}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 8)
+	rows = 5)
 ```
 
-<!--  logical vectors knowledge drop -->
-
+###
 Our code:
-```{r, echo=TRUE}
+```{r baby-names-9-test, echo = TRUE}
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
 ```
 
-
 ###
+`>=` is used when you want to find a variable that that is greater than or equal to a number. Conversely, you could use `<=` to find a variable that that is less than or equal to a number. Finally, `==` can be used to find a variable that is exactly equal to a number.
 
-
-### Exercise 7
-
+### Exercise 10
 Next, prompt AI to continue the pipe to summarize the data by grouping by year and length_class, calculating the total number of babies in each group by summing n. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
@@ -765,32 +364,28 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-7}
+```{r baby-names-10}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 7)
+	rows = 5)
 ```
 
-<!--  knowledge drop-->
-
 ###
-
 Our code:
-
-```{r, echo=TRUE}
+```{r baby-names-10-test, echo = TRUE}
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) |>
+  summarize(total = sum(n), .by = c(year, length_class)) 
 ```
 
 ###
+The `.by` arguement is a selection of columns to group by for just this operation, functioning as an alternative to `group_by()`. For details and examples, see `?dplyr_by`.
 
-### Exercise 8
-
+### Exercise 11
 Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
@@ -801,21 +396,18 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-8}
+```{r baby-names-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 7)
+	rows = 5)
 ```
 
-
 ###
-
 Our code:
-
-```{r, echo=TRUE}
+```{r baby-names-11-test, echo = TRUE}
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -824,10 +416,10 @@ babynames_db |>
   collect()
 ```
 
-<!--  knowledge drop, maybe about the sql equivalent-->
+###
+Ordering rows involves a straightforward translation from `arrange()` to the SQL `ORDER BY` clause. 
 
-### Exercise 9
-
+### Exercise 12
 Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
 
 In the Console, run:
@@ -838,21 +430,30 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-9}
+```{r baby-names-12}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 6)
+	rows = 5)
 ```
 
 ###
 
-<!--  knowledge drop-->
+```{r baby-names-12-test, echo = TRUE}
+babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+  arrange(year) |>
+  collect()
+```
 
+###
+To get all the data back into R, you call `collect()`. Behind the scenes, this generates the SQL, calls `dbGetQuery()` to get the data, then turns the result into a tibble.
 
-### Exercise 10
+### Exercise 13
 
 Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to  `x`. 
 
@@ -862,61 +463,56 @@ Place your cursor on the line where the pipe is assigned to x, run `Cmd/Ctrl + E
 
 CP/CR.
 
-```{r strings-10}
+
+```{r baby-names-13}
 question_text(NULL,
-    answer(NULL, correct = TRUE),
-    allow_retry = TRUE,
-    try_again_button = "Edit Answer",
-    incorrect = NULL,
-    rows = 8)
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
 ```
 
 ###
-
 Our code:
-
-```{r, echo=TRUE}
+```{r baby-names-13-test, echo = TRUE}
 x <- babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
   summarize(total = sum(n), .by = c(year, length_class)) |>
   arrange(year) |>
   collect()
+
 ```
 
-<!--  knowledge drop-->
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 11
+### Exercise 14
 
 Within the Console, type `x`, which we previously assigned to a pipe
 and ran in the Console. Hit `Enter`.
 
 CP/CR.
-
-```{r strings-11}
+```{r baby-names-14}
 question_text(NULL,
-    answer(NULL, correct = TRUE),
-    allow_retry = TRUE,
-    try_again_button = "Edit Answer",
-    incorrect = NULL,
-    rows = 8)
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
 ```
 
 ###
-
 Our code:
-
-```{r, echo=TRUE}
+```{r baby-names-11-test, echo = TRUE}
 x
 ```
 
-<!--  knowledge drop-->
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
 
-
-### Exercise 12
-
-<!-- https://pkgs.rstudio.com/learnr/articles/exercises.html -->
-
+### Exercise 15
 Go to the AI and ask it to generate R code that plots a basic line graph showing the proportion of "Short" vs. "Long" names starting with A over the years (after 2000). Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
 
 Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code to a new code cell. Run `Cmd/Ctrl + Shift + K`.
@@ -929,23 +525,19 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-12}
+
+```{r baby-names-15}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 12)
+	rows = 5)
 ```
-
-<!--  knowledge drop-->
-
 
 ###
 
-Our code:
-
-```{r echo=FALSE}
+```{r baby-names-15-test, echo = TRUE}
 x <- babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -953,10 +545,7 @@ x <- babynames_db |>
   arrange(year) |>
   collect()
 
-```
-
-```{r, echo=TRUE}
-ggplot(a_names, aes(x = year, y = total, color = length_class)) +
+ggplot(x, aes(x = year, y = total, color = length_class)) +
   geom_line(size = 1.2) +
   labs(
     title = "Trends in Short vs Long A-Names Since 2000",
@@ -969,10 +558,9 @@ ggplot(a_names, aes(x = year, y = total, color = length_class)) +
 ```
 
 ###
+<!-- XX: Insert a knowledge drop related to this project. -->
 
-
-### Exercise 13
-
+### Exercise 16
 Using the same AI, ask it to generate code for finding the top five longest names beginning with 'A' in 2009. 
 
 Here is the prompt we used: using R, create code that finds the top five longest names beginning with 'A' in 2009. First use `filter()` and `slice_head()` to get the top names of the 'A' name column ordered by highest proportion, then use `pull()` to create a vector of the column, and finally use `str_flatten()` to create a string. Use `str_c()` to print out a coherent sentence at the end. 
@@ -989,28 +577,25 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r strings-13}
+```{r baby-names-16}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 12)
+	rows = 5)
 ```
 
-
 ###
-
 Our code:
-
-```{r, echo=TRUE}
-top_a_1950 <- babynames |>
+```{r baby-names-16-test, echo = TRUE}
+top_a_2009 <- babynames |>
   filter(year == 2009, str_starts(name, "A")) |>
   mutate(name_length = str_length(name)) |>
   arrange(desc(name_length)) |>
   slice_head(n = 5)
 
-insight_text <- top_a_1950 |>
+insight_text <- top_a_2009 |>
   pull(name) |> # returns a vector from the column
   str_flatten(collapse = ", ", last = " and ") # combines vector into a string
 
@@ -1022,182 +607,333 @@ insight
 ```
 
 `str_c()` and `str_glue()` are suitable for use with `mutate()` since their output matches the length of their inputs. However, if you need a function that works well with `summarize()` and always returns a single string, `str_flatten()` comes into play. It takes a character vector as input and combines each element of the vector into a single string.
-
 One variation of `str_flatten()` is `str_flatten_comma()` is a variation designed specifically for flattening with commas. It automatically recognizes if last uses the Oxford comma and handles the special case of 2 elements.
 
-
-
-<!--  end the tutorial here-->
-
-
-### Exercise 15
-
-Using the same AI, ask it to generate code that will collapse our previously made `top_a_1950`, and then split the names into separate rows with `separate_longer_delim()`. In a new code cell below the previous cells, copy and paste the generated code.
-
-Then, isolate the part where `top_a_1950` is collapsed, and either run it in the Console to view the tibble. Then, run the whole thing with the relavant function `separate_longer_delim()` by placing your cursor at the top and pressing `Cmd/Ctrl + Enter`.
-
-CP/CR both tibbles.
-
-```{r strings-15}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
-
-
+The `desc()` function is used to create a descending order. This means that rows with longest names will appear first in the data frame. 
 ###
-
-Our code:
-
-```{r, echo=TRUE}
-collapsed <- top_a_1950 |>
-  summarize(name_list = str_c(name, collapse = ","))
-collapsed
-```
-
-```{r, echo=TRUE}
-collapsed |>
-  separate_longer_delim(name_list, delim = ",")
-```
-
-The function `separate_longer_delim(col, delim)` makes the input data frame longer through increased rows, with the string split up through a specified deliminator as an argument.
-
-The function `separate_longer_position(col, width)` makes the input data frame longer through increased rows, with the string split up with specified widths.
-
-### Exercise 16
-
-Using the same AI, ask it to generate code that will separate the first letter of a name from `top_a_1950` from the rest of the name using `separate_wider_position()`. Using the same code cell from the previous exercise, copy and paste the generated code. Then, place your cursor on any line of the code and press `Cmd/Ctrl + Shift + Enter` to run it in the Console. 
-
-CP/CR.
-
-If there is an error, plug it back into AI and see what it says.
-
-```{r strings-16}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 6)
-```
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-top_a_1950 |>
-  separate_wider_position(
-    name,
-    widths = c(first_letter = 1, rest_of_name = 100),
-    too_few = "align_start"
-  )
-```
-
-The function `separate_wider_position(col, widths)` makes the input data frame wider through increased columns, with the string split up with a specified widths. Note how because the character length for names varied, we had to pad it with 10 extra characters so we could for sure separate the columns by width.
-
-The function `separate_wider_delim(col, delim, names)` makes the input data frame wider through increased columns, with the string split up with a specified deliminator.
-
-<!-- This knowledge drop seems too long. -->
-
-
-
-<!-- LL: This following section could use another exercise for each existing one where students edit the code. Could be too long though? You decide. --> 
 
 ### Exercise 17
 
-Make a new code cell after the plot, and using AI, ask it to generate code that pipes **babynames** to `count()` with `str_length()` to find the distribution of lengths of US baby names. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into the code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
+Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
-CP/CR.
+````
+quarto publish gh-pages analysis.qmd
+````
 
-```{r strings-17}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-``` 
+Copy/paste the resulting URL below.
 
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-babynames |>
-  count(length = str_length(name), sort = TRUE)
-```
-
-The function `str_length()` tells you the number of letters in the string.
-
-
-### Exercise 18
-
-Next, get code that pipes `babynames` to `mutate()` and use `str_sub()` to find the first and last letter of each name. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into the same code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
-
-CP/CR.
-
-```{r strings-18}
+```{r baby-names-17}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
 	rows = 5)
-``` 
-
-
-###
-
-Our code:
-
-```{r, echo=TRUE}
-babynames |>
-  mutate(
-    first_letter = str_sub(name, 1, 1),
-    last_letter = str_sub(name, -1, -1)
-  ) |>
-  select(name, first_letter, last_letter)
 ```
 
-The function `str_sub(string, start, end)` can extract parts of a string. The start and end are the positions where the substring should start and end, and the start and end arguments are inclusive.
+###
+Commit/push everything.
 
+<!--  end the tutorial here-->
 
-### Exercise 19
+## Flights
 
-Next, get code that pipes `babynames` to `filter()` with name and `str_starts()` to find all names beginning with a certain string. Make sure that the pipe is not assigned to any variable so it is easier to run. Copy and paste the code into the same code cell. Place your cursor on the line with the code, and press `Cmd/Ctrl + Enter` to run the code in the Console.
+### Introduction
+This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) and [Chapter 15: Regular Expressions](https://r4ds.hadley.nz/regexps.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of working with numeric data and text patterns using core Tidyverse packages: readr, dplyr, and stringr. Important functions you'll learn about include: 
+[parse_number()](https://readr.tidyverse.org/reference/parse_number.html)
+[is.na()](https://rdrr.io/r/base/NA.html)
+[str_detect()](https://stringr.tidyverse.org/reference/str_detect.html)
+[pmax()](https://rdrr.io/r/base/Extremes.html)
+We will also learn about integer division and moduluo. 
 
-CP/CR.
+In this section we are going to focus on generating code to create a graph based on a dataset called `nycflights13`. The `nycflights13` is a dataset which contains information about all flights departing from New York City airports in 2013. We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
+###
 
-```{r strings-19}
+### Exercise 1
+
+We begin by downloading a DuckDB version of the flights dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial. 
+In the Console, run:
+
+```   
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/flights.duckdb",
+  destfile = "flights.duckdb"
+)
+```
+CP/CR
+```{r flights-1}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 3)
-``` 
+	rows = 5)
+```
 
+###
+Our code:
+```{r flights-1-test, echo = TRUE}
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/flights.duckdb",
+  destfile = "flights.duckdb"
+)
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 2
+Next, ask AI how to connect and write the database as a table so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```         
+```{r flights-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-2-test, echo = TRUE}
+con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "flights.duckdb"
+  )
+
+DBI::dbWriteTable(con, "flights", nycflights13::flights, overwrite = TRUE)
+```
+
+###
+You can check that the data is loaded correctly by using the `dbListTables()` function that lists all tables in the database. Try running `dbListTables()` on `con`.
+
+### Exercise 3
+Now, ask AI how you can view the flights.duckdb dataset using dbReadTable. Add this code to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Copy and paste the resulting tibble.
+
+```{r flights-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-3-test, echo = TRUE}
+con |> 
+    dbReadTable("flights") |> 
+    as_tibble()
+```
 
 ###
 
-Our code:
+`dbGetQuery()` is a function which takes a connection and an SQL query as a text string as inputs. It returns the result of that query as a data frame. 
+<!-- SG: How do I make this sound less random? -->
 
-```{r, echo=TRUE}
-babynames |> filter(str_starts(name, "A"))
+
+### Exercise 5
+To use dbplyr, you must first use tbl() to create an object that represents a database table. 
+
+Paste this code into a new chunk in your QMD:
+```         
+flights_db <- tbl(con, "flights")
 ```
 
-The function `str_starts()` returns TRUE if each string starts with the given pattern. We have used this function earlier in this tutorial! Also, the function `str_ends()` returns TRUE if each string ends with the given pattern. The function `str_detect()` returns TRUE if each string contains the given pattern anywhere inside.
+View the data by putting flights_db in your console. Copy/paste the resulting dataframe.
+
+```{r flights-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-5-test, echo = TRUE}
+flights_db <- tbl(con, "flights")
+flights_db
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 6
+Now, view the tailnum column by pasting this in your console:
+```
+flights$tailnum
+```
+Ask AI how to check the column type of tailnum from the flights dataset. Add the code to your Console and hit `Enter`. 
+
+CP/CR:
+      
+show_file("analysis.qmd", chunk = "Last")
+
+```{r flights-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-6-test, echo = TRUE}
+class(flights$tailnum)
+```
+
+###
+[[ and $ can be used to extract columns out of a data frame. [[ can access by position or by name, and $ is specialized for access by name.
+
+### Exercise 7
+
+Now, ask AI to create a new tailnum column using parse so we can extract numbers from a character column. Also, ask AI to clean flights and select the dep_time, sched_dep_time, dep_delay, and tailnum columns. Add the code to your QMD in a new chunk. Assign this pipe to "flights_clean". Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+
+x <- c(1, 2, 3, 4, NA)
+ranktypes <- tibble(x = x)
+
+In the Console, run:
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+CP/CR
+```{r flights-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-7-test, echo = TRUE}
+flights_clean <- flights |>
+  select(dep_time, sched_dep_time, dep_delay, tailnum) |>
+  mutate(tail_number = parse_number(tailnum)) 
+```
+
+###
+Use `parse_number()` when the string contains non-numeric text that you want to ignore. This is particularly useful for currency data and percentages. 
+
+### Exercise 8
+Now, ask your favorite AI to write code that summarizes how many missing values are in the ``dep_time`` and ``arr_time`` columns using the function ``is.na()``. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+CP/CR
+```{r flights-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-8-test, echo = TRUE}
+flights |> 
+  summarise(
+    missing_dep = sum(is.na(dep_time)),
+    missing_arr = sum(is.na(arr_time))
+  )
+```
+
+A tibble: 1 × 2
+  missing_dep missing_arr
+        <int>       <int>
+1        8255        8713
+
+We have a lot of missing values that needs to be cleaned. 
+###
+`is.na(x)` works with any type of vector and returns TRUE for missing values and FALSE for everything else, which we can use to find all the rows with a missing `dep_time`. To check for `NA` values, use `any()` function with argument `is.na()`, argument of which should be the dataset babynames. 
 
 
-### Exercise 20
+### Exercise 9
+Ask AI how you can continue your previous pipe and filters out rows where dep_time is missing using !is.na(). Add the code to your QMD in the same chunk as an addition to the pipe. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. View your new cleaned dataset.
 
-Now that we have all these functions in the same code cell, we can see all of the functions we have learned, and we can run any of them at will with `Cmd/Ctrl + Enter`.
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+```{r flights-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r flights-9-test, echo = TRUE}
+flights_clean <- flights |>
+  select(dep_time, sched_dep_time, dep_delay, tailnum) |>
+  mutate(tail_number = parse_number(tailnum)) |>
+  filter(!is.na(dep_time))
+
+flights_clean
+```
+
+###
+`is.na()` can also be useful in `arrange()`. `arrange()` usually puts all the missing values at the end but you can override this default by first sorting with `is.na()`.The `arrange()` function is used to order rows in a data set based on a column. It allows you to sort the data set in either ascending or descending order.
+
+### Exercise 10
+Now, ask AI how you can find tail numbers starting with "N1". Add the code to your QMD in a new code chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run: 
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+```{r flights-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-10-test, echo = TRUE}
+flights_clean |>
+  filter(str_detect(tailnum, "^N1")) |>
+  count(tailnum, sort = TRUE)
+```
+
+###
+
+Since `str_detect()` returns a logical vector of the same length as the initial vector, it pairs well with `filter()`
+There are two functions that are closely related to `str_detect()`:  
+* `str_subset()` returns a character vector containing only the strings that match. 
+* `str_which()` returns an integer vector giving the positions of the strings that match.
+
+Also, `n_distinct(x)` counts the number of distinct (unique) values of one or more variables. It is part of the same family of functions as `count()` and `n()`.
+
+### Exercise 11
+The scheduled departure time and the actual departure time for flights is written in the 24-hr system. Let's change this to the 12-hr system. Ask your favorite AI how to break military time into hours and minutes in R using integer division and modulo operators for the sched_dep_time and dep_time columns. Add the code to your QMD in a new code chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
 In the Console, run:
 
@@ -1205,24 +941,219 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-CP/CR.
-
-```{r strings-20}
+```{r flights-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 15)
-``` 
+	rows = 5)
+```
 
-### 
+###
+Our code:
+```{r flights-11-test, echo = TRUE}
+flights_clean |>
+  mutate(
+    dep_hour = dep_time %/% 100,
+    dep_minute = dep_time %% 100,
+    sched_hour = sched_dep_time %/% 100,
+    sched_minute = sched_dep_time %% 100
+  )
+```
 
-Commit/push everything.
+###
+When combined with %% or %/%, `row_number()` can be a useful tool for dividing data into similarly sized groups. `row_number()` can also be used without any arguments when inside a dplyr verb. 
 
+### Exercise 12
+Let's add a column for positive delays only. Ask the same AI how to continue the pipe and add true_dep_delay using pmax(dep_delay, 0) to treat early departures (negative delays) as 0. Then, how to use count() to group by sched_hour and dep_hour, weighing by true_dep_delay to get total delay minutes for each hour combination.  Add the code to your QMD in the same code chunk as a continuation of your pipe. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
+In the Console, run:
 
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+```{r flights-12}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
 
+###
+Our code:
+```{r flights-12-test, echo = TRUE}
+flights_clean |>
+  mutate(
+    dep_hour = dep_time %/% 100,
+    dep_minute = dep_time %% 100,
+    sched_hour = sched_dep_time %/% 100,
+    sched_minute = sched_dep_time %% 100,
+    true_dep_delay = pmax(dep_delay, 0)
+  ) |>
+  count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
+```
+
+###
+Note that these are different to the summary functions `min()` and `max()` which take multiple observations and return a single value. You can tell that you’ve used the wrong form when all the minimums and all the maximums have the same value.
+
+### Exercise 13
+
+Now that we have filtered our dataset through a pipe, 
+we need to be on track with the same, correct, code. 
+Replace your code with our code in your QMD.
+
+In the Console, run:
+
+```         
+show_file("XX.qmd", chunk = "Last")
+```
+
+CP/CR.
+```{r flights-13}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r flights-13-test, echo = TRUE}
+flights_clean |>
+  mutate(
+    dep_hour = dep_time %/% 100,
+    dep_minute = dep_time %% 100,
+    sched_hour = sched_dep_time %/% 100,
+    sched_minute = sched_dep_time %% 100,
+    true_dep_delay = pmax(dep_delay, 0)
+  ) |>
+  count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 14
+Within the recent code chunk, add the
+option: `#| cache: true`. Assign the result of our pipe to 
+`x`. 
+
+`Cmd/Ctrl + Shift + K`. By including `#| cache: true` 
+you cause Quarto to cache the results of the chunk. 
+The next time you render your QMD, as long as you have not changed 
+the code, Quarto will just load up the saved fitted object.
+
+Place your cursor on the line where the pipe is assigned to `x`,
+run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy
+of `x`.
+
+CP/CR.
+
+```{r flights-14}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r flights-14-test, echo = TRUE}
+x <- flights_clean |>
+  mutate(
+    dep_hour = dep_time %/% 100,
+    dep_minute = dep_time %% 100,
+    sched_hour = sched_dep_time %/% 100,
+    sched_minute = sched_dep_time %% 100,
+    true_dep_delay = pmax(dep_delay, 0)
+  ) |>
+  count(sched_hour, dep_hour, wt = true_dep_delay, name = "total_delay")
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 15
+Within the Console, type `x`, which we previously assigned to a pipe
+and ran in the Console. Hit `Enter`.
+
+CP/CR.
+```{r flights-15}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-15-test, echo = TRUE}
+x
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 16
+
+Go to the AI and ask it to generate R code that plots a beautiful heatmap using geom_tile() 
+that shows where delays cluster by scheduled vs. actual departure hour. Mention you want to use the data from `x` and copy and paste 
+the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
+
+Within `labs()` edit or add a proper title, subtitle, and caption. 
+If axis labels are appropriate, add them, but if unnecessary, don't bother. 
+Don't assign the code for the plot to any variable. 
+Add this code to a new code cell. Run `Cmd/Ctrl + Shift + K`.
+
+In the Console, run:
+
+```         
+show_file("XX.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r flights-16}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+Our code:
+```{r flights-16-test, echo = TRUE}
+ggplot(x, aes(x = sched_hour, y = dep_hour, fill = total_delay)) +
+  geom_tile(color = "white") +
+  scale_fill_viridis_c(option = "plasma", name = "Total Delay\n(minutes)") +
+  labs(
+    title = "Flight Delay Patterns: Scheduled vs Actual Departure Hours",
+    subtitle = "Darker regions show higher total delay concentrations",
+    x = "Scheduled Departure Hour",
+    y = "Actual Departure Hour", 
+    caption = "Source: nycflights13 dataset"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12)
+  )
+```
+
+###
+<!-- XX: Insert a knowledge drop related to this project. -->
 
 
 ## Summary
@@ -1233,30 +1164,6 @@ This tutorial covered [Chapter 12: Logical vectors](https://r4ds.hadley.nz/logic
 You learned about how to work with numbers using commands such as [`pmin()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extremes.html) with the **nycflights13** package.
 
 You learned about some of the power of the [**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings with the **babynames** package.
-
-
-### Exercise 1
-
-Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
-
-````
-quarto publish gh-pages analysis.qmd
-````
-
-Copy/paste the resulting URL below.
-
-```{r summary-1}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 3)
-```
-
-### 
-
-Commit/push everything.
 
 
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
