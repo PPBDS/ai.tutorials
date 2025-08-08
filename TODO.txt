@@ -2,13 +2,13 @@
 
 One week left!
 
-Get rid of extra newline text wrap.
+Get rid of extra newline text wrap. done
 
-Backticks around functions or anything else which you can type at the Console or Terminal.
+Backticks around functions or anything else which you can type at the Console or Terminal. done
 
-Add blank lines around things like ###, code chunks and so on. 
+Add blank lines around things like ###, code chunks and so on. need to look through again
 
-No "Next, we .."
+No "Next, we .." done
 
 Our goal is to finish the other 4 tutorials in this collection.
 
