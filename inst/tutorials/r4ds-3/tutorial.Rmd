@@ -15,20 +15,59 @@ description: 'Tutorial for R for Data Science Integrated with AI (test)'
 library(learnr)
 library(tutorial.helpers)
 library(tidyverse)
-
 library(babynames)
 library(nycflights13)
 library(DBI)
 library(duckdb)
 library(dbplyr)
 
+# Connect to the DuckDB database
+con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "babynames.duckdb"
+)
 
+# Write the babynames dataset to the database
+DBI::dbWriteTable(con, "babynames", babynames::babynames, overwrite = TRUE)
+
+# Read the babynames table as a tibble
+con |> 
+  dbReadTable("babynames") |> 
+  as_tibble()
+
+# Create a dbplyr connection to the babynames table
+babynames_db <- tbl(con, "babynames")
+
+# Example query: Filter names starting with "A" after 2000 with at least 10 occurrences
+x <- babynames_db |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) |>
+  arrange(year) |>
+  collect()
+
+# Example query: Top 5 longest names starting with "A" in 2009
+top_a_2009 <- babynames_db |>
+  filter(year == 2009, str_starts(name, "A")) |>
+  mutate(name_length = str_length(name)) |>
+  collect() |>
+  arrange(desc(name_length)) |>
+  slice_head(n = 5)
+
+insight_text <- top_a_2009 |>
+  pull(name) |>
+  str_flatten(collapse = ", ", last = " and ")
+
+insight <- str_c(
+  "In 2009, the longest 'A' names were ", 
+  insight_text, 
+  "."
+)
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 ```
-
 ```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
 ```
 
@@ -113,7 +152,7 @@ execute:
   echo: false
 ```
 
-In the Console, run:
+Render the file using `Cmd/Ctrl + Shift + K`. In the Console, run:
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
@@ -142,7 +181,7 @@ Databases are run by database management systems (DBMS’s for short), which com
 
 ### Exercise 3
 
-Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
+Place your cursor in the QMD file at the starting of the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
 
 Note that this causes `library(tidyverse)` to be copied down to the Console and then executed.
 
@@ -180,12 +219,9 @@ download.file(
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-1}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+```{r baby-names-1}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -199,30 +235,26 @@ question_text(NULL,
 
 <!-- DK: Knowledge drop? Maybe: "Note that `babynames.duckdb` is not a ready to use database. It is a binary file with all the information we need in order to create a database." Or something?  -->
 
-# \<\<\<\<\<\<\< HEAD
 
-### Exercise 2
 
-DK: DANGER! DANGER! \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
+DK: DANGER! DANGER! 
 
 ### Exercise 2
 
 Setting up a client-server or cloud DBMS would be a pain for this tutorial, so we’ll instead use an in-process DBMS that lives entirely in an R package: `duckdb`. Thanks to the magic of DBI, the only difference between using `duckdb` and any other DBMS is how you’ll connect to the database.
 
-Ask AI how to connect the database as a table using `DBI::dbConnect()`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Ask AI how to connect the `babynames.duckdb` database as a table using `DBI::dbConnect()` by assigning it to a variable `con`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
+  
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-```{r babynames-2}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+```{r baby-names-2}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -247,15 +279,11 @@ This creates a connection to the database and assigns it to the variable con, sh
 
 ### Exercise 3
 
-\<\<\<\<\<\<\< HEAD Ask AI how you can retrieves the contents of the babynames.duckdb dataset using `dbReadTable()`. Add this code to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. =======
+Restart your console. Ask AI how you can retrieve the contents of the `babynames.duckdb` dataset using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
-### Exercise 3
+CP/CR.
 
-Ask AI how you can view the babynames.duckdb dataset using dbReadTable(). Add this code to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-
-Copy and paste the resulting tibble.
-
-```{r babynames-3}
+```{r baby-names-4}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -269,6 +297,10 @@ question_text(NULL,
 Our code:
 
 ```{r baby-names-3-test, echo = TRUE}
+con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "babynames.duckdb"
+  )
 con |> 
     dbReadTable("babynames") |> 
     as_tibble()
@@ -276,11 +308,11 @@ con |>
 
 ### 
 
-`dbReadTable()` returns a data frame, not a tibble, so we pipe it into `as_tibble()` for the result to be a tibble.
+`dbReadTable()` has the argument of `babynames` instead of `babynames.duckdb` because `babynames.duckdb` the database file name, not the name of the table inside the database.`dbReadTable()`returns a data frame, not a tibble, so we pipe it into `as_tibble()` for the result to be a tibble.
 
-### Exercise 4
+### Exercise 5
 
-Using your favorite AI, prompt it to generate SQL code that takes `babynames` and filters the dataset to show all names that have a first name starting with A after the year 2000. Make sure to provide some lines of **babynames** for the AI to use. If necessary, change the code so that the result of the pipe is not assigned to a variable. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Using your favorite AI, prompt it to generate SQL code that takes `babynames` and filters the dataset to show all names that have a first name starting with A after the year 2000. Make sure to provide some lines of **babynames** for the AI to use. If necessary, change the code so that the result of the pipe is assigned to a variable called "sql". Add the code as a replacement to the current code in your current chuck in the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -288,12 +320,11 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-CP/CR. \<\<\<\<\<\<\< HEAD
+CP/CR.
 
-```{r babynames-4}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+```{r baby-names-5}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -306,6 +337,11 @@ question_text(NULL,
 Our code:
 
 ```{r baby-names-7-test, echo = TRUE}
+con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "babynames.duckdb"
+  )
+
 sql <- "
   SELECT name, year, sex, n, prop
   FROM babynames
@@ -315,9 +351,12 @@ sql <- "
 
 A query is made up of **clauses**. There are five important clauses: `SELECT`, `FROM`, `WHERE`, `ORDER BY`, and `GROUP BY`. Every query must have the `SELECT` and `FROM` clauses and the simplest query is `SELECT * FROM table`, which selects all columns from the specified table. `WHERE` and `ORDER BY` control which rows are included and how they are ordered, and `GROUP BY` converts the query to a summary, causing aggregation to happen.
 
-### Exercise 5
+MAKE EXERCISE HERE TO READ THE SQL PROMPT
+as_tibble(dbGetQuery(con, sql))
 
-\<\<\<\<\<\<\< HEAD You just used SQL to filter the babynames database directly. Although, instead of writing raw SQL yourself, we can do the exact same task with R code using `dbplyr`. `dbplyr` is a `dplyr` backend, which means that you keep writing `dplyr` code but the backend executes it differently. In this, `dbplyr` translates to SQL; other backends include `dbplyr` which translates to `data.table`, and `multidplyr` which executes your code on multiple cores. ======= You just used SQL to filter the babynames database directly. Although, instead of writing raw SQL yourself, we can do the exact same task using dbplyr. dbplyr is a dplyr backend, which means that you keep writing dplyr code but the backend executes it differently. In this, dbplyr translates to SQL; other backends include dbplyr which translates to data.table, and multidplyr which executes your code on multiple cores. \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
+### Exercise 6
+
+ You just used SQL to filter the babynames database directly. Although, instead of writing raw SQL yourself, we can do the exact same task with R code using `dbplyr`. `dbplyr` is a `dplyr` backend, which means that you keep writing `dplyr` code but the backend executes it differently. In this, `dbplyr` translates to SQL; other backends include `dbplyr` which translates to `data.table`, and `multidplyr` which executes your code on multiple cores. 
 
 Paste this code into a new chunk in your QMD:
 
@@ -325,7 +364,9 @@ Paste this code into a new chunk in your QMD:
 babynames_db <- tbl(con, "babynames")
 ```
 
-To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000. Paste this code into the same code chunk and place your cursor on a line of the code and run `Cmd/Ctrl + Enter`.
+To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. 
+
+Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor on a line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -333,12 +374,10 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-\<\<\<\<\<\<\< HEAD
 
-```{r babynames-5}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+```{r baby-names-6}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -360,23 +399,20 @@ babynames_db |>
 
 **dplyr**’s `case_when()` is inspired by SQL’s `CASE` statement and provides a flexible way of performing different computations for different conditions. It has a special syntax that unfortunately looks like nothing else you’ll use in the tidyverse. It takes pairs that look like `condition ~ output`. `condition` must be a logical vector; when it’s `TRUE`, `output` will be used.
 
-### Exercise 6
+### Exercise 7
 
-\<\<\<\<\<\<\< HEAD Prompt AI to give you code that creates a new column of names classified as "Short" or "Long". Anything less than or equal to 5 can be classifed as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the average length of an American name (5.44) truncated.
+Paste your current pipe into AI and ask it for a continuation that uses `if_else()`, `str_length()`, and `length_class()` to create a new column of names classified as "Short" or "Long" where anything less than or equal to 5 is classified as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the truncated average length of an American name during 2009: 5. 
 
-======= Next, prompt AI to give you code that creates a new column of names classified as "Short" or "Long". Anything less than or equal to 5 can be classifed as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the average length of an American name (5.44) truncated. \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22 In the Console, run:
+ 
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-\<\<\<\<\<\<\< HEAD CP/CR.
+CP/CR.
 
-```{r babynames-6}
-=======
-CP/CR
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+```{r baby-names-7}
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -389,6 +425,7 @@ question_text(NULL,
 Our code:
 
 ```{r baby-names-9-test, echo = TRUE}
+babynames_db <- tbl(con, "babynames")
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
@@ -396,9 +433,9 @@ babynames_db |>
 
 `>=` is used when you want to find a variable that that is greater than or equal to a number. Conversely, you could use `<=` to find a variable that that is less than or equal to a number. Finally, `==` can be used to find a variable that is exactly equal to a number.
 
-### Exercise 7
+### Exercise 8
 
-\<\<\<\<\<\<\< HEAD Prompt AI to continue the pipe to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n`. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. ======= Next, prompt AI to continue the pipe to summarize the data by grouping by year and length_class, calculating the total number of babies in each group by summing n. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
+Prompt AI to continue the pipe by using `.by()` to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n` using `sum()`. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Next, prompt AI to continue the pipe to summarize the data by grouping by year and length_class, calculating the total number of babies in each group by summing n. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
 In the Console, run:
 
@@ -408,12 +445,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-7}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-8}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -426,6 +461,7 @@ question_text(NULL,
 Our code:
 
 ```{r baby-names-10-test, echo = TRUE}
+babynames_db <- tbl(con, "babynames")
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -436,9 +472,9 @@ babynames_db |>
 
 The `.by` arguement is a selection of columns to group by for just this operation, functioning as an alternative to `group_by()`. For details and examples, see `?dplyr_by`.
 
-### Exercise 8
+### Exercise 9
 
-\<\<\<\<\<\<\< HEAD Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. ======= Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
+Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -448,12 +484,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-8}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-9}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -466,6 +500,7 @@ question_text(NULL,
 Our code:
 
 ```{r baby-names-8-test, echo = TRUE}
+babynames_db <- tbl(con, "babynames")
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -478,7 +513,7 @@ babynames_db |>
 
 Ordering rows involves a straightforward translation from `arrange()` to the SQL `ORDER BY` clause.
 
-### Exercise 9
+### Exercise 10
 
 Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
 
@@ -490,12 +525,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-9}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-10}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -506,6 +539,7 @@ question_text(NULL,
 ### 
 
 ```{r baby-names-12-test, echo = TRUE}
+babynames_db <- tbl(con, "babynames")
 babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -518,7 +552,7 @@ babynames_db |>
 
 To get all the data back into R, you call `collect()`. Behind the scenes, this generates the SQL, calls `dbGetQuery()` to get the data, then turns the result into a tibble.
 
-### Exercise 10
+### Exercise 11
 
 Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to `x`.
 
@@ -528,12 +562,10 @@ Place your cursor on the line where the pipe is assigned to x, run `Cmd/Ctrl + E
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-10}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-11}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -559,16 +591,14 @@ x <- babynames_db |>
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 11
+### Exercise 12
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
-CP/CR. \<\<\<\<\<\<\< HEAD
-
-```{r babynames-11}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+CP/CR.   
+```{r baby-names-12}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -588,7 +618,7 @@ x
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 12
+### Exercise 13
 
 Go to the AI and ask it to generate R code that plots a basic line graph showing the proportion of "Short" vs. "Long" names starting with A over the years (after 2000). Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
 
@@ -602,12 +632,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-12}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-13}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -629,8 +657,9 @@ ggplot(x, aes(x = year, y = total, color = length_class)) +
   geom_line(size = 1.2) +
   labs(
     title = "Trends in Short vs Long A-Names Since 2000",
-	subtitle = "Long baby names starting with A are becoming less popular"
-    x = "Year", y = "Total Babies",
+	subtitle = "Long baby names starting with A are becoming less popular",
+    x = "Year", 
+    y = "Total Babies",
     color = "Name Length",
 	caption = "Source: Babynames"
   ) +
@@ -641,7 +670,7 @@ ggplot(x, aes(x = year, y = total, color = length_class)) +
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 13
+### Exercise 14
 
 Using the same AI, ask it to generate code for finding the top five longest names beginning with 'A' in 2009.
 
@@ -659,12 +688,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-13}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-14}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -701,7 +728,7 @@ insight
 
 The `desc()` function is used to create a descending order. This means that rows with longest names will appear first in the data frame. \###
 
-### Exercise 14
+### Exercise 15
 
 Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
@@ -711,12 +738,10 @@ quarto publish gh-pages analysis.qmd
 
 Copy/paste the resulting URL below.
 
-\<\<\<\<\<\<\< HEAD
-
-```{r babynames-14}
-=======
->>>>>>> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
-question_text(NULL,
+  
+```{r baby-names-15}
+ 
+ question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -917,7 +942,6 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-\<\<\<\<\<\<\< HEAD CP/CR. ======= CP/CR \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
 
 ```{r flights-6}
 question_text(NULL,
@@ -952,7 +976,6 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-\<\<\<\<\<\<\< HEAD CP/CR. ======= CP/CR \>\>\>\>\>\>\> 7b55ab187a84ce0c0bf498b5335d72e18dde9f22
 
 ```{r flights-7}
 question_text(NULL,
