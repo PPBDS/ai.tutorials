@@ -14,6 +14,7 @@ description: 'Tutorial for R for Data Science Integrated with AI (test)'
 ```{r setup, include = FALSE}
 library(learnr)
 library(tutorial.helpers)
+
 library(tidyverse)
 library(babynames)
 library(nycflights13)
@@ -21,60 +22,28 @@ library(DBI)
 library(duckdb)
 library(dbplyr)
 
-
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 
 # Connect to the DuckDB database
-con <- DBI::dbConnect(
-    duckdb::duckdb(),
-    dbdir = "babynames"
-)
 
+con <- dbConnect(duckdb::duckdb(), 
+				 dbdir = "data/babynames.duckdb")
 
-# Write the babynames dataset to the database
-DBI::dbWriteTable(con, "babynames", babynames::babynames, overwrite = TRUE)
-
-# Read the babynames table as a tibble
-con |> 
-  dbReadTable("babynames") |> 
-  as_tibble()
-
-sql <- "
-  SELECT name, year, sex, n, prop
-  FROM babynames
-  WHERE name LIKE 'A%' AND year > 2000
-"
 # Create a dbplyr connection to the babynames table
+
 babynames_db <- tbl(con, "babynames")
 
+
 # Example query: Filter names starting with "A" after 2000 with at least 10 occurrences
-x <- babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) |>
-  arrange(year) |>
-  collect()
 
-# Example query: Top 5 longest names starting with "A" in 2009
-top_a_2009 <- babynames_db |>
-  filter(year == 2009, str_starts(name, "A")) |>
-  mutate(name_length = str_length(name)) |>
-  collect() |>
-  arrange(desc(name_length)) |>
-  slice_head(n = 5)
-
-insight_text <- top_a_2009 |>
-  pull(name) |>
-  str_flatten(collapse = ", ", last = " and ")
-
-insight <- str_c(
-  "In 2009, the longest 'A' names were ", 
-  insight_text, 
-  "."
-)
- 
+# x <- babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+#   summarize(total = sum(n), .by = c(year, length_class)) |>
+#   arrange(year) |>
+#   collect() 
 ```
 ```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
 ```
@@ -82,26 +51,9 @@ insight <- str_c(
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-DK: Get the headers.
+
 
 ## Introduction
-
-### 
-
-## Baby names
-
-### 
-
-## Flights
-
-### 
-
-## Summary
-
-### 
-
-## Introduction
-
 ### 
 
 This section covers [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html), [Chapter 12: Logical Vectors](https://r4ds.hadley.nz/logicals.html), and [Chapter 21: Databases](https://r4ds.hadley.nz/databases.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of the [**dbplyr**](https://dbplyr.tidyverse.org/) package and how it helps to connect and work with duck databases and SQL. You will also learn about some of the[**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings, and logicial operations with `if_else()`. Some important functions which we will learn include: [`str_c()`](https://stringr.tidyverse.org/reference/str_c.html), [`str_flatten()`](https://stringr.tidyverse.org/reference/str_flatten.html), [`dbWriteTable()`](https://rdrr.io/cran/DBI/man/dbWriteTable.html), [`dbConnect()`](https://rdrr.io/cran/DBI/man/dbConnect.html)and more.
@@ -110,7 +62,7 @@ In this section we are going to focus on generating code to create a graph based
 
 ### Exercise 1
 
-Create a Github repo called `analysis`. Make sure to click the "Add a README file" check box.
+Create a Github repo called `r4ds-3`. Make sure to click the "Add a README file" check box.
 
 Connect the repo to a project on your computer using `File -> New Folder from Git ...`. Make sure to select the "Open in a new window" box.
 
@@ -209,11 +161,13 @@ question_text(NULL,
 For this tutorial, we will be working with the babynames database. At the simplest level, you can think about a database as a collection of data frames, called tables in database terminology. Like a data frame, a database table is a collection of named columns, where every value in the column is the same type.
 
 ## Baby names
-
 ### 
+
+<!-- DK: Stuff here! -->
 
 ### Exercise 1
 
+<!-- DK: delete next sentence. -->
 We begin by downloading the `babynames` package. Type in `install.packages(babynames)` into your console and press enter. 
 
 Now, put `library(babynames)` in the same code chunk and place your cursor at the beginning of the line and use `Cmd/Ctrl + Enter` to execute that line.
@@ -221,7 +175,6 @@ Now, put `library(babynames)` in the same code chunk and place your cursor at th
 CP/CR.
 
 ```{r baby-names-1}
- 
  question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -237,12 +190,9 @@ CP/CR.
 <!-- DK: Knowledge drop? Maybe: "Note that `babynames.duckdb` is not a ready to use database. It is a binary file with all the information we need in order to create a database." Or something?  -->
 
 
-
-DK: DANGER! DANGER! 
-
 ### Exercise 2
 
-Setting up a client-server or cloud DBMS would be a pain for this tutorial, so we’ll instead use an in-process DBMS that lives entirely in an R package: `duckdb`. Thanks to the magic of DBI, the only difference between using `duckdb` and any other DBMS is how you’ll connect to the database.
+<!-- DK: Rewrite. Use download.file().  -->
 
 Ask AI how to connect the `babynames` package to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
@@ -254,7 +204,6 @@ show_file("analysis.qmd", chunk = "Last")
 ```
 
 ```{r baby-names-2}
- 
  question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -295,19 +244,16 @@ question_text(NULL,
 
 ### 
 
-Our code:
 
-```{r baby-names-3-test, echo = TRUE, eval = FALSE}
 
-dbWriteTable(con, "babynames", babynames, overwrite = TRUE)
-
-```
 
 ### 
 
 
 
 ### Exercise 4
+
+<!-- DK: Going to fast. What are the tables in this database? -->
 
 Ask AI how to start a pipe from `con` to retrieve the contents of the `babynames` dataset using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
@@ -345,7 +291,7 @@ show_file("analysis.qmd", chunk = "Last")
 CP/CR.
 
 ```{r baby-names-5}
- 
+
  question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -358,7 +304,7 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-7-test, echo = TRUE}
+```{r baby-names-5-test, echo = TRUE}
 
 sql <- "
   SELECT name, year, sex, n, prop
@@ -384,7 +330,7 @@ question_text(NULL,
 
 ###
 
-```{r baby-names-5-test, echo = TRUE}
+```{r baby-names-6-test, echo = TRUE}
 sql <- "
   SELECT name, year, sex, n, prop
   FROM babynames
@@ -420,8 +366,7 @@ show_file("analysis.qmd", chunk = "Last")
 ```
 
 ```{r baby-names-7}
- 
- question_text(NULL,
+question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -433,10 +378,10 @@ show_file("analysis.qmd", chunk = "Last")
 
 Our code:
 
-```{r baby-names-8a-test, echo = TRUE}
-babynames_db <- tbl(con, "babynames")
-babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) 
+```{r baby-names-7-test, echo = TRUE}
+# babynames_db <- tbl(con, "babynames")
+# babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) 
 ```
 
 ### 
@@ -467,11 +412,11 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-9-test, echo = TRUE}
-babynames_db <- tbl(con, "babynames")
-babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
+```{r baby-names-8-test, echo = TRUE}
+
+# babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
 ```
 
 `>=` is used when you want to find a variable that that is greater than or equal to a number. Conversely, you could use `<=` to find a variable that that is less than or equal to a number. Finally, `==` can be used to find a variable that is exactly equal to a number.
@@ -490,7 +435,6 @@ CP/CR.
 
   
 ```{r baby-names-9}
- 
  question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -503,12 +447,11 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-10-test, echo = TRUE}
-babynames_db <- tbl(con, "babynames")
-babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) 
+```{r baby-names-9-test, echo = TRUE}
+# babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+#   summarize(total = sum(n), .by = c(year, length_class)) 
 ```
 
 ### 
@@ -542,14 +485,14 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-8-test, echo = TRUE}
-babynames_db <- tbl(con, "babynames")
-babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) |>
-  arrange(year) |>
-  collect()
+```{r baby-names-10-test, echo = TRUE}
+# babynames_db <- tbl(con, "babynames")
+# babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+#   summarize(total = sum(n), .by = c(year, length_class)) |>
+#   arrange(year) |>
+#   collect()
 ```
 
 ### 
@@ -581,14 +524,14 @@ CP/CR.
 
 ### 
 
-```{r baby-names-12-test, echo = TRUE}
-babynames_db <- tbl(con, "babynames")
-babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) |>
-  arrange(year) |>
-  collect()
+```{r baby-names-11-test, echo = TRUE}
+# babynames_db <- tbl(con, "babynames")
+# babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+#   summarize(total = sum(n), .by = c(year, length_class)) |>
+#   arrange(year) |>
+#   collect()
 ```
 
 ### 
@@ -620,13 +563,13 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-13-test, echo = TRUE}
-x <- babynames_db |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) |>
-  arrange(year) |>
-  collect()
+```{r baby-names-12-test, echo = TRUE}
+# x <- babynames_db |>
+#   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+#   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+#   summarize(total = sum(n), .by = c(year, length_class)) |>
+#   arrange(year) |>
+#   collect()
 
 ```
 
@@ -640,8 +583,7 @@ Within the Console, type `x`, which we previously assigned to a pipe and ran in 
 
 CP/CR.   
 ```{r baby-names-13}
- 
- question_text(NULL,
+question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -653,7 +595,7 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-11-test, echo = TRUE}
+```{r baby-names-13-test, echo = TRUE}
 x
 ```
 
@@ -688,7 +630,7 @@ CP/CR.
 
 ### 
 Our code:
-```{r baby-names-15-test, echo = TRUE}
+```{r baby-names-14-test, echo = TRUE}
 x <- babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -746,7 +688,7 @@ CP/CR.
 
 Our code:
 
-```{r baby-names-16-test, echo = TRUE}
+```{r baby-names-15-test, echo = TRUE}
 top_a_2009 <- babynames_db |>
   filter(year == 2009, str_starts(name, "A")) |>
   mutate(name_length = str_length(name)) |>
@@ -856,7 +798,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 Our code:
 
-```{r flights-2a-test, echo = TRUE}
+```{r flights-2-test, echo = TRUE}
 con <- DBI::dbConnect(
     duckdb::duckdb(),
     dbdir = "flights"
