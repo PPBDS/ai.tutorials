@@ -21,11 +21,17 @@ library(DBI)
 library(duckdb)
 library(dbplyr)
 
+
+knitr::opts_chunk$set(echo = FALSE)
+options(tutorial.exercise.timelimit = 600, 
+        tutorial.storage = "local") 
+
 # Connect to the DuckDB database
 con <- DBI::dbConnect(
     duckdb::duckdb(),
     dbdir = "babynames"
 )
+
 
 # Write the babynames dataset to the database
 DBI::dbWriteTable(con, "babynames", babynames::babynames, overwrite = TRUE)
@@ -68,12 +74,7 @@ insight <- str_c(
   insight_text, 
   "."
 )
-if (exists("con")) {
-  DBI::dbDisconnect(con, shutdown = TRUE)
-}
-knitr::opts_chunk$set(echo = FALSE)
-options(tutorial.exercise.timelimit = 600, 
-        tutorial.storage = "local") 
+ 
 ```
 ```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
 ```
@@ -686,7 +687,7 @@ CP/CR.
 ```
 
 ### 
-
+Our code:
 ```{r baby-names-15-test, echo = TRUE}
 x <- babynames_db |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
