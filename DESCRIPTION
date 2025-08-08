@@ -1,6 +1,6 @@
 Package: ai.tutorials
 Title: Tutorials for Learning R by Using AI
-Version: 0.0.9001
+Version: 0.0.9002
 Authors@R: 
     c(
     person(given = "David",
@@ -28,6 +28,6 @@ VignetteBuilder:
     quarto  
 Config/testthat/edition: 3 
 Remotes: 
-    PPBDS/primer.data,
+    PPBDS/tutorial.helpers,
 BugReports: https://github.com/ppbds/ai.tutorials/issues
 URL: https://ppbds.github.io/ai.tutorials/
