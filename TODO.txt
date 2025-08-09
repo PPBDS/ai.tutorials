@@ -86,11 +86,10 @@ There are 3 to 5 Sections, each begins with some data processing and/or manipula
 
 Most R4DS tutorials require the use of some strange data structures, like arrow files, spreadsheets and what not. We want to maintain our own copies of those starter files, even though they originally come from the web somewhere. 
 
-* These are stored in `inst/extdata`. 
+* These are stored in the `data` directory of the tutorial in which they are used. 
 
-* Document where these files come from in a brief note in `inst/extdata/README.txt`.
+* Document where these files come from in a brief note in `inst/extdata/README.txt`. (Maybe this should be elsewhere?) Or maybe there should be a .R script which recreates the files in that directory? Then, if you want to use the new ones, you move them over by hand to the relevant data directory.
 
 * The files should be much less than 100 megabytes each because we want students to be able to easily download them and back them up in their personal repos.
 
-* We exclude `inst/extdata` from the R package. Which is OK! We need to keep the size of the package down if we want this to be on CRAN someday. 
-Sruthi
+* The big problem is that if we keep the datasets in the `data` directories, then we can't put the [ackage on CRAN because it will be too big. Solution? Maybe we just keep all the data in extdata, then there is a script which downloads the files and puts them in the correct `data` directories. That script might be run by hand, sort of like the script which sets up tinytex. Appropriate checks would then need to be added to the tutorials so that they might report if the data is not there.
