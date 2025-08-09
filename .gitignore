@@ -1,2 +1,12 @@
 
 docs
+
+# Match all subdirectories under inst/tutorials/
+inst/tutorials/*/
+
+# But exclude data and images subdirectories
+!inst/tutorials/*/data/
+!inst/tutorials/*/images/
+
+# And exclude .Rmd files
+!inst/tutorials/*/*.Rmd
