@@ -17,18 +17,21 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     learnr,
-    tutorial.helpers
+    tutorial.helpers,
+    duckdb,
+    DBI,
+    dbplyr,
+    tidyverse
 Suggests: 
     babynames,
     nycflights13,
     quarto,
     rsconnect,
-    testthat (>= 3.0.0),
-    tidyverse
+    testthat (>= 3.0.0)
 VignetteBuilder: 
     quarto  
 Config/testthat/edition: 3 
 Remotes: 
-    PPBDS/tutorial.helpers,
+    PPBDS/tutorial.helpers
 BugReports: https://github.com/ppbds/ai.tutorials/issues
 URL: https://ppbds.github.io/ai.tutorials/
