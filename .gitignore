@@ -1,7 +1,7 @@
 docs
 
-# Ignore everything in inst/tutorials
-inst/tutorials/*
+# Ignore everything in inst/tutorials recursively
+inst/tutorials/**
 
 # But don't ignore .Rmd files anywhere in inst/tutorials
 !inst/tutorials/**/*.Rmd
@@ -12,3 +12,5 @@ inst/tutorials/*
 
 # Need to unignore intermediate directories for traversal
 !inst/tutorials/*/
+!inst/tutorials/*/*/
+!inst/tutorials/*/*/*/
