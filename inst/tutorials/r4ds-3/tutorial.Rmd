@@ -72,9 +72,11 @@ x <- departure_data |>
 ## Introduction
 ### 
 
-This section covers [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html), [Chapter 12: Logical Vectors](https://r4ds.hadley.nz/logicals.html), and [Chapter 21: Databases](https://r4ds.hadley.nz/databases.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of the [**dbplyr**](https://dbplyr.tidyverse.org/) package and how it helps to connect and work with duck databases and SQL. You will also learn about some of the[**stringr**](https://stringr.tidyverse.org/) package: how to create, combine, and extract strings, and logicial operations with `if_else()`. Some important functions which we will learn include: [`str_c()`](https://stringr.tidyverse.org/reference/str_c.html), [`str_flatten()`](https://stringr.tidyverse.org/reference/str_flatten.html), [`dbWriteTable()`](https://rdrr.io/cran/DBI/man/dbWriteTable.html), [`dbConnect()`](https://rdrr.io/cran/DBI/man/dbConnect.html)and more.
+This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html), [Chapter 14: Strings](https://r4ds.hadley.nz/strings.html), [Chapter 15: Regular Expressions](https://r4ds.hadley.nz/regexps.html), [Chapter 12: Logical Vectors](https://r4ds.hadley.nz/logicals.html), and [Chapter 21: Databases](https://r4ds.hadley.nz/databases.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
 
-In this section we are going to focus on generating code to create a graph based on a dataset called `babynames`. The `babynames` is a dataset which contained names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
+You will learn about working with numeric data and text patterns using core tidyverse packages like **readr**, **dplyr**, and **stringr**, as well as database interaction using **dbplyr**. Important functions include: [parse_number()](https://readr.tidyverse.org/reference/parse_number.html), [is.na()](https://rdrr.io/r/base/NA.html), [str_detect()](https://stringr.tidyverse.org/reference/str_detect.html), [pmax()](https://rdrr.io/r/base/Extremes.html), [`str_c()`](https://stringr.tidyverse.org/reference/str_c.html), [`str_flatten()`](https://stringr.tidyverse.org/reference/str_flatten.html), [`dbWriteTable()`](https://rdrr.io/cran/DBI/man/dbWriteTable.html), and [`dbConnect()`](https://rdrr.io/cran/DBI/man/dbConnect.html). 
+
+You will also explore logical operations with `if_else()`, and concepts like integer division and modulo. This knowledge will help you manipulate numbers, strings, logical vectors, and connect with DuckDB databases using SQL from within R.
 
 ### Exercise 1
 
@@ -178,7 +180,17 @@ For this tutorial, we will be working with the babynames database. At the simple
 
 ## Baby names
 ### 
+In this section we are going to focus on generating code to create a graph based on a database called `nameby_year.duckdb`. The data in this database comes from `babynames`, which is a dataset that contains names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
+Key functions you'll learn:
+
+`DBI::dbConnect()` - Creates a connection to a database
+`dbReadTable()` - Reads a complete table from a database into a data frame
+`as_tibble()` - Converts data frames to tibbles for better printing and consistency
+`tbl()` - Creates a lazy reference to a database table for use with dbplyr
+`dbGetQuery()` - Executes a SQL query and returns the results as a data frame
+
+ <!--SG: Should I list them out like this? -->
 
 ### Exercise 1
 
@@ -335,6 +347,7 @@ as_tibble(dbGetQuery(con_names, sql))
 
 ###
 
+`as_tibble()` turns an existing object, such as a data frame or matrix, into a tibble, a data frame with class `tbl_df`. This is in contrast with `tibble()`, which builds a tibble from individual columns.
 
 ### Exercise 6
 
@@ -344,16 +357,6 @@ Replace the code in your current code chunk in your new QMD by pasting this code
 
 ```         
  dbplyr_names <- tbl(con, "babynames")
-```
-
-To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. 
-
-Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
 ```
 CP/CR.
 
@@ -368,34 +371,21 @@ question_text(NULL,
 
 ### 
 
-Our code:
-
-```{r baby-names-6-test, echo = TRUE}
- dbplyr_names <- tbl(con_names, "babynames")
- dbplyr_names |>
- filter(str_starts(name, "A"), year > 2000, n >= 10) 
-```
-
-### 
-
-**dplyr**’s `case_when()` is inspired by SQL’s `CASE` statement and provides a flexible way of performing different computations for different conditions. It has a special syntax that unfortunately looks like nothing else you’ll use in the tidyverse. It takes pairs that look like `condition ~ output`. `condition` must be a logical vector; when it’s `TRUE`, `output` will be used.
+To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. This is called a lazy table, which is a representation of a database table or query result that is not immediately materialized in R's memory. Instead, `dbplyr` translates `dplyr` operations performed on this lazy table into SQL queries. These queries are then sent to the database and executed there, with the results only being retrieved into R when explicitly requested (e.g., using collect()). 
 
 ### Exercise 7
 
-Paste your current pipe into AI and ask it for a continuation that uses `if_else()`, `str_length()`, and `length_class()` to create a new column of names classified as "Short" or "Long", where anything less than or equal to 5 is classified as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the truncated average length of an American name during 2009: 5. 
-
-Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
+Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
-
 CP/CR.
 
 ```{r baby-names-7}
- question_text(NULL,
+question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
@@ -409,15 +399,18 @@ Our code:
 
 ```{r baby-names-7-test, echo = TRUE}
  dbplyr_names |>
-  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
+ filter(str_starts(name, "A"), year > 2000, n >= 10) 
 ```
 
-`>=` is used when you want to find a variable that that is greater than or equal to a number. Conversely, you could use `<=` to find a variable that that is less than or equal to a number. Finally, `==` can be used to find a variable that is exactly equal to a number.
+### 
+
+**dplyr**’s `case_when()` is inspired by SQL’s `CASE` statement and provides a flexible way of performing different computations for different conditions. It has a special syntax that unfortunately looks like nothing else you’ll use in the tidyverse. It takes pairs that look like `condition ~ output`. `condition` must be a logical vector; when it’s `TRUE`, `output` will be used.
 
 ### Exercise 8
 
-Prompt AI to continue the pipe by using `.by()` to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n` using `sum()`. Add the code as a continuation of your pipe to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
+Paste your current pipe into AI and ask it for a continuation that uses `if_else()`, `str_length()`, and `length_class()` to create a new column of names classified as "Short" or "Long", where anything less than or equal to 5 is classified as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the truncated average length of an American name during 2009: 5. 
+
+Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
 
 In the Console, run:
 
@@ -427,7 +420,6 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-  
 ```{r baby-names-8}
  question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -442,19 +434,16 @@ CP/CR.
 Our code:
 
 ```{r baby-names-8-test, echo = TRUE}
-  dbplyr_names |>
+ dbplyr_names |>
   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-  summarize(total = sum(n), .by = c(year, length_class)) 
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
 ```
 
-### 
-
-The `.by` arguement is a selection of columns to group by for just this operation, functioning as an alternative to `group_by()`. For details and examples, see `?dplyr_by`.
+`>=` is used when you want to find a variable that that is greater than or equal to a number. Conversely, you could use `<=` to find a variable that that is less than or equal to a number. Finally, `==` can be used to find a variable that is exactly equal to a number.
 
 ### Exercise 9
 
-Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
+Prompt AI to continue the pipe by using `.by()` to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n` using `sum()`. Add the code as a continuation of your pipe to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
 
 In the Console, run:
 
@@ -466,7 +455,6 @@ CP/CR.
 
   
 ```{r baby-names-9}
- 
  question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -480,21 +468,19 @@ CP/CR.
 Our code:
 
 ```{r baby-names-9-test, echo = TRUE}
- dbplyr_names |>
-filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-summarize(total = sum(n), .by = c(year, length_class)) |>
-arrange(year) |>
-collect()
+  dbplyr_names |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+  mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+  summarize(total = sum(n), .by = c(year, length_class)) 
 ```
 
 ### 
 
-Ordering rows involves a straightforward translation from `arrange()` to the SQL `ORDER BY` clause.
+The `.by` arguement is a selection of columns to group by for just this operation, functioning as an alternative to `group_by()`. For details and examples, see `?dplyr_by`.
 
 ### Exercise 10
 
-Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your last code chunk with our code in your QMD.
+Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -517,26 +503,30 @@ CP/CR.
 
 ### 
 
+Our code:
+
 ```{r baby-names-10-test, echo = TRUE}
-  dbplyr_names |>
-   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-   summarize(total = sum(n), .by = c(year, length_class)) |>
-   arrange(year) |>
-   collect()
+ dbplyr_names |>
+filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+summarize(total = sum(n), .by = c(year, length_class)) |>
+arrange(year) |>
+collect()
 ```
 
 ### 
 
-To get all the data back into R, you call `collect()`. Behind the scenes, this generates the SQL, calls `dbGetQuery()` to get the data, then turns the result into a tibble.
+Ordering rows involves a straightforward translation from `arrange()` to the SQL `ORDER BY` clause.
 
 ### Exercise 11
 
-Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to `x`.
+Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your last code chunk with our code in your QMD.
 
-`Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved fitted object.
+In the Console, run:
 
-Place your cursor on the line where the pipe is assigned to x, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `x`.
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
 
 CP/CR.
 
@@ -553,9 +543,45 @@ CP/CR.
 
 ### 
 
+```{r baby-names-11-test, echo = TRUE}
+  dbplyr_names |>
+   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
+   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
+   summarize(total = sum(n), .by = c(year, length_class)) |>
+   arrange(year) |>
+   collect()
+```
+
+### 
+
+To get all the data back into R, you call `collect()`. Behind the scenes, this generates the SQL, calls `dbGetQuery()` to get the data, then turns the result into a tibble.
+
+### Exercise 12
+
+Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to `x`.
+
+`Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved fitted object.
+
+Place your cursor on the line where the pipe is assigned to x, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `x`.
+
+CP/CR.
+
+  
+```{r baby-names-12}
+ 
+ question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+### 
+
 Our code:
 
-```{r baby-names-11-test, echo = TRUE}
+```{r baby-names-12-test, echo = TRUE}
  x <-  dbplyr_names |>
    filter(str_starts(name, "A"), year > 2000, n >= 10) |>
    mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -569,12 +595,12 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 12
+### Exercise 13
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.   
-```{r baby-names-12}
+```{r baby-names-13}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -587,53 +613,8 @@ question_text(NULL,
 
 Our code:
 
-```{r baby-names-12-test, echo = TRUE}
+```{r baby-names-13-test, echo = TRUE}
 x
-```
-
-### 
-
-<!-- XX: Insert a knowledge drop related to this project. -->
-
-### Exercise 13
-
-Go to the AI and ask it to generate R code that plots a basic line graph showing the proportion of "Short" vs. "Long" names starting with A over the years (after 2000). Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
-
-Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code to a new code cell. Run `Cmd/Ctrl + Shift + K`.
-
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
-
-CP/CR.
-
-  
-```{r baby-names-13}
- 
- question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 5)
-```
-
-### 
-Our code:
-```{r baby-names-13-test, echo = TRUE, fig.keep = FALSE}
-ggplot(x, aes(x = year, y = total, color = length_class)) +
-  geom_line(size = 1.2) +
-  labs(
-    title = "Trends in Short vs Long A-Names Since 2000",
-	subtitle = "Long baby names starting with A are becoming less popular",
-    x = "Year", 
-    y = "Total Babies",
-    color = "Name Length",
-	caption = "Source: Babynames"
-  ) +
-  theme_minimal()
 ```
 
 ### 
@@ -658,7 +639,6 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-  
 ```{r baby-names-14}
  
  question_text(NULL,
@@ -700,6 +680,51 @@ The `desc()` function is used to create a descending order. This means that rows
 
 ### Exercise 15
 
+Ask AI to generate R code that plots a basic line graph showing the proportion of "Short" vs. "Long" names starting with A over the years (after 2000). Mention you want to use the data from `x` and copy and paste the `x` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
+
+Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code as a replacement to the code in your current code cell. Run `Cmd/Ctrl + Shift + K`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r baby-names-15}
+ 
+ question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+### 
+
+Our code:
+```{r baby-names-15-test, fig.keep = FALSE, echo = TRUE}
+ggplot(x, aes(x = year, y = total, color = length_class)) +
+  geom_line(size = 1.2) +
+  labs(
+    title = "Trends in Short vs Long A-Names Since 2000",
+	subtitle = "Long baby names starting with A are becoming less popular",
+    x = "Year", 
+    y = "Total Babies",
+    color = "Name Length",
+	caption = "Source: Babynames"
+  ) +
+  theme_minimal()
+```
+
+### 
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 16
+
 Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
 ```         
@@ -709,7 +734,7 @@ quarto publish gh-pages analysis.qmd
 Copy/paste the resulting URL below.
 
   
-```{r baby-names-15}
+```{r baby-names-16}
  
  question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -723,11 +748,9 @@ Copy/paste the resulting URL below.
 
 Commit/push everything.
 
-<!--  end the tutorial here-->
 
 ## Flights
-
-### Introduction
+### 
 
 This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) and [Chapter 15: Regular Expressions](https://r4ds.hadley.nz/regexps.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of working with numeric data and text patterns using core Tidyverse packages: readr, dplyr, and stringr. Important functions you'll learn about include: [parse_number()](https://readr.tidyverse.org/reference/parse_number.html) [is.na()](https://rdrr.io/r/base/NA.html) [str_detect()](https://stringr.tidyverse.org/reference/str_detect.html) [pmax()](https://rdrr.io/r/base/Extremes.html) We will also learn about integer division and moduluo.
 
