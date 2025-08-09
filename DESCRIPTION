@@ -20,6 +20,8 @@ Imports:
     tutorial.helpers
 Suggests: 
     babynames,
+    DBI,
+    duckdb,
     nycflights13,
     quarto,
     rsconnect,
