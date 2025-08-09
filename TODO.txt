@@ -1,10 +1,9 @@
 ## Sruthi
 
-One week left!
-rmarkdown::run("tutorial.Rmd")
-Get rid of extra newline text wrap. done
 
-Backticks around functions or anything else which you can type at the Console or Terminal. done
+
+
+
 
 Add blank lines around things like ###, code chunks and so on. need to look through again
 
@@ -12,7 +11,7 @@ No "Next, we .." done
 
 Our goal is to finish the other 4 tutorials in this collection.
 
-Let's do r4ds-2 next. Need to find some data you like, then create speadhseets versions of that data, then put those xls files in extdata, editing README.txt as you see fit. Think about how you want to structure the spreadsheets, given what you want students to learn. Perhaps the only concrete example is that it may be nice to use more than one sheet in the book. Then those spreadsheets serve as the basis of the two or three sections.
+Let's do r4ds-2 next. Need to find some data you like, then create spreadhseets versions of that data, then put those xls files in extdata, editing README.txt as you see fit. Think about how you want to structure the spreadsheets, given what you want students to learn. Perhaps the only concrete example is that it may be nice to use more than one sheet in the book. Then those spreadsheets serve as the basis of the two or three sections.
 
 Where data? Find some plots you think are cool which have the data available.
 
