@@ -1,7 +1,7 @@
 ## Sruthi
 
 One week left!
-
+rmarkdown::run("tutorial.Rmd")
 Get rid of extra newline text wrap. done
 
 Backticks around functions or anything else which you can type at the Console or Terminal. done
