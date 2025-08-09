@@ -26,20 +26,17 @@ knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 
-# Connect to the DuckDB database
-
+# duck db connections
 con_names <- dbConnect(duckdb::duckdb(), 
-				 dbdir = "data/babynames.duckdb")
+				 dbdir = "data/nameby_year.duckdb")
 con_air <- dbConnect(duckdb::duckdb(), 
 				 dbdir = "data/flights.duckdb")
 
-# Create a dbplyr connection to the babynames table
+#making lazy table for dbplyr use
+dbplyr_names <- tbl(con_names, "babynames")
+dbplyr_nycflights <- tbl(con_air, "flights")
 
- dbplyr_names <- tbl(con_names, "babynames")
-
-
-# Example query: Filter names starting with "A" after 2000 with at least 10 occurrences
-
+#babynames plot
 x <-  dbplyr_names |>
 filter(str_starts(name, "A"), year > 2000, n >= 10) |>
 mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -47,13 +44,13 @@ summarize(total = sum(n), .by = c(year, length_class)) |>
 arrange(year) |>
 collect() 
 
-#Flights
- dbplyr_nycflights <- tbl(con_air, "flights")
+#flights filtering code
 departure_data <- flights |>
   select(dep_time, sched_dep_time, dep_delay, tailnum) |>
   mutate(tail_number = parse_number(tailnum)) |>
   filter(!is.na(dep_time))
 
+#flights plot
 x <- departure_data |>
   mutate(
     dep_hour = dep_time %/% 100,
@@ -185,14 +182,14 @@ For this tutorial, we will be working with the babynames database. At the simple
 
 ### Exercise 1
 
-We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using `download.file()`. This adds the database file, `babynames.duckdb`, to our working directory so we can use it in this tutorial.
+We begin by downloading a DuckDB version of the babynames dataset directly from GitHub using `download.file()`. This adds the database file, `nameby_year.duckdb`, to our working directory so we can use it in this tutorial.
 
 In the Console, run:
 
 ```         
 download.file(
-  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/babynames.duckdb",
-  destfile = "babynames.duckdb"
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/tutorials/r4ds-3/data/nameby_year.duckdb",
+  destfile = "nameby_year.duckdb"
 )
 ```
 
@@ -210,11 +207,11 @@ CP/CR.
 
 ### 
 
-`babynames.duckdb` is currently a collection of binary files and is not ready to use until we create a database connection using `DBI::dbConnect()`. The first argument selects the DBMS, then the second and subsequent arguments describe how to connect to it (i.e. where it lives and the credentials that you need to access it).
+`nameby_year.duckdb` is currently a collection of binary files and is not ready to use until we create a database connection using `DBI::dbConnect()`. The first argument selects the DBMS, then the second and subsequent arguments describe how to connect to it (i.e. where it lives and the credentials that you need to access it).
 
 ### Exercise 2
 
-Ask AI how to connect the `babynames` package to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con_names`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Ask AI how to connect the `nameby_year.duckdb` database to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con_names`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -239,7 +236,7 @@ Our code:
 ```{r baby-names-2-hint-1, echo = TRUE, eval = FALSE}
 con_names <- DBI::dbConnect(
     duckdb::duckdb(),
-    dbdir = "babynames"
+    dbdir = "nameby_year.duckdb"
   )
 ```
 
@@ -249,7 +246,9 @@ This creates a connection to the database and assigns it to the variable con, sh
 ### Exercise 3
 
 <!-- DK: Going to fast. What are the tables in this database? -->
-Ask AI how to start a pipe from `con` to retrieve the contents of the `babynames` dataset using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
+The `nameby_year.duckdb` database contains one table: `babynames`.
+
+Ask AI how to start a pipe from `con` to retrieve the contents of the `babynames` table from the `nameby_year.duckdb` database using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
 ```{r baby-names-3}
 question_text(NULL,
@@ -341,7 +340,7 @@ as_tibble(dbGetQuery(con_names, sql))
 
 You just used SQL to filter the babynames database directly and ran a query to see your results. Although, instead of writing raw SQL yourself, we can do the exact same task with R code using `dbplyr`. `dbplyr` is a `dplyr` backend, which means that you keep writing `dplyr` code but the backend executes it differently. In this, `dbplyr` translates to SQL; other backends include `dbplyr` which translates to `data.table`, and `multidplyr` which executes your code on multiple cores. 
 
-Paste this code into a new chunk in your QMD:
+Replace the code in your current code chunk in your new QMD by pasting this code instead:
 
 ```         
  dbplyr_names <- tbl(con, "babynames")
@@ -349,13 +348,14 @@ Paste this code into a new chunk in your QMD:
 
 To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. 
 
-Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor on a line of the code and run `Cmd/Ctrl + Enter`.
+Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
+CP/CR.
 
 ```{r baby-names-6}
 question_text(NULL,
@@ -382,9 +382,12 @@ Our code:
 
 ### Exercise 7
 
-Paste your current pipe into AI and ask it for a continuation that uses `if_else()`, `str_length()`, and `length_class()` to create a new column of names classified as "Short" or "Long" where anything less than or equal to 5 is classified as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the truncated average length of an American name during 2009: 5. 
+Paste your current pipe into AI and ask it for a continuation that uses `if_else()`, `str_length()`, and `length_class()` to create a new column of names classified as "Short" or "Long", where anything less than or equal to 5 is classified as short. Add this code as a continuation of your pipe to the same chunk in your QMD. Since the `babynames` is a data set which contains names used for babies from 1880 to 2017 in America, we are using the truncated average length of an American name during 2009: 5. 
 
- 
+Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
@@ -414,7 +417,7 @@ Our code:
 
 ### Exercise 8
 
-Prompt AI to continue the pipe by using `.by()` to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n` using `sum()`. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Next, prompt AI to continue the pipe to summarize the data by grouping by year and length_class, calculating the total number of babies in each group by summing n. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
+Prompt AI to continue the pipe by using `.by()` to summarize the data by grouping by `year` and `length_class`, calculating the total number of babies in each group by summing `n` using `sum()`. Add the code as a continuation of your pipe to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`. 
 
 In the Console, run:
 
@@ -451,7 +454,7 @@ The `.by` arguement is a selection of columns to group by for just this operatio
 
 ### Exercise 9
 
-Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
+Prompt the AI to arrange the summarized results in ascending order by `year`, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. Now, prompt the AI to arrange the summarized results in ascending order by year, and collect the results from the database into a local R tibble for further use, such as plotting. Add the code to your QMD in the same chunk. Place your cursor on the first line of the code in your current code chunk at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -491,7 +494,7 @@ Ordering rows involves a straightforward translation from `arrange()` to the SQL
 
 ### Exercise 10
 
-Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
+Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your last code chunk with our code in your QMD.
 
 In the Console, run:
 
@@ -515,7 +518,6 @@ CP/CR.
 ### 
 
 ```{r baby-names-10-test, echo = TRUE}
-  dbplyr_names <- tbl(con_names, "babynames")
   dbplyr_names |>
    filter(str_starts(name, "A"), year > 2000, n >= 10) |>
    mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
@@ -735,7 +737,7 @@ In this section we are going to focus on generating code to create a graph based
 
 ### Exercise 1
 
-We begin by downloading a DuckDB version of the flights dataset directly from GitHub using download.file(). This stores the database file (babynames.duckdb) in our working directory so we can use it in this tutorial. In the Console, run:
+We begin by downloading a DuckDB version of the flights dataset directly from GitHub using download.file(). This stores the database file (nameby_year.duckdb) in our working directory so we can use it in this tutorial. In the Console, run:
 
 ```         
 download.file(
