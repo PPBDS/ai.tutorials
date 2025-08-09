@@ -1,14 +1,16 @@
 docs
 
-# Ignore all subdirectories under inst/tutorials/
-inst/tutorials/*/
+# Ignore everything in inst/tutorials recursively
+inst/tutorials/**
 
-# But un-ignore tutorial folders themselves
-!inst/tutorials/*
+# But don't ignore .Rmd files anywhere in inst/tutorials
+!inst/tutorials/**/*.Rmd
 
-# Un-ignore data and images subdirectories and all files within data/
-!inst/tutorials/*/data/
-!inst/tutorials/*/data/**
+# Don't ignore data and images directories and their contents
+!inst/tutorials/**/data/**
+!inst/tutorials/**/images/**
 
-!inst/tutorials/*/images/
-!inst/tutorials/*/*.Rmd
+# Need to unignore intermediate directories for traversal
+!inst/tutorials/*/
+!inst/tutorials/*/*/
+!inst/tutorials/*/*/*/

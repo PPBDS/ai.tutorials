@@ -8,7 +8,6 @@
 tut_paths <- tutorial.helpers::return_tutorial_paths("ai.tutorials")
 
 test_that("All tutorials can be knit without error", {
-  skip_on_cran()
   expect_null(
     tutorial.helpers::knit_tutorials(tut_paths)
   )

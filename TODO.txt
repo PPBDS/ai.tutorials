@@ -1,18 +1,21 @@
 ## Sruthi
 
-One week left!
-rmarkdown::run("tutorial.Rmd")
-Get rid of extra newline text wrap. done
+Random knowledge drops are fine.
 
-Backticks around functions or anything else which you can type at the Console or Terminal. done
+Take a break from r4ds-3. (I will work on it.)
 
-Add blank lines around things like ###, code chunks and so on. need to look through again
+Let's do r4ds-2 next. Need to find some data you like, then create spreadhseets versions of that data, then put those xls files in extdata, editing README.txt as you see fit. Think about how you want to structure the spreadsheets, given what you want students to learn. Perhaps the only concrete example is that it may be nice to use more than one sheet in the book. Then those spreadsheets serve as the basis of the two or three sections.
 
-No "Next, we .." done
+Email when you pick your graphic. Also, be sure to confirm that AI can give the code for the graphics.
+
+Add Introduction.
+
+Start collecting knowledge drops at the bottom. (Or copy them over.)
+
+Look at the chapters, and confirm the packages and the functions you want to be sure to use and/or mention.
+
 
 Our goal is to finish the other 4 tutorials in this collection.
-
-Let's do r4ds-2 next. Need to find some data you like, then create speadhseets versions of that data, then put those xls files in extdata, editing README.txt as you see fit. Think about how you want to structure the spreadsheets, given what you want students to learn. Perhaps the only concrete example is that it may be nice to use more than one sheet in the book. Then those spreadsheets serve as the basis of the two or three sections.
 
 Where data? Find some plots you think are cool which have the data available.
 
@@ -20,16 +23,6 @@ Where data? Find some plots you think are cool which have the data available.
 
 Think ahead about r4ds-4. Note that it explores date-times, missing, joins. 
 
-
-
-
-Find some data sources. 
-
-    * Begin by re-reading these three data source chapters: spreadsheets, (duck) databases, and arrow. Maybe we really just start with looking for data that we like, data that we know makes a cool plot.
-
-    * Go looking for cool examples these data sources, stuff that would be fun to play with and make a cool plot. 
-Found a titanic spreadsheet and world happiness data csv
-    
 
 
 
