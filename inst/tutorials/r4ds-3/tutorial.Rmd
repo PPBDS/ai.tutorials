@@ -754,7 +754,6 @@ This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.
 In this section we are going to focus on generating code to create a graph based on a dataset called `nycflights13`. The `nycflights13` is a dataset which contains information about all flights departing from New York City airports in 2013. We will be using AI to generate the code for us and then we will break down the functions within the code and how they work. 
 
 
-
 ### Exercise 1
 
 We begin by downloading a DuckDB version of the flights dataset directly from GitHub using download.file(). This stores the database file (nameby_year.duckdb) in our working directory so we can use it in this tutorial. In the Console, run:
@@ -777,12 +776,15 @@ question_text(NULL,
 	rows = 5)
 ```
 
+###
+
 
 ### Exercise 2
 
 Ask AI how to connect the `flights` table from `nycflights13` to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con_air`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
+
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
@@ -812,10 +814,11 @@ con_air <- DBI::dbConnect(
 
 ### 
 
-You can check that the data is loaded correctly by using the `dbListTables()` function on `con_air` to lists all tables in the database.
+Run `dbListTables()` on `con_air` to lists all tables in the database.
 
 
 ### Exercise 3
+
 The `nycflights13.duckdb` database has multiple tables: `airlines`, `airports`, `flights`, `planes`, and `weather`.
 
 Ask AI how to start a pipe from `con_air` to retrieve the contents of the `flights` table from the `nycflights13.duckdb` database using `dbReadTable()` and convert it to a tibble using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
