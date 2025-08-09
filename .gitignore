@@ -1,12 +1,14 @@
-
 docs
 
-# Match all subdirectories under inst/tutorials/
+# Ignore all subdirectories under inst/tutorials/
 inst/tutorials/*/
 
-# But exclude data and images subdirectories
-!inst/tutorials/*/data/
-!inst/tutorials/*/images/
+# But un-ignore tutorial folders themselves
+!inst/tutorials/*
 
-# And exclude .Rmd files
+# Un-ignore data and images subdirectories and all files within data/
+!inst/tutorials/*/data/
+!inst/tutorials/*/data/**
+
+!inst/tutorials/*/images/
 !inst/tutorials/*/*.Rmd

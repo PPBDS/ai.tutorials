@@ -21,10 +21,10 @@ Making flights into a duckdb:
 > usethis::use_directory("inst/extdata")
 ✔ Setting active project to
   "/Users/spgn/Desktop/ai.tutorials".
-> con <- DBI::dbConnect(
-+   duckdb::duckdb(),
-+   dbdir = "inst/extdata/flights.duckdb"
-+ )
+ con <- DBI::dbConnect(
+  duckdb::duckdb(),
+  dbdir = "inst/extdata/flights.duckdb"
+ )
 > DBI::dbWriteTable(con, "flights", nycflights13::flights, overwrite = TRUE)
 + DBI::dbDisconnect(con, shutdown = TRUE)
                      
