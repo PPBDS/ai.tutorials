@@ -38,7 +38,7 @@ dbplyr_fly <- tbl(con_air, "flights")
 
 #babynames plot
 x <-  dbplyr_names |>
-filter(substr(name, "A"), year > 2000, n >= 10) |>
+filter(str_starts(name, "A"), year > 2000, n >= 10) |>
 mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
 summarize(total = sum(n), .by = c(year, length_class)) |>
 arrange(year) |>
@@ -376,7 +376,7 @@ To use `dbplyr`, you must first use `tbl()` to create an object that represents 
 
 ### Exercise 7
 
-Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `substr()`. Paste this code into the same code chunk and place your cursor at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
+Ask AI how to use `dbplyr` to filter the data to show all names start with A after the year 2000 using `str_starts()`. Paste this code into the same code chunk and place your cursor at the start of `dbplyr_names` and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
@@ -400,7 +400,7 @@ Our code:
 
 ```{r baby-names-7-test, echo = TRUE}
  dbplyr_names |>
- filter(substr(name, "A"), year > 2000, n >= 10) 
+ filter(str_starts(name, "A"), year > 2000, n >= 10) 
 ```
 
 ### 
@@ -436,7 +436,7 @@ Our code:
 
 ```{r baby-names-8-test, echo = TRUE}
  dbplyr_names |>
-  filter(substr(name, "A"), year > 2000, n >= 10) |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
 ```
 
@@ -470,7 +470,7 @@ Our code:
 
 ```{r baby-names-9-test, echo = TRUE}
   dbplyr_names |>
-  filter(substr(name, "A"), year > 2000, n >= 10) |>
+  filter(str_starts(name, "A"), year > 2000, n >= 10) |>
   mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
   summarize(total = sum(n), .by = c(year, length_class)) 
 ```
@@ -508,7 +508,7 @@ Our code:
 
 ```{r baby-names-10-test, echo = TRUE}
  dbplyr_names |>
-filter(substr(name, "A"), year > 2000, n >= 10) |>
+filter(str_starts(name, "A"), year > 2000, n >= 10) |>
 mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
 summarize(total = sum(n), .by = c(year, length_class)) |>
 arrange(year) |>
@@ -546,7 +546,7 @@ CP/CR.
 
 ```{r baby-names-11-test, echo = TRUE}
   dbplyr_names |>
-   filter(substr(name, "A"), year > 2000, n >= 10) |>
+   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
    mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
    summarize(total = sum(n), .by = c(year, length_class)) |>
    arrange(year) |>
@@ -584,7 +584,7 @@ Our code:
 
 ```{r baby-names-12-test, echo = TRUE}
  x <-  dbplyr_names |>
-   filter(substr(name, "A"), year > 2000, n >= 10) |>
+   filter(str_starts(name, "A"), year > 2000, n >= 10) |>
    mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
    summarize(total = sum(n), .by = c(year, length_class)) |>
    arrange(year) |>
@@ -656,7 +656,7 @@ Our code:
 
 ```{r baby-names-14-test, echo = TRUE}
 top_a_2009 <-  dbplyr_names |>
-  filter(year == 2009, substr(name, "A")) |>
+  filter(year == 2009, str_starts(name, "A")) |>
   mutate(name_length = str_length(name)) |>
   collect() |>
   arrange(desc(name_length)) |>
