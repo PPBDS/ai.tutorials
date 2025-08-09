@@ -30,11 +30,11 @@ options(tutorial.exercise.timelimit = 600,
 con_names <- dbConnect(duckdb::duckdb(), 
 				 dbdir = "data/nameby_year.duckdb")
 con_air <- dbConnect(duckdb::duckdb(), 
-				 dbdir = "data/flights.duckdb")
+				 dbdir = "data/nycflights13.duckdb")
 
 #making lazy table for dbplyr use
 dbplyr_names <- tbl(con_names, "babynames")
-dbplyr_nycflights <- tbl(con_air, "flights")
+dbplyr_fly <- tbl(con_air, "flights")
 
 #babynames plot
 x <-  dbplyr_names |>
@@ -180,6 +180,7 @@ For this tutorial, we will be working with the babynames database. At the simple
 
 ## Baby names
 ### 
+
 In this section we are going to focus on generating code to create a graph based on a database called `nameby_year.duckdb`. The data in this database comes from `babynames`, which is a dataset that contains names used for American babies from 1880 to 2017. If you want to explore related data, checkout [popular baby names](https://www.ssa.gov/oact/babynames/limits.html). We will be using AI to generate the code for us and then we will break down the functions within the code and how they work.
 
 Key functions you'll learn:
@@ -260,7 +261,7 @@ This creates a connection to the database and assigns it to the variable con, sh
 <!-- DK: Going to fast. What are the tables in this database? -->
 The `nameby_year.duckdb` database contains one table: `babynames`.
 
-Ask AI how to start a pipe from `con` to retrieve the contents of the `babynames` table from the `nameby_year.duckdb` database using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
+Ask AI how to start a pipe from `con_names` to retrieve the contents of the `babynames` table from the `nameby_year.duckdb` database using `dbReadTable()` and read it using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
 ```{r baby-names-3}
 question_text(NULL,
@@ -764,8 +765,8 @@ We begin by downloading a DuckDB version of the flights dataset directly from Gi
 
 ```         
 download.file(
-  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/extdata/flights.duckdb",
-  destfile = "flights.duckdb"
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/tutorials/r4ds-3/data/nycflights13.duckdb",
+  destfile = "nycflights13.duckdb"
 )
 ```
 
@@ -783,15 +784,14 @@ question_text(NULL,
 
 ### Exercise 2
 
+Ask AI how to connect the `flights` table from `nycflights13` to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con_air`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
-Ask AI how to connect the `flights` table from `nycflights13` to `duckdb` using `DBI::dbConnect()` by assigning it to a variable `con`, so it is accessible to use with the rest of the code in the document. Add the code to your QMD in a new chunk. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
-CP/CR.
-
-  
+In the Console, run:
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
+
+CP/CR.
 
 ```{r flights-2}
  
@@ -810,18 +810,19 @@ Our code:
 ```{r flights-2-test, echo = TRUE, eval = FALSE}
 con_air <- DBI::dbConnect(
     duckdb::duckdb(),
-    dbdir = "flights.duckdb"
+    dbdir = "nycflights13.duckdb"
   )
 ```
 
 ### 
 
-You can check that the data is loaded correctly by using the `dbListTables()` function on `con` to lists all tables in the database.
+You can check that the data is loaded correctly by using the `dbListTables()` function on `con_air` to lists all tables in the database.
 
 
 ### Exercise 3
+The `nycflights13.duckdb` database has multiple tables: `airlines`, `airports`, `flights`, `planes`, and `weather`.
 
-Ask AI how to start a pipe from `con` to retrieve the contents of the `flights` dataset using `dbReadTable()` and convert it to a tibble using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
+Ask AI how to start a pipe from `con_air` to retrieve the contents of the `flights` table from the `nycflights13.duckdb` database using `dbReadTable()` and convert it to a tibble using `as_tibble()`. Make sure the result is not assigned to a variable. Add this code in a new code chunk to the QMD. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. 
 
 ```{r flights-3}
 question_text(NULL,
@@ -846,15 +847,15 @@ con_air |>
 
 ### Exercise 4
 
-To use dbplyr, you must first use `tbl()` to create an object that represents a database table.
+To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table, called a lazy table.
 
-Paste this code into a new chunk in your QMD:
+Paste this code as a replacement to your current code in the same chunk in your QMD:
 
 ```         
- dbplyr_nycflights <- tbl(con_air, "flights")
+ dbplyr_fly <- tbl(con_air, "flights")
 ```
 
-View the data by putting  dbplyr_nycflights in your console. Copy/paste the resulting dataframe.
+ View the data by putting `dbplyr_fly` in your Console. Copy/paste the resulting lazy table.
 
 ```{r flights-4}
 question_text(NULL,
@@ -870,8 +871,8 @@ question_text(NULL,
 Our code:
 
 ```{r flights-4-test, echo = TRUE}
- dbplyr_nycflights <- tbl(con_air, "flights")
- dbplyr_nycflights
+ dbplyr_fly <- tbl(con_air, "flights")
+ dbplyr_fly
 ```
 
 ### 
@@ -886,11 +887,9 @@ View the `tailnum` column by pasting this in your console:
 flights$tailnum
 ```
 
-Ask AI how to check the column type of tailnum from the flights dataset using `class()`. Add the code to your Console and hit `Enter`.
+Ask AI how to check the column type of `tailnum` from the `flights` table using `class()`. Add the code to your Console and hit `Enter`.
 
 CP/CR.
-
-show_file("analysis.qmd", chunk = "Last")
 
 ```{r flights-5}
 question_text(NULL,
@@ -915,15 +914,13 @@ class(flights$tailnum)
 
 ### Exercise 6
 
-Ask AI to create a new tailnum column using parse so we can extract numbers from a character column. Also, ask AI to clean flights and select the `dep_time`, `sched_dep_time`, `dep_delay`, and `tailnum` columns. Add the code to your QMD in a new chunk. Assign this pipe to `departure_data`. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
-
+The column type of `tailnum` is character. Ask AI to clean the `flights` table by selecting the columns `dep_time`, `sched_dep_time`, `dep_delay`, and `tailnum`. Then, create a new column called `tail_number` by extracting numeric values from the character column `tailnum` using the `parse_number()` function. Add the code to your QMD in a new chunk. Assign this pipe to `departure_data`. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`.
 
 In the Console, run:
 
 ```         
 show_file("analysis.qmd", chunk = "Last")
 ```
-
 
 ```{r flights-6}
 question_text(NULL,
@@ -958,7 +955,6 @@ In the Console, run:
 show_file("analysis.qmd", chunk = "Last")
 ```
 
-
 ```{r flights-7}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -980,12 +976,15 @@ flights |>
   )
 ```
 
+Delete this code cell.
+ <!--SG: where should I put these -->
+
 
 We have a lot of missing values that needs to be cleaned.  `is.na(x)` works with any type of vector and returns TRUE for missing values and FALSE for everything else, which we can use to find all the rows with a missing `dep_time`. To check for `NA` values, use `any()` function with argument `is.na()`, argument of which should be the dataset babynames.
 
 ### Exercise 8
 
-Ask AI how you can continue your previous pipe and filters out rows where dep_time is missing using `!is.na()`. Add the code to your QMD in the same chunk as an addition to the pipe. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. View your new cleaned dataset.
+Ask AI how you can continue your previous pipe and filters out rows where dep_time is missing using `!is.na()`. Add the code to your QMD in the same chunk as an addition to the pipe that is assigned to `departure_data`. Place your cursor on the first line of the code and run `Cmd/Ctrl + Enter`. View your new cleaned data.
 
 In the Console, run:
 
@@ -1046,6 +1045,7 @@ departure_data |>
 ```
 
 ### 
+Delete this code cell. 
 
 Since `str_detect()` returns a logical vector of the same length as the initial vector, it pairs well with `filter()` There are two functions that are closely related to `str_detect()`:\
 \* `str_subset()` returns a character vector containing only the strings that match. 
@@ -1131,7 +1131,7 @@ Note that these are different to the summary functions `min()` and `max()` which
 
 ### Exercise 12
 
-Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
+Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your latest code chunk with our code in your QMD.
 
 In the Console, run:
 
