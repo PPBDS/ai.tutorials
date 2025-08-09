@@ -16,6 +16,8 @@ library(learnr)
 library(tutorial.helpers)
 
 library(tidyverse)
+library(readxl)
+library(tidyverse)
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
@@ -28,5 +30,31 @@ options(tutorial.exercise.timelimit = 600,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+## Introduction
+###
+
+## Wine
+###
+
+## Cheese
+###
+
+## Summary
+###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
 ```
+
