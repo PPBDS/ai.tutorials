@@ -22,7 +22,9 @@ library(DBI)
 library(duckdb)
 library(dbplyr)
 
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.show = "asis",
+                      fig.keep = "high")
 options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 
