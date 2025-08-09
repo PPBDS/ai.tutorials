@@ -24,6 +24,8 @@ Imports:
     tidyverse
 Suggests: 
     babynames,
+    DBI,
+    duckdb,
     nycflights13,
     quarto,
     rsconnect,

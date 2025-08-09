@@ -39,19 +39,15 @@ dbplyr_fly <- tbl(con_air, "flights")
 #babynames plot
 x <-  dbplyr_names |>
 filter(str_starts(name, "A"), year > 2000, n >= 10) |>
-mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long")) |>
-summarize(total = sum(n), .by = c(year, length_class)) |>
-arrange(year) |>
-collect() 
+mutate(length_class = if_else(str_length(name) <= 5, "Short", "Long"))
 
-#flights filtering code
-departure_data <- flights |>
+data <- flights |>
   select(dep_time, sched_dep_time, dep_delay, tailnum) |>
   mutate(tail_number = parse_number(tailnum)) |>
   filter(!is.na(dep_time))
 
 #flights plot
-x <- departure_data |>
+departure_data <- data |> 
   mutate(
     dep_hour = dep_time %/% 100,
     dep_minute = dep_time %% 100,
