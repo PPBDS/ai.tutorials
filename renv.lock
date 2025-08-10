@@ -4915,7 +4915,7 @@
     },
     "tutorial.helpers": {
       "Package": "tutorial.helpers",
-      "Version": "0.5.0.9005",
+      "Version": "0.5.0.9007",
       "Source": "GitHub",
       "Title": "Helper Functions for Creating Tutorials",
       "Authors@R": "person(given = \"David\", family = \"Kane\", role = c(\"aut\", \"cre\", \"cph\"), email = \"dave.kane@gmail.com\", comment = c(ORCID = \"0000-0002-6660-3934\"))",
@@ -4963,7 +4963,7 @@
       "RemoteUsername": "PPBDS",
       "RemoteRepo": "tutorial.helpers",
       "RemoteRef": "main",
-      "RemoteSha": "e340d8239ef95456ff769c4ed2320ac3fc90fabb"
+      "RemoteSha": "16818f620a13231a0732f75ede4bd278c24f0001"
     },
     "tzdb": {
       "Package": "tzdb",
