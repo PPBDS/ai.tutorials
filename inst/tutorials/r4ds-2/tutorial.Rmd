@@ -1,6 +1,6 @@
 ---
 title: A Second Tutorial for R4DS
-author: David Kane, and Sruthi Gandhi
+author: Sruthi Gandhi and David Kane
 tutorial:
   id: r4ds-2
 output:
@@ -8,7 +8,7 @@ output:
     progressive: yes
     allow_skip: yes
 runtime: shiny_prerendered
-description: 'Tutorial for R for Data Science Integrated with AI'
+description: 'DK: Add chapters covered. Tutorial for R for Data Science Integrated with AI'
 ---
 
 ```{r setup, include = FALSE}
@@ -36,6 +36,7 @@ x <- cheese |>
   group_by(country) |>
   arrange(country, desc(n))
 ```
+
 ```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
 ```
 
