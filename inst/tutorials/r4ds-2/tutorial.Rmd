@@ -16,17 +16,793 @@ library(learnr)
 library(tutorial.helpers)
 
 library(tidyverse)
+library(readxl)
+library(dbplyr)
+
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
         tutorial.storage = "local") 
 
+cheese <- read_excel("data/cheeses.xlsx")
+top_countries <- cheese |>
+  filter(!is.na(country)) |>           
+  count(country, sort = TRUE) |>
+  slice_head(n = 3) |>
+  pull(country)
+x <- cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) |>
+  group_by(country) |>
+  arrange(country, desc(n))
 ```
 ```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
 ```
 
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
+
+## Introduction
+###
+
+This section covers key concepts from [Chapter 9: Layers](https://r4ds.hadley.nz/layers.html), [Chapter 10: Exploratory Data Analysis](https://r4ds.hadley.nz/eda.html), [Chapter 11: Communication](https://r4ds.hadley.nz/communication.html), and [Chapter 20: Spreadsheets](https://r4ds.hadley.nz/spreadsheets.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+Add the links to functions
+You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such like **readxl**, **dbplyr**, and **ggplot2**. Important functions include: facet_wrap(), coord_flip(), geom_jitter(), geom_smooth(), scales_  , count(), slice_head(), and mutate(). 
+
+### Exercise 1
+
+Create a Github repo called `r4ds-2`. Make sure to click the "Add a README file" check box.
+
+Connect the repo to a project on your computer using `File -> New Folder from Git ...`.  Make sure to select the "Open in a new window" box. 
+
+You need two Positon windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
+
+Select `File -> New File -> Quarto Document ...`. Provide a title -- `"Analyzing Cheese and cheese"` -- and an author (you). Render the document and save it as `analysis.qmd`.
+
+Create a `.gitignore` file with `analysis_files` on the first line and then a blank line. Save and push.
+
+In the Console, run:
+
+```         
+show_file(".gitignore")
+```
+
+If that fails, it is probably because you have not yet loaded `library(tutorial.helpers)` in the Console.
+
+CP/CR.
+
+```{r introduction-1}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 3)
+```
+
+### 
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 2
+
+In your QMD, put `library(tidyverse)`, `library(readxl)` in a new code chunk. Render the file using `Cmd/Ctrl + Shift + K`.
+
+Notice that the file does not look good because the code is visible and there are annoying messages. To take care of this, add `#| message: false` to remove all the messages in this `setup` chunk. Also add the following to the YAML header to remove all code echos from the HTML:
+
+```         
+execute: 
+  echo: false
+```
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r introduction-2}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 6)
+```
+
+### 
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 3
+
+Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
+
+Note that this causes `library(tidyverse)` to be copied down to the Console and then executed. 
+
+CP/CR.
+
+```{r introduction-3}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 3)
+```
+
+###
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+## Cheese
+###
+
+The [cheese.csv](https://github.com/rfordatascience/tidytuesday/blob/main/data/2024/2024-06-04/readme.md) dataset is a [TidyTuesday](https://github.com/rfordatascience/tidytuesday) dataset on Github which contains data scraped from [cheese.com](https://www.cheese.com) about data from 2046 different types of cheese. Our spreadsheet `cheeses.xlsx` contains this data in a spreadsheet format. 
+
+### Exercise 1
+
+We begin by downloading our spreadsheet `cheeses.xlsx` directly from GitHub using `download.file()`. 
+
+This adds the spreadsheet, `cheeses.xlsx`, to our working directory so we can use it in this tutorial.
+
+In the Console, run:
+
+```         
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/tutorials/r4ds-2/data/cheeses.xlsx",
+  destfile = "cheeses.xlsx"
+)
+```
+
+CP/CR.
+
+```{r cheese-1}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+### Exercise 2
+
+Ask AI how to read a `.xlsx` spreadsheet called `cheeses.xlsx` using `read_excel()` and assign the result to a variable `cheese`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line where it says `cheese <- ...` and run `Cmd/Ctrl + Enter`. Type `cheese` in the console to retreive the contents of `cheese`.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Our code:
+
+```{r cheese-2-hint-1, echo = TRUE, eval = FALSE}
+cheese <- read_excel("cheeses.xlsx")
+```
+
+```{r cheese-2a-test, echo = TRUE}
+cheese
+```
+###
+
+Most of `readxl`’s functions allow you to load Excel spreadsheets into R:
+
+`read_xls()` reads Excel files with `xls` format.
+`read_xlsx()` read Excel files with `xlsx` format.
+`read_excel(`) can read files with both `xls` and `xlsx` format. It guesses the file type based on the input.
+
+### Exercise 3
+
+Ask AI to give you code to make a stacked bar plot using `geom_bar()` to explore the relationship between countries and the milks they use to produce different cheeses by using the `country` and `milk` columns. Mention you want to use the data from `cheese` and copy and paste the `cheese` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
+
+Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code in a new code cell in your QMD. Run `Cmd/Ctrl + Shift + K`.
+
+CP/CR. 
+
+```{r cheese-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-3-test, echo = TRUE}
+cheese |>
+  ggplot(aes(x = country, fill = milk)) +
+  geom_bar(position = "stack") +
+  labs(
+    title = "Cheese Production by Milk Type Across Countries",
+    subtitle = "Exploring the relationship between country and type of milk used",
+    caption = "Data source: cheese dataset"
+  )
+```
+
+###
+
+As always, `ggplot()` alone, without the use of the `aes()` function as an argument to `mapping`, produces an empty rectangle.
+
+### Exercise 4
+
+You may have noticed that the plot is very crowded with all the countries forming a grey box and the legend takes up most of the plot. `cheese` also has a lot of `NA` values. 
+
+Ask AI to use `cheese` and pipe it into `filter()` and use `is.na` to drop all the instances where `country` is NA. Assign this code to the variable `top_countries`. Add this code as a replacement to the code in your current code cell. Run `Cmd/Ctrl + Shift + K`. Type `top_countries` in the console to retreive the contents of `cheese`.
+
+CP/CR.
+```{r cheese-4}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-4-test, echo = TRUE}
+cheese |>
+  filter(!is.na(country))
+```
+
+###
+
+A geom that can help annotate your plot is `geom_rect()`. You can use `geom_rect()` to draw a rectangle around points of interest. The boundaries of the rectangle are defined by aesthetics `xmin`, `xmax`, `ymin`, `ymax`. Alternatively, look into the [**ggforce**](https://ggforce.data-imaginist.com/) package, specifically [`geom_mark_hull()`](https://ggforce.data-imaginist.com/reference/geom_mark_hull.html), which allows you to annotate subsets of points with hulls.
+
+### Exercise 5
+
+Ask AI to continue the pipe using `count()`, `slice_head()`, and `pull()` to get the top 3 most occuring instances of a country. Add this code as a continuation of your pipe to the same chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `cheese` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+```{r cheese-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-5-test, echo = TRUE}
+cheese |>
+  filter(!is.na(country))|>           
+  count(country, sort = TRUE) |>
+  slice_head(n = 3) |>
+  pull(country)
+
+```
+
+###
+
+Another handy function for adding annotations to plots is `annotate()`. As a rule of thumb, geoms are generally useful for highlighting a subset of the data while `annotate()` is useful for adding one or few annotation elements to a plot.
+
+### Exercise 6
+
+Assign this code to the variable `top_countries`. Add this code right before `cheese` in the same code cell in your current QMD. Run `Cmd/Ctrl + Shift + K`. Type `top_countries` in the console to retreive the contents of your pipe.
+
+CP/CR.
+```{r cheese-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-6-test, echo = TRUE}
+top_countries <- cheese |>
+  filter(!is.na(country))|>           
+  count(country, sort = TRUE) |>
+  slice_head(n = 3) |>
+  pull(country)
+
+top_countries
+```
+
+###
+
+
+### Exercise 7
+ 
+Ask AI to start a new pipe using `filter()` to filter the `country` column to only have our newely created variable `top_countries` and also use `is.na` to drop all the instances where `milk` is NA. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line where it says `cheese |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-7-test, echo = TRUE}
+cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) 
+```
+
+###
+
+Covariation is the tendency for the values of two or more variables to vary together in a related way. The best way to spot covariation is to visualize the relationship between two or more variables. In this case, our two variables are `country` and `milk`. 
+
+### Exercise 8
+
+Ask AI to continue the pipe using `count()` to count the number of observations for each combination of levels of the categorical variables `country` and `milk`. Add this code as a continuation to your current pipe in the your latest code cell in your current QMD. 
+Place your cursor at the beginning of the line where it says `cheese |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-8-test, echo = TRUE}
+cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) 
+
+```
+
+###
+
+### Exercise 9
+ 
+Ask AI to continue the pipe and use `group_by()` to group the countries together. Add this code as a continuation to your current pipe in the your latest code cell in your current QMD. 
+Place your cursor at the beginning of the line where it says `cheese |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-9-test, echo = TRUE}
+cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) |>
+  group_by(country) 
+```
+
+###
+
+### Exercise 10
+ 
+Ask AI to continue the pipe using arranging the number of observations for each combination of levels of the categorical variables `country` and `milk` which is `n` in descending order using  `arrange()`. Add this code as a continuation to your current pipe in the your latest code cell in your current QMD. 
+Place your cursor at the beginning of the line where it says `cheese |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-10-test, echo = TRUE}
+cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) |>
+  group_by(country) |>
+  arrange(country, desc(n))
+
+```
+
+###
+
+
+### Exercise 11
+
+Now that we have filtered our dataset through a pipe, we need to be on track with the same, correct, code. Replace your code with our code in your QMD.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-11}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 6)
+```
+
+###
+
+The function, `geom_freqpoly()`, visualizes the distribution of a single continuous variable by dividing the x-axis into bins and counting the number of observations in each bin. Frequency polygons display the counts with lines. Frequency polygons are more suitable when you want to compare the distribution across the levels of a categorical variable.
+
+### Exercise 12
+
+Within the recent code chunk, add the option: `#| cache: true`. Assign the result of our pipe to `x`. 
+
+`Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved fitted object.
+
+Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `x`.
+
+CP/CR.
+
+```{r cheese-12}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 6)
+```
+
+###
+
+Our code:
+
+```{r cheese-12-test, echo=TRUE}
+x <- cheese |>
+  filter(country %in% top_countries, !is.na(milk)) |>
+  count(country, milk) |>
+  group_by(country) |>
+  arrange(country, desc(n))
+
+```
+
+`geom_bin2d()` and `geom_hex()` divide the coordinate plane into 2d bins and then use a fill color to display how many points fall into each bin. `geom_bin2d()` creates rectangular bins. `geom_hex()` creates hexagonal bins. You will need to install the **hexbin** package to use `geom_hex()`.
+
+### Exercise 13
+
+Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
+
+CP/CR.
+
+```{r cheese-13}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 8)
+```
+
+###
+
+Our code:
+
+```{r, echo=TRUE}
+x
+```
+
+The function [`linear_reg()`](https://parsnip.tidymodels.org/reference/linear_reg.html) defines a model that can predict numeric values from predictors using a linear function. This function can fit regression models. There are different ways to fit this model, and the method of estimation is chosen by setting the model `engine`.
+
+### Exercise 14
+
+Ask AI how to pipe `x` into a stacked bar chart using `geom_bar()` to explore the relationship between the `country` column and `milk` column. Add this code in a new code chunk in the same QMD. Place your cursor at the beginning of the line where it says `x |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-14}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-14-test, echo = TRUE}
+ x|>
+  ggplot(aes(x = country, fill = milk)) +
+    geom_bar(position = "stack") +
+    labs(
+     title = "Milk Types Used in Cheeses from Top 3 Countries",
+      x = "Country",
+      y = "Number of Cheeses",
+      fill = "Milk Type"
+    ) +
+    theme_minimal()
+```
+
+###
+
+If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.
+
+### Exercise 15
+
+This plot is good, but it's difficult to see the tiny slivers of data because of the stacking. 
+
+Make anothe plot by asking AI how to pipe `x` into a faceted column plot using `geom_col()` that shows the number of cheeses by milk type using the columns `milk` and `n` and map the `fill` to `milk`. Add this code as a replacement to your current code in the same code chunk in the same QMD. Place your cursor at the beginning of the line where it says `x |>` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-15}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-15-test, echo = TRUE}
+x |>
+    ggplot(aes(x = milk, y = n, fill = milk))+
+    geom_col() +
+    facet_wrap(~ country, scales = "fixed") 
+```
+
+###
+
+To facet your plot by a single variable, use `facet_wrap()`. The first argument of `facet_wrap()` is a formula, which you create with `~` followed by a variable name. The variable that you pass to `facet_wrap()` should be categorical, i.e., either character or factor.
+
+### Exercise 16
+
+Ask AI how to continue the pipe by adding `coord_flip()` and add use `show.legend = FALSE` so that there is no legend. Add this code as a continuation of your pipe to the same chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `cheese` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-16}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-16-test, echo = TRUE}
+x |>
+    ggplot(aes(x = milk, y = n, fill = milk))+
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ country, scales = "fixed") +
+    coord_flip() 
+```
+
+###
+
+We use scale_y_continuous when we want to modify the y-axis for continuous data. [This documentation here](https://ggplot2.tidyverse.org/reference/scale_continuous.html) will tell you more, and all the possible arguments you can use with `scale_y_continuous`
+
+### Exercise 17
+
+Some countries have such a small number of a certain milk type in comparison which becomes virtually nonexistant in the plot because of the scale of the United States. We can fix this by using a square root scale. 
+
+Ask AI how to continue your current pipe and use `scale_y_sqrt()` to make the scaling better and add `theme_gray()`. Add this code as a continuation of your pipe to the same chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `cheese` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-17}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-17-test, echo = TRUE}
+x |>
+    ggplot(aes(x = milk, y = n, fill = milk))+
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ country, scales = "fixed") +
+    coord_flip() +
+    scale_y_sqrt() +
+    theme_gray()
+```
+
+###
+
+Note the naming scheme for scales: `scale_` followed by the name of the aesthetic, then `_`, then the name of the scale. The default scales are named according to the type of variable they align with: `continuous`, `discrete`, `datetime`, or `date`.
+
+Another scale that is frequently customized is color. The default categorical scale picks colors that are evenly spaced around the color wheel. Useful alternatives are the ColorBrewer and Viridis scales which have been hand-tuned to work better for people with common types of color blindness.
+
+### Exercise 18
+
+You add labels with the `labs()` function.
+
+Ask AI to use the `labs()` function and add a `title`, `subtitle`, `caption`, and labels for the `x` and `y` axes. Add this code as a continuation of your pipe to the same chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `cheese` and run `Cmd/Ctrl + Enter`. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r cheese-18}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+Our code:
+```{r cheese-18-test, echo = TRUE}
+x |>
+    ggplot(aes(x = milk, y = n, fill = milk))+
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ country, scales = "fixed") +
+    coord_flip() +
+    scale_y_sqrt() +
+    theme_gray() +
+    labs(
+    title = "Milk Types Used in Cheeses by Country",
+    subtitle = "Italy has the most variety of cheese",
+    caption = "Source: cheese.com",
+    x = "Type of Milk",
+    y = "Number of Cheeses (sqrt scale)"
+  
+  )
+```
+
+The [**ggrepel**](https://ggrepel.slowkow.com) package will automatically adjust labels so that they don’t overlap. To help others quickly build up a good mental model of the data, you will need to invest considerable effort in making your plots as self-explanatory as possible.
+
+###
+
+
+## Wine
+###
+
+## Summary
+###
+
+
+KNOWLEDGE DROPS FROM tutorials 9, 10, 11
+
+(Not all of them!) Just the 20 or so you think are best. No need to number them.
+```
+
+The [**ggrepel**](https://ggrepel.slowkow.com) package will automatically adjust labels so that they don’t overlap. To help others quickly build up a good mental model of the data, you will need to invest considerable effort in making your plots as self-explanatory as possible.
+
+Another handy function for adding annotations to plots is `annotate()`. As a rule of thumb, geoms are generally useful for highlighting a subset of the data while `annotate()` is useful for adding one or few annotation elements to a plot.
+
+We can see that the two plots are the same. Note the naming scheme for scales: `scale_` followed by the name of the aesthetic, then `_`, then the name of the scale. The default scales are named according to the type of variable they align with: `continuous`, `discrete`, `datetime`, or `date`.
+
+Another scale that is frequently customized is color. The default categorical scale picks colors that are evenly spaced around the color wheel. Useful alternatives are the ColorBrewer scales which have been hand-tuned to work better for people with common types of color blindness.
+
+You can use labels in the same way (a character vector the same length as breaks), but you can also set it to NULL to suppress the labels altogether. This can be useful for maps, or for publishing plots where you do want to share the absolute numbers.
+
+In addition to `geom_text()` and `geom_label()`, you have many other geoms in **ggplot2** available to help annotate your plot. For example, you can use `geom_hline()` and `geom_vline()` to add reference lines. We often make them thick (`linewidth = 2`) and white (`color = "white"`), and draw them underneath the primary data layer. That makes them easy to see, without drawing attention away from the data.
+
+As always, `ggplot()` alone, without the use of the `aes()` function as an argument to `mapping`, produces an empty rectangle.
+
+The function, `geom_freqpoly()`, visualizes the distribution of a single continuous variable by dividing the x-axis into bins and counting the number of observations in each bin. Frequency polygons display the counts with lines. Frequency polygons are more suitable when you want to compare the distribution across the levels of a categorical variable.
+
+`geom_bin2d()` and `geom_hex()` divide the coordinate plane into 2d bins and then use a fill color to display how many points fall into each bin. `geom_bin2d()` creates rectangular bins. `geom_hex()` creates hexagonal bins. You will need to install the **hexbin** package to use `geom_hex()`.
+
+If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.
+
+The function [`linear_reg()`](https://parsnip.tidymodels.org/reference/linear_reg.html) defines a model that can predict numeric values from predictors using a linear function. This function can fit regression models. There are different ways to fit this model, and the method of estimation is chosen by setting the model `engine`.
+
+EDA is not a formal process with a strict set of rules. More than anything, EDA is a state of mind. During the initial phases of EDA you should feel free to investigate every idea that occurs to you. Some of these ideas will pan out, and some will be dead ends.
+
+Covariation is the tendency for the values of two or more variables to vary together in a related way. The best way to spot covariation is to visualize the relationship between two or more variables.
+
+If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.
+
+Mapping an unordered discrete (categorical) variable, like `class`, to an ordered aesthetic, like `size` is generally not a good idea because it implies a ranking that does not in fact exist, hence the warning.
+
+Once you map an aesthetic, **ggplot2** takes care of the rest. It selects a reasonable scale to use with the aesthetic, and it constructs a legend that explains the mapping between levels and values. For x and y aesthetics, **ggplot2** does not create a legend, but it creates an axis line with tick marks and a label. The axis line provides the same information as a legend; it explains the mapping between locations and values.
+
+The `geom_smooth()` geom is applied to each category of color separately. With one call to a geom, we get three different plots, all on the same graph. There are no front-wheel drive cars with a `displ` value greater than 5, so the green line does not extend to the right-side of the graphic.
+
+To facet your plot by a single variable, use `facet_wrap()`. The first argument of `facet_wrap()` is a formula, which you create with `~` followed by a variable name. The variable that you pass to `facet_wrap()` should be categorical, i.e., either character or factor.
+
+Adding randomness seems like a strange way to improve your plot, but while it makes your graph less accurate at small scales, it makes your graph more revealing at large scales. Because this is such a useful operation, **ggplot2** comes with a shorthand for `geom_point(position = "jitter")`: `geom_jitter()`.
+
+We use scale_y_continuous when we want to modify the y-axis for continuous data. [This documentation here](https://ggplot2.tidyverse.org/reference/scale_continuous.html) will tell you more, and all the possible arguments you can use with `scale_y_continuous`
+
+
+
+Using `alpha` helps, first, to highlight where the data is densest and, second, to lessen the business of the plot, the better to allow space for labels.
+
+
+
+
+
+
+
 
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
 ```
