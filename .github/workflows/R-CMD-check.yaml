@@ -39,6 +39,13 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # Install system dependencies for macOS
+      - name: Install macOS system dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install gettext
+          brew link --force gettext
+
       - uses: r-lib/actions/setup-renv@v2
 
       - name: Install rcmdcheck
