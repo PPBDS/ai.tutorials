@@ -1,8 +1,7 @@
 ## Sruthi
 
-Random knowledge drops are fine.
+Continue work on r4ds-2.
 
-Take a break from r4ds-3. (I will work on it.)
 
 
 
