@@ -8,7 +8,7 @@ output:
     progressive: yes
     allow_skip: yes
 runtime: shiny_prerendered
-description: 'DK: Add chapters covered. This Tutorial for R for Data Science Integrated with AI covers Chapter 9: Layers, Chapter 10: Exploratory Data Analysis, Chapter 11: Communication, and Chapter 20: Spreadsheets'
+description: 'This tutorial for "R for Data Science" covers Chapter 9: Layers, Chapter 10: Exploratory Data Analysis, Chapter 11: Communication, and Chapter 20: Spreadsheets.'
 ---
 
 ```{r setup, include = FALSE}
@@ -18,7 +18,6 @@ library(tutorial.helpers)
 library(tidyverse)
 library(readxl)
 library(dbplyr)
-
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
@@ -46,12 +45,16 @@ xw <- read_excel("data/wine.xlsx")|>
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+<!-- DK: Knowledge drops. -->
+
 ## Introduction
 ###
 
 This section covers key concepts from [Chapter 9: Layers](https://r4ds.hadley.nz/layers.html), [Chapter 10: Exploratory Data Analysis](https://r4ds.hadley.nz/eda.html), [Chapter 11: Communication](https://r4ds.hadley.nz/communication.html), and [Chapter 20: Spreadsheets](https://r4ds.hadley.nz/spreadsheets.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
-Add the links to functions
-You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such like **readxl**, **dbplyr**, and **ggplot2**. Important functions include: facet_wrap(), coord_flip(), geom_jitter(), geom_smooth(), scales_  , count(), slice_head(), and mutate(). 
+
+<!-- DK: Add the links to functions and to the packages. Function names have backticks. -->
+
+You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such like **[readxl](https://readxl.tidyverse.org/)**, **dbplyr**, and **ggplot2**. Important functions include: facet_wrap(), coord_flip(), geom_jitter(), geom_smooth(), scales_  , count(), slice_head(), and mutate(). 
 
 ### Exercise 1
 
@@ -176,7 +179,7 @@ question_text(NULL,
 
 ### Exercise 2
 
-Ask AI how to read a `.xlsx` spreadsheet called `cheeses.xlsx` using `read_excel()` and assign the result to a variable `cheese`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line where it says `cheese <- ...` and run `Cmd/Ctrl + Enter`. Type `cheese` in the console to retreive the contents of `cheese`.
+Ask AI how to read a `.xlsx` spreadsheet called `cheeses.xlsx` using `read_excel()` and assign the result to a variable `cheese`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line where it says `cheese <- ...` and run `Cmd/Ctrl + Enter`. Type `cheese` in the console to retrieve the contents of `cheese`.
 
 In the Console, run:
 
@@ -196,6 +199,8 @@ question_text(NULL,
 ```
 
 ###
+
+<!-- DK: No hints. -->
 
 Our code:
 
@@ -218,7 +223,7 @@ Most of `readxl`’s functions allow you to load Excel spreadsheets into R:
 
 Ask AI to give you code to make a stacked bar plot using `geom_bar()` to explore the relationship between countries and the milks they use to produce different cheeses by using the `country` and `milk` columns. Mention you want to use the data from `cheese` and copy and paste the `cheese` you ran in the Console with the resulting dataframe. You only need the top 3 lines, mainly to include column names.
 
-Within `labs()` edit or add a proper title, subtitle, and caption. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code in a new code cell in your QMD. Run `Cmd/Ctrl + Shift + K`.
+Within `labs()` edit or add a proper `title`, `subtitle`, and `caption`. If axis labels are appropriate, add them, but if unnecessary, don't bother. Don't assign the code to any variable. Add this code in a new code cell in your QMD. Run `Cmd/Ctrl + Shift + K`.
 
 CP/CR. 
 
@@ -232,6 +237,7 @@ question_text(NULL,
 ```
 
 Our code:
+
 ```{r cheese-3-test, echo = TRUE}
 cheese |>
   ggplot(aes(x = country, fill = milk)) +
@@ -245,11 +251,10 @@ cheese |>
 
 ###
 
-As always, `ggplot()` alone, without the use of the `aes()` function as an argument to `mapping`, produces an empty rectangle.
 
 ### Exercise 4
 
-You may have noticed that the plot is very crowded with all the countries forming a grey box and the legend takes up most of the plot. `cheese` also has a lot of `NA` values. 
+Our plot is very crowded with all the countries forming a grey box and the legend takes up most of the plot. `cheese` also has a lot of `NA` values. 
 
 Ask AI to use `cheese` and pipe it into `filter()` and use `is.na` to drop all the instances where `country` is NA. Assign this code to the variable `top_countries`. Add this code as a replacement to the code in your current code cell. Run `Cmd/Ctrl + Shift + K`. Type `top_countries` in the console to retreive the contents of `cheese`.
 
@@ -284,6 +289,7 @@ show_file("analysis.qmd", chunk = "Last")
 ```
 
 CP/CR.
+
 ```{r cheese-5}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -296,7 +302,7 @@ question_text(NULL,
 Our code:
 ```{r cheese-5-test, echo = TRUE}
 cheese |>
-  filter(!is.na(country))|>           
+  filter(!is.na(country)) |>           
   count(country, sort = TRUE) |>
   slice_head(n = 3) |>
   pull(country)
@@ -312,6 +318,7 @@ Another handy function for adding annotations to plots is `annotate()`. As a rul
 Assign this code to the variable `top_countries`. Add this code right before `cheese` in the same code cell in your current QMD. Run `Cmd/Ctrl + Shift + K`. Type `top_countries` in the console to retreive the contents of your pipe.
 
 CP/CR.
+
 ```{r cheese-6}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -322,6 +329,7 @@ question_text(NULL,
 ```
 
 Our code:
+
 ```{r cheese-6-test, echo = TRUE}
 top_countries <- cheese |>
   filter(!is.na(country))|>           
