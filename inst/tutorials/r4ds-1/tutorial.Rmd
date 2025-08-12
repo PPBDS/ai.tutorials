@@ -213,8 +213,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-#x
-...
+#x ...
 ```
 
 ###
