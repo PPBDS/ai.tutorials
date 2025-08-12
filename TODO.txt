@@ -2,8 +2,35 @@
 
 Continue work on r4ds-2.
 
+## Luke
+
+https://ppbds.github.io/tutorial.helpers/articles/instructions.html
+
+Latest version of tutorial.helpers:
+
+renv::install("PPBDS/tutorial.helpers")
+
+Re-read: https://ppbds.github.io/tutorial.helpers/articles/ai.html
+
+Read: r4ds-2/tutorial.Rmd
+
+Work on: r4ds-1/tutorial.Rmd
+
+### r4ds-1
+
+data visualization
+data transformations
+data tidying
+data import
+
+Grab the most important 40 knowledge drops from the relevant tutorials in r4ds.tutorials, about 10 per chapter. Think about the most important packages and functions. Not all the packages and functions will get mentioned in the Introduction/Summary, but it is still nice to have a list.
+
+Let's use billboards for the first example.
+
+What csv file do we use for the second example?
 
 
+## Preceptor
 
 Our goal is to finish the other 4 tutorials in this collection.
 
@@ -29,12 +56,7 @@ In essence, each of our five tutorials should start with a get-the-data section 
 
 We don't cover any of the workflow chapters, or chapters 27-29.
 
-### r4ds-1
 
-data visualization
-data transformations
-data tidying
-data import
 
 ### r4ds-2
 
