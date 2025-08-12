@@ -8,7 +8,7 @@ output:
     progressive: yes
     allow_skip: yes
 runtime: shiny_prerendered
-description: 'DK: Add chapters covered. This Tutorial for R for Data Science Integrated with AI covers Chapter 9: Layers, Chapter 10: Exploratory Data Analysis, Chapter 11: Communication, and Chapter 20: Spreadsheets'
+description: 'This tutorial for "R for Data Science" covers Chapter 9: Layers, Chapter 10: Exploratory Data Analysis, Chapter 11: Communication, and Chapter 20: Spreadsheets.'
 ---
 
 ```{r setup, include = FALSE}
@@ -18,7 +18,6 @@ library(tutorial.helpers)
 library(tidyverse)
 library(readxl)
 library(dbplyr)
-
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 600, 
@@ -56,12 +55,16 @@ xw <- read_excel("data/wine.xlsx")|>
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+<!-- DK: Knowledge drops. -->
+
 ## Introduction
 ###
 
 This section covers key concepts from [Chapter 9: Layers](https://r4ds.hadley.nz/layers.html), [Chapter 10: Exploratory Data Analysis](https://r4ds.hadley.nz/eda.html), [Chapter 11: Communication](https://r4ds.hadley.nz/communication.html), and [Chapter 20: Spreadsheets](https://r4ds.hadley.nz/spreadsheets.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
-Add the links to functions
-You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such like **readxl**, **dbplyr**, and **ggplot2**. Important functions include: facet_wrap(), coord_flip(), geom_jitter(), geom_smooth(), scales_  , count(), slice_head(), and mutate(). 
+
+<!-- DK: Add the links to functions and to the packages. Function names have backticks. -->
+
+You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such like **[readxl](https://readxl.tidyverse.org/)**, **dbplyr**, and **ggplot2**. Important functions include: facet_wrap(), coord_flip(), geom_jitter(), geom_smooth(), scales_  , count(), slice_head(), and mutate(). 
 
 ### Exercise 1
 
@@ -209,6 +212,8 @@ question_text(NULL,
 
 ###
 
+<!-- DK: No hints. -->
+
 Our code:
 
 ```{r cheese-2-test, echo = TRUE, eval = FALSE}
@@ -241,6 +246,7 @@ question_text(NULL,
 ```
 
 Our code:
+
 ```{r cheese-3-test, echo = TRUE}
 read_excel("data/cheeses.xlsx") |>
   ggplot(aes(x = country, fill = milk)) +
@@ -303,6 +309,7 @@ Add this code to a new code chunk in your QMD. Run Cmd/Ctrl + Shift + K to rende
 
 CP/CR.
 
+
 ```{r cheese-5}
 question_text(NULL,
     answer(NULL, correct = TRUE),
@@ -337,6 +344,7 @@ Within the recent code chunk, add the option: `#| cache: true`. Assign the resul
 Place your cursor on the line where the pipe is assigned to `xc`, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `xc`.
 
 CP/CR.
+
 
 ```{r cheese-6}
 question_text(NULL,
