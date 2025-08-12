@@ -57,6 +57,10 @@ xw <- read_excel("data/wine.xlsx")|>
 
 <!-- DK: Knowledge drops. -->
 
+<!-- DK: Add data directory question. -->
+
+<!-- DK: Change download.file() to that directory. -->
+
 ## Introduction
 ###
 
@@ -188,16 +192,11 @@ question_text(NULL,
 
 ###
 
-You can use the `readxl_example()` function to locate the spreadsheet on your system in the directory where the package is installed. This function returns the path to the spreadsheet, which you can use in `read_excel()` as usual.
+<!-- DK: Knowledge drop. -->
 
 ### Exercise 2
 
 Ask AI how to read a `.xlsx` spreadsheet called `data/cheeses.xlsx` using `read_excel()`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line where it says `read_excel()` and run `Cmd/Ctrl + Enter`.
-In the Console, run:
-
-```         
-show_file("analysis.qmd", chunk = "Last")
-```
 
 CP/CR.
 
@@ -212,8 +211,6 @@ question_text(NULL,
 
 ###
 
-<!-- DK: No hints. -->
-
 Our code:
 
 ```{r cheese-2-test, echo = TRUE, eval = FALSE}
@@ -222,7 +219,7 @@ read_excel("data/cheeses.xlsx")
 
 ###
 
-Most of `readxl`’s functions allow you to load Excel spreadsheets into R:
+Most of **readxl**’s functions allow you to load Excel spreadsheets into R:
 
 `read_xls()` reads Excel files with `xls` format.
 `read_xlsx()` read Excel files with `xlsx` format.
@@ -272,7 +269,7 @@ Our plot is crowded because it includes all countries and has many `NA`values. W
 
 Ask AI to help you create a variable called `top_countries` that uses `data/cheeses.xlsx` and pipes it into `filter()` with `!is.na()` to remove rows where country is `NA`, continues the pipe with `count()` to count occurrences by country and sort them, then uses `slice_head(n = 3)` to get the top 3 countries and finally uses `pull(country)` to extract just the country names as a vector.
 
-Add this code as a replacement of your current code to the code chunk in your QMD. Run Cmd/Ctrl + Shift + K to render. Then type `top_countries` in the Console to see the results.
+Add this code as a replacement of your current code to the code chunk in your QMD. Run `Cmd/Ctrl + Shift + K` to render. Then type `top_countries` in the Console to see the results.
 
 ```{r cheese-4}
 question_text(NULL,
