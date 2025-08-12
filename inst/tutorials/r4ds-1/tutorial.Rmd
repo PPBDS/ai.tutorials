@@ -186,7 +186,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo = TRUE}
-x <- ...
+#x <- ...
 ```
 
 ###
@@ -213,7 +213,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-x
+#x
 ...
 ```
 
@@ -249,7 +249,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-  ...
+  #...
 ```
 
 ###
@@ -319,7 +319,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo = TRUE}
-x <- ...
+#x <- ...
 ```
 
 ###
@@ -346,8 +346,8 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-x
-...
+#x
+#...
 ```
 
 ###
@@ -382,7 +382,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-  ...
+  #...
 ```
 
 ###
