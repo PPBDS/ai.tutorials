@@ -4,15 +4,15 @@ Continue work on r4ds-2.
 
 ## Luke
 
-https://ppbds.github.io/tutorial.helpers/articles/instructions.html
+https://ppbds.github.io/tutorial.helpers/articles/instructions.html DONE
 
 Latest version of tutorial.helpers:
 
-renv::install("PPBDS/tutorial.helpers")
+renv::install("PPBDS/tutorial.helpers") DONE
 
-Re-read: https://ppbds.github.io/tutorial.helpers/articles/ai.html
+Re-read: https://ppbds.github.io/tutorial.helpers/articles/ai.html DONE
 
-Read: r4ds-2/tutorial.Rmd
+Read: r4ds-2/tutorial.Rmd DONE
 
 Work on: r4ds-1/tutorial.Rmd
 
