@@ -127,21 +127,35 @@ question_text(NULL,
 ## Billboards
 ###
 
+<!-- LL: do data transfomration before doing data visualization? Still need to create a plot for data transformation though, so maybe not? Or, hold off on the plot until the end of the section? -->
+
 The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of the song rankings for Billboard top 100 in the year 2000, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
 
 We will use the following functions for this section (and we will mention more):
 [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html)
+
 [aes()](https://ggplot2.tidyverse.org/reference/aes.html)
+
 [geom_point()](https://ggplot2.tidyverse.org/reference/geom_point.html)
+
 [geom_smooth()](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+
 [labs()](https://ggplot2.tidyverse.org/reference/labs.html)
+
 [facet_wrap()](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
+
 [ggsave()](https://ggplot2.tidyverse.org/reference/ggsave.html)
+
 [filter()](https://dplyr.tidyverse.org/reference/filter.html)
+
 [arrange()](https://dplyr.tidyverse.org/reference/arrange.html)
+
 [mutate()](https://dplyr.tidyverse.org/reference/mutate.html)
+
 [select()](https://dplyr.tidyverse.org/reference/select.html)
+
 [summarize()](https://dplyr.tidyverse.org/reference/summarise.html)
+
 [slice_head()](https://dplyr.tidyverse.org/reference/slice.html)
 
 <!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
@@ -167,7 +181,9 @@ question_text(NULL,
 
 ### Exercise 2
 
+Ask AI to create a simple graph plotting `wk1` against `wk2`. Provide a tibble of `billboard` for AI to reference. Specify to the AI to only use the functions `ggplot()`, `aes()`, and `geom_point()`. Copy and paste this code into a new code chunk with your QMD. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
 
 ```{r billboards-2}
 question_text(NULL,
@@ -180,7 +196,55 @@ question_text(NULL,
 
 ###
 
+Our code:
+
 ```{r billboards-2-test, echo = TRUE}
+ggplot(billboard, aes(x = wk1, y = wk2)) +
+  geom_point()
+```
+
+###
+
+### Exercise 3
+
+Ask AI to continue the code with `+` and add a trendline with `geom_smooth()`. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-3-test, echo = TRUE}
+ggplot(billboard, aes(x = wk1, y = wk2)) +
+  geom_point() +
+  geom_smooth()
+```
+
+###
+
+### Exercise 4
+
+
+```{r billboards-4}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-4-test, echo = TRUE}
 
 ```
 
@@ -188,9 +252,7 @@ question_text(NULL,
 
 
 
-<!-- XX: ... -->
-
-### Exercise 3
+### Exercise 5
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -204,7 +266,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-3}
+```{r billboards-5}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -217,7 +279,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 4
+### Exercise 6
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -229,7 +291,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-4}
+```{r billboards-6}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -250,13 +312,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 5
+### Exercise 7
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-5}
+```{r billboards-7}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -277,7 +339,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 6
+### Exercise 8
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -291,7 +353,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-6}
+```{r billboards-8}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
