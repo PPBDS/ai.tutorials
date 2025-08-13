@@ -4,16 +4,6 @@ Continue work on r4ds-2.
 
 ## Luke
 
-https://ppbds.github.io/tutorial.helpers/articles/instructions.html DONE
-
-Latest version of tutorial.helpers:
-
-renv::install("PPBDS/tutorial.helpers") DONE
-
-Re-read: https://ppbds.github.io/tutorial.helpers/articles/ai.html DONE
-
-Read: r4ds-2/tutorial.Rmd DONE
-
 Work on: r4ds-1/tutorial.Rmd
 
 ### r4ds-1
@@ -27,7 +17,9 @@ Grab the most important 40 knowledge drops from the relevant tutorials in r4ds.t
 
 Let's use billboards for the first example.
 
-What csv file do we use for the second example?
+What csv file do we use for the second example? Pick an a graphic you like from here: https://r-graph-gallery.com/
+
+
 
 
 ## Preceptor

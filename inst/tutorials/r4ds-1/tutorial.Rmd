@@ -24,17 +24,10 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- XX: CHECKLIST BEFORE STARTING: -->
-<!-- * If you need to use the copy code button, you must load the relevant child document. -->
-<!-- * Edit yaml at the top of this file -->
-<!-- * Save the file as "tutorial.Rmd" in a new directory under inst/tutorials/. -->
-<!-- * Load any necessary libraries for the tutorial in the first code chunk -->
-<!-- * Delete this and the other commented instructions below. -->
-
 ## Introduction
 ###
 
-<!-- Two to four sentence about the main packages/functions covered in this tutorial. -->
+<!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
 
 ### Exercise 1
 
@@ -124,10 +117,45 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-## Billboards
+### Exercise 4
+
+<!-- XX: Delete this question if you do not make use of the `data` directory in this tutorial. -->
+
+From the Console, run these three commands:
+
+`getwd()`
+`dir.create("data")`
+`list.files()`
+
+This will create a `data` directory in your project. This is a good place to store any data that you are working with.
+
+CP/CR
+
+```{r introduction-4}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
 ###
 
-<!-- LL: do data transfomration before doing data visualization? Still need to create a plot for data transformation though, so maybe not? Or, hold off on the plot until the end of the section? -->
+You answer should look something like, although your path will be different.
+
+````
+> getwd()
+[1] "/Users/dkane/Desktop/projects/XX"
+> dir.create("data")
+> list.files()
+ [1] "analysis.qmd"        "data"    "README.md"
+>
+````
+
+
+## Billboards
+###
 
 The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of the song rankings for Billboard top 100 in the year 2000, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
 
@@ -158,13 +186,14 @@ We will use the following functions for this section (and we will mention more):
 
 [slice_head()](https://dplyr.tidyverse.org/reference/slice.html)
 
-<!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
+<!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
-Since we have already loaded **tidyverse**, we have therefore loaded **tidyr** and by extension, **Billboard**. Type `billboard` into the Console and observe the rows and columns.
+Since we have already loaded **tidyverse**, we have therefore loaded **tidyr**, one of the component packages of the "core" *Tidyverse*. Type `billboard` into the Console.
 
 CP/CR.
+
 
 ```{r billboards-1}
 question_text(NULL,
@@ -175,13 +204,23 @@ question_text(NULL,
 	rows = 5)
 ```
 
-<!-- LL: should answer boxes be "billboards-1-test" or just "billboards-1"? --> 
+###
+
+```{r billboards-1-test, echo = TRUE}
+billboard
+```
 
 ###
 
+
+
 ### Exercise 2
 
-Ask AI to create a simple graph plotting `wk1` against `wk2`. Provide a tibble of `billboard` for AI to reference. Specify to the AI to only use the functions `ggplot()`, `aes()`, and `geom_point()`. Copy and paste this code into a new code chunk with your QMD. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+Provide a tibble of `billboard` for AI to reference.
+
+Ask AI: Create a simple graph plotting `wk1` against `wk2`. Specify to the AI to only use the functions `ggplot()`, `aes()`, and `geom_point()`. 
+
+Copy and paste this code into a new code chunk with your QMD. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -204,6 +243,7 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 ```
 
 ###
+
 
 ### Exercise 3
 
@@ -232,7 +272,7 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ### Exercise 4
 
-Ask AI to continue the code by adding a title, subtitle, caption, and axis labels using the `labs()` function. Don't worry if it isn't perfect. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+Ask AI to continue the code by adding a `title`, `subtitle`, `caption`, and axis labels using the `labs()` function. Don't worry if it isn't perfect. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -388,7 +428,7 @@ Our code:
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
 
-<!-- LL: Should I keep knowledge drops on how pipes, quotes, and +s work? I think it would be beneficial to a student new to R -->
+
 
 ````
 VISUALIZATION knowledge drops 17 (more than average because it is R4DS tutorial)
