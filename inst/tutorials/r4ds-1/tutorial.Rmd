@@ -232,6 +232,9 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ### Exercise 4
 
+Ask AI to continue the code by adding a title, subtitle, caption, and axis labels using the `labs()` function. Don't worry if it isn't perfect. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r billboards-4}
 question_text(NULL,
@@ -244,8 +247,19 @@ question_text(NULL,
 
 ###
 
-```{r billboards-4-test, echo = TRUE}
+Our code:
 
+```{r billboards-4-test, echo = TRUE}
+ggplot(billboard, aes(x = wk1, y = wk2)) +
+  geom_point() +
+  geom_smooth() +
+  labs(
+    title = "Billboard Rankings: Week 1 vs. Week 2",
+    subtitle = "Shows how a song’s debut ranking relates to its second week performance",
+    caption = "Source: Billboard dataset (2000)",
+    x = "Week 1 Rank",
+    y = "Week 2 Rank"
+  )
 ```
 
 ###
