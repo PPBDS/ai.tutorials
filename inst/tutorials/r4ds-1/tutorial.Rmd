@@ -517,8 +517,6 @@ billboard |>
 
 
 
-<!-- LL: No need for the end of the section to finish with a plot for this one? We are learning how to plot and have not focused on pipes to change data yet. -->
-
 ### Exercise 11
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
@@ -644,7 +642,7 @@ Our code:
 
 
 ````
-VISUALIZATION knowledge drops 17 (more than average because it is R4DS tutorial)
+VISUALIZATION knowledge drops 15 (more than average because it is R4DS tutorial)
 
 ### 
 
@@ -703,10 +701,6 @@ Finally, it's worth noting that the `labs()` function is just one way to modify 
 
 ### 
 
-Always keep in mind that steps in the pipeline are separated by `|>` while steps in the construction of your `ggplot()` object are separated with `+`. 
-
-### 
-
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
 An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
@@ -736,10 +730,6 @@ For categorical variables, splitting your plot into **facets** creates subplots 
 In order to save a copy of this plot, we use the [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) by running `ggsave(filename = "penguin-plot.png")` immediately after creating the plot.
 
 By default, `ggsave()` saves the most recently created plot.
-
-### 
-
-R is extremely picky, and a misplaced character can make all the difference. Make sure that every `(` is matched with a `)` and every `"` is paired with another `"`. Sometimes you’ll run the code and nothing happens. Check the left-hand of your console: if it’s a `+`, it means that R doesn’t think you’ve typed a complete expression and it’s waiting for you to finish it. In this case, it’s usually easy to start from scratch again by pressing ESCAPE to abort processing the current command.
 ````
 
 ````
@@ -842,17 +832,69 @@ Using `.by` is a much better approach. Never use `group_by()` unless you have a 
 ````
 
 
-## XX: Second section (use sentence case)
+## Music
 ###
+
+The **music** csv file comes from the [**Million Song Dataset**](https://corgis-edu.github.io/corgis/csv/music/), which used a company called the Echo Nest to derive data points about one million popular contemporary songs. **Music** only contains 10,000 rows of data of the songs from the **Million Song Dataset**.
+
 
 <!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
-<!-- XX: ... -->
+We begin by downloading our csv file `data/music.csv` directly from the internet using `download.file()`. 
 
+This adds the spreadsheet, `data/music.csv`, to our working directory so we can use it in this tutorial.
+
+In the Console, run:
+
+```         
+download.file(
+  "https://corgis-edu.github.io/corgis/datasets/csv/music/music.csv",
+  destfile = "data/music.csv"
+)
+```
+
+CP/CR.
+
+```{r music-1}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
 
 ### Exercise 2
+
+Ask AI: Read a `.csv` dataset called `data/music.csv` using `read_csv()`. Add this code to a new code chunk in your QMD. Make sure the code is not assigned to a variable. 
+
+Place your cursor at the beginning of the line and run `Cmd/Ctrl + Shift + Enter`.
+
+
+```{r music-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+```{r music-2-test, echo = TRUE, eval = FALSE}
+read_csv("data/music.csv")
+```
+
+###
+
+Now, assign this code to the variable `x` so that it looks like `x <- read_csv("data/music.csv")`. Save the file.
+
+### Exercise 3
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -866,7 +908,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-2}
+```{r music-3}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -879,7 +921,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 3
+### Exercise 4
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -891,7 +933,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-3}
+```{r music-4}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -912,13 +954,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 4
+### Exercise 5
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-4}
+```{r music-5}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -940,7 +982,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 5
+### Exercise 6
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -954,7 +996,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-5}
+```{r music-6}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
