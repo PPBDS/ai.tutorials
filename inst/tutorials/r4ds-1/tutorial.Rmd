@@ -190,7 +190,9 @@ We will use the following functions for this section (and we will mention more):
 
 ### Exercise 1
 
-Since we have already loaded **tidyverse**, we have therefore loaded **tidyr**, one of the component packages of the "core" *Tidyverse*. Type `billboard` into the Console.
+Since we have already loaded **tidyverse**, we have therefore loaded **tidyr**, one of the component packages of the "core" *Tidyverse*. 
+
+Type `billboard` into the Console.
 
 CP/CR.
 
@@ -216,11 +218,11 @@ billboard
 
 ### Exercise 2
 
-Provide a tibble of `billboard` for AI to reference.
+In a prompt for AI provide a tibble of `billboard`. You only need the top 3 lines or so.
 
-Ask AI: Create a simple graph plotting `wk1` against `wk2`. Specify to the AI to only use the functions `ggplot()`, `aes()`, and `geom_point()`. 
+Ask AI: Create a simple graph plotting `wk1` against `wk2` while only using the functions `ggplot()`, `aes()`, and `geom_point()`. 
 
-Copy and paste this code into a new code chunk with your QMD. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
 
 CP/CR.
 
@@ -244,10 +246,11 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ###
 
-
 ### Exercise 3
 
-Ask AI to continue the code with `+` and add a trendline with `geom_smooth()`. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+Now, within the code in your QMD, remove the `aes()` argument and `geom_point()`.
+
+Place your cursor on the line of code and run `Cmd/Ctrl + Shift + Enter`.
 
 ```{r billboards-3}
 question_text(NULL,
@@ -255,26 +258,28 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 3)
 ```
 
 ###
-
-Our code:
 
 ```{r billboards-3-test, echo = TRUE}
-ggplot(billboard, aes(x = wk1, y = wk2)) +
-  geom_point() +
-  geom_smooth()
+ggplot(billboard)
 ```
 
 ###
+
+
+
+###
+
+Revert this change with `Cmd/Ctrl + Z` so that `aes()` and `geom_point()` are restored.
 
 ### Exercise 4
 
-Ask AI to continue the code by adding a `title`, `subtitle`, `caption`, and axis labels using the `labs()` function. Don't worry if it isn't perfect. Copy and paste this code to continue the previous code. Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
+Ask AI: Continue the code with `+` and add a trendline with `geom_smooth()`. 
 
-CP/CR.
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
 
 ```{r billboards-4}
 question_text(NULL,
@@ -292,6 +297,35 @@ Our code:
 ```{r billboards-4-test, echo = TRUE}
 ggplot(billboard, aes(x = wk1, y = wk2)) +
   geom_point() +
+  geom_smooth()
+```
+
+###
+
+### Exercise 5
+
+Ask AI: Continue the code by adding a `title`, `subtitle`, `caption`, and axis labels using the `labs()` function.
+
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code again and run `Cmd/Ctrl + Shift + Enter`.
+
+CP/CR.
+
+```{r billboards-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-5-test, echo = TRUE}
+ggplot(billboard, aes(x = wk1, y = wk2)) +
+  geom_point() +
   geom_smooth() +
   labs(
     title = "Billboard Rankings: Week 1 vs. Week 2",
@@ -304,9 +338,186 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ###
 
+### Exercise 6
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple graph plotting a line graph showing the rank of 3 songs over the first 5 weeks, mainly using the functions `ggplot()`, `aes()`, and `geom_line()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-6-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk5,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = week, y = rank, color = track, group = track)) +
+  geom_line()
+```
+
+###
+
+### Exercise 7
+
+Ask AI: Continue the code to split the graph into 3 graphs, 1 per track, using `facet_wrap()`. 
+
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-7-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk5,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = week, y = rank, color = track, group = track)) +
+  geom_line() + 
+  facet_wrap(~ track)
+```
+
+###
+
+### Exercise 8
+
+Ask AI: Continue the code to save the graph with `ggsave()`.
+
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-8-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk5,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = week, y = rank, color = track, group = track)) +
+  geom_line() + 
+  facet_wrap(~ track)
+
+ggsave("billboard_tracks.png")
+```
+
+###
+
+### Exercise 9
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple graph with boxplots showing the distribution of ranks of 3 songs, mainly using the functions `ggplot()`, `aes()`, and `geom_boxplot()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-9-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Kryptonite", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk76,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = track, y = rank)) +
+  geom_boxplot()
+```
+
+###
+
+### Exercise 10
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple bar graph with bars showing the count of weeks 3 songs were ranked in the top 100, mainly using the functions `ggplot()`, `aes()`, and `geom_bar()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-10-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Kryptonite", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk76,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  filter(rank <= 100) |>
+  ggplot(aes(x = track)) +
+  geom_bar()
+```
+
+###
 
 
-### Exercise 5
+
+### Exercise 11
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -320,7 +531,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-5}
+```{r billboards-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -333,7 +544,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 6
+### Exercise 12
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -345,7 +556,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-6}
+```{r billboards-12}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -366,13 +577,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 7
+### Exercise 13
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-7}
+```{r billboards-13}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -393,7 +604,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 8
+### Exercise 14
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -407,7 +618,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-8}
+```{r billboards-14}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -431,7 +642,7 @@ Our code:
 
 
 ````
-VISUALIZATION knowledge drops 17 (more than average because it is R4DS tutorial)
+VISUALIZATION knowledge drops 15 (more than average because it is R4DS tutorial)
 
 ### 
 
@@ -490,10 +701,6 @@ Finally, it's worth noting that the `labs()` function is just one way to modify 
 
 ### 
 
-Always keep in mind that steps in the pipeline are separated by `|>` while steps in the construction of your `ggplot()` object are separated with `+`. 
-
-### 
-
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
 An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
@@ -523,10 +730,6 @@ For categorical variables, splitting your plot into **facets** creates subplots 
 In order to save a copy of this plot, we use the [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) by running `ggsave(filename = "penguin-plot.png")` immediately after creating the plot.
 
 By default, `ggsave()` saves the most recently created plot.
-
-### 
-
-R is extremely picky, and a misplaced character can make all the difference. Make sure that every `(` is matched with a `)` and every `"` is paired with another `"`. Sometimes you’ll run the code and nothing happens. Check the left-hand of your console: if it’s a `+`, it means that R doesn’t think you’ve typed a complete expression and it’s waiting for you to finish it. In this case, it’s usually easy to start from scratch again by pressing ESCAPE to abort processing the current command.
 ````
 
 ````
@@ -629,17 +832,73 @@ Using `.by` is a much better approach. Never use `group_by()` unless you have a 
 ````
 
 
-## XX: Second section (use sentence case)
+## Music
 ###
+
+The **music** csv file comes from the [**Million Song Dataset**](https://corgis-edu.github.io/corgis/csv/music/), which used a company called the Echo Nest to derive data points about one million popular contemporary songs. **Music** only contains 10,000 rows of data of the songs from the **Million Song Dataset**.
+
+`read_csv()`
+`pivot_longer()`
 
 <!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
-<!-- XX: ... -->
+We begin by downloading our csv file `data/music.csv` directly from the internet using `download.file()`. 
 
+This adds the spreadsheet, `data/music.csv`, to our working directory so we can use it in this tutorial.
+
+In the Console, run:
+
+```         
+download.file(
+  "https://corgis-edu.github.io/corgis/datasets/csv/music/music.csv",
+  destfile = "data/music.csv"
+)
+```
+
+CP/CR.
+
+```{r music-1}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
 
 ### Exercise 2
+
+Ask AI: Read a `.csv` dataset called `data/music.csv` using `read_csv()`. 
+
+Add this code to a new code chunk in your QMD. Make sure the code is not assigned to a variable. 
+
+Place your cursor at the beginning of the line and run `Cmd/Ctrl + Shift + Enter`.
+
+
+```{r music-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+```{r music-2-test, echo = TRUE, eval = FALSE}
+read_csv("data/music.csv")
+```
+
+###
+
+Now, assign this code to the variable `music` so that it looks like `music <- read_csv("data/music.csv")`. Save the file.
+
+### Exercise 3
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -653,7 +912,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-2}
+```{r music-3}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -666,7 +925,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 3
+### Exercise 4
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -678,7 +937,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-3}
+```{r music-4}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -699,13 +958,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 4
+### Exercise 5
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-4}
+```{r music-5}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -727,7 +986,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 5
+### Exercise 6
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -741,7 +1000,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r xx-second-section-use-sentence-case-5}
+```{r music-6}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -761,6 +1020,116 @@ Our code:
 ###
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
+
+````
+IMPORT knowledge drops 15
+
+### 
+
+This tutorial covers [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn how to import data into your R project using [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) and related functions from the [**readr**](https://readr.tidyverse.org/) package. You will also learn how to write out data to files with functions like [`write_csv()`](https://readr.tidyverse.org/reference/write_delim.html).
+
+### 
+
+When you run `read_csv()`, it prints out a message telling you the number of rows and columns of data, the delimiter that was used, and the column specifications (names of columns organized by the type of data the column contains). It also prints out some information about retrieving the full column specification and how to quiet this message. 
+
+"CSV" stands for **c**omma-**s**eparated **v**alues, meaning that the variable names and data values are separated by commas in the file. 
+
+### 
+
+By default, `read_csv()` only recognizes empty strings ("") in this dataset as NAs
+
+### 
+
+You might also notice that columns are surrounded by backticks. That’s because they contain spaces, breaking R’s usual rules for variable names; they’re *non-syntactic* names. To refer to these variables, you need to surround them with backticks: `` ` ``. 
+
+### 
+
+Sometimes, a data set will have scores of weirdly named variables. In that case, we recommend using `clean_names()` from the [**janitor**](https://sfirke.github.io/janitor/) package. 
+
+**janitor** has several useful functions, including `make_clean_names()`, which does the same thing as `clean_names()` but can be used directly during data import rather than as part of a pipe.
+
+`clean_names()` not only fixes the *non-syntactic* names like `Full Name`; it also cleans up any variable name which does not follow the standard approach of, first, no capitalization and, second, using underscores as a word seperator.
+
+The **janitor** package has a function called `remove_empty()` to remove empty spaces, `remove_constant()` to remove columns of constant values, and many more. 
+
+### 
+
+A new function here is `if_else()`, which has three arguments. The first argument `test` should be a logical vector. The result will contain the value of the second argument, `yes`, when test is `TRUE`, and the value of the third argument, `no`, when it is `FALSE`. Here we’re saying if `age` is the character string "five", make it "5", and if not leave it as `age`. 
+
+### 
+
+It is always better to use the `col_types` argument explicitly in order to ensure that the variable types are what you want them to be. 
+
+The argument `skip` is used to skip rows, but to skip columns, you can use the `col_only()` function as the argument to `col_types` in order to read in only the columns which you want. 
+
+The argument `col_names` can also be used to create custom column names. 
+
+The `col_names` argument is not just specific to `read_csv()`; it can be used in other functions such as `read_excel()` and `read_delim()`
+
+There are many other arguments to `cols`. Type `?cols` into your Console to explore!
+
+There are functions which specify data: `col_logical()`, `col_double()`, `col_date()`, and so on.
+
+### 
+
+The `"universal"` makes sure the columns names are all unique and uses the syntax already built into the `name_repair` command to organize the names. There are other options such as `minimal` and`unique` for this function. Try them out!
+
+###
+
+CSV files are just one type of **text** file. A text file is any file which includes plain text. The contents of such files are easy to look at in any text editor, or in RStudio.
+
+A CSV file doesn’t contain any information about the type of each variable (i.e. whether it’s a logical, number, string, etc.), so **readr** will try to guess the type. 
+
+###
+
+The "quotation trick" allows `read_csv()` and related functions to read data directly from a quoted string, rather than a file. 
+It produces the same tibble as if the character string were in a separate file.
+
+###
+
+**readr** uses a heuristic to figure out the column types. For each column, it pulls the values of 1,000 rows spaced evenly from the first row to the last, ignoring missing values. It then works through the following questions:
+
+* Does it contain only `F`, `T`, `FALSE`, or `TRUE` (ignoring case)? If so, it’s a logical.
+* Does it contain only numbers (e.g., `1`, `-4.5`, `5e6`, `Inf`)? If so, it’s a number.
+* Does it match the ISO8601 standard? If so, it’s a date or date-time. 
+* Otherwise, it must be a string.
+
+### 
+
+**readr** provides a total of nine column types for you to use. Here are the most important 4.
+
+* `col_logical()` and `col_double()` read logicals and real numbers. They’re relatively rarely needed (except as above), since **readr** will usually guess them for you.
+
+* `col_integer()` reads integers. We seldom distinguish integers and doubles because they’re functionally equivalent, but reading integers explicitly can occasionally be useful because they occupy half the memory of doubles.
+
+* `col_character()` reads strings. This is sometimes useful to specify explicitly when you have a column that is a numeric identifier, i.e. long series of digits that identifies some object, but it doesn’t make sense to (e.g.) divide it in half, for example, a phone number, social security number, credit card number, etc.
+
+### 
+
+Here are the other 5 column types from **readr**.
+
+* `col_factor()`, `col_date()`, and `col_datetime()` create factors, dates, and date-times respectively.
+
+* `col_number()` is a permissive numeric parser that will ignore non-numeric components, and is particularly useful for currencies.
+
+* `col_skip()` skips a column so it’s not included in the result, which can be useful for speeding up reading the data if you have a large CSV file and you only want to use some of the columns.
+
+The [help page](https://readr.tidyverse.org/reference/cols.html) for `cols()` includes more details and discussion.
+
+### 
+
+**readr** also comes with two useful functions for writing data back to disk: `write_csv()` and `write_tsv()`. The most important arguments to these functions are `x` (the data frame or tibble to write) and `file` (the location to write it to). You can also specify how missing values are written with `na`, and if you want to `append` to an existing file.
+
+You can use `append` with `write_csv()` and similar text-based functions to add on data to an existing file. That won't work with `write_rds()` and other functions which work with binary data. In that case, the files must be recreated each time.
+
+### 
+
+Sometimes you’ll need to assemble a tibble “by hand,” doing a little data entry in your R script. There are two useful functions to help you do this which differ in whether you layout the tibble by columns (`tibble()`) or by rows (`tribble()`).
+
+Laying out the data by column can make it hard to see how the rows are related, so an alternative is `tribble()`, short for **tr**ansposed t**ibble**, which lets you lay out your data row by row.
+
+
+````
 
 ## Summary
 ###
