@@ -14,6 +14,7 @@ description: 'This tutorial for "R for Data Science" covers Chapter 1: Data visu
 ```{r setup, include = FALSE}
 library(learnr)
 library(tutorial.helpers)
+library(tidyverse)
 
 
 knitr::opts_chunk$set(echo = FALSE)
