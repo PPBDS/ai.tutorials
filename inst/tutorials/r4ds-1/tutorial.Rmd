@@ -246,12 +246,11 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ###
 
-
 ### Exercise 3
 
-Ask AI: Continue the code with `+` and add a trendline with `geom_smooth()`. 
+Now, within the code in your QMD, remove the `aes()` argument and `geom_point()`.
 
-Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+Place your cursor on the line of code and run `Cmd/Ctrl + Shift + Enter`.
 
 ```{r billboards-3}
 question_text(NULL,
@@ -259,28 +258,28 @@ question_text(NULL,
 	allow_retry = TRUE,
 	try_again_button = "Edit Answer",
 	incorrect = NULL,
-	rows = 5)
+	rows = 3)
 ```
 
 ###
-
-Our code:
 
 ```{r billboards-3-test, echo = TRUE}
-ggplot(billboard, aes(x = wk1, y = wk2)) +
-  geom_point() +
-  geom_smooth()
+ggplot(billboard)
 ```
 
 ###
+
+
+
+###
+
+Revert this change with `Cmd/Ctrl + Z` so that `aes()` and `geom_point()` are restored.
 
 ### Exercise 4
 
-Ask AI: Continue the code by adding a `title`, `subtitle`, `caption`, and axis labels using the `labs()` function.
+Ask AI: Continue the code with `+` and add a trendline with `geom_smooth()`. 
 
-Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code again and run `Cmd/Ctrl + Shift + Enter`.
-
-CP/CR.
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
 
 ```{r billboards-4}
 question_text(NULL,
@@ -298,25 +297,18 @@ Our code:
 ```{r billboards-4-test, echo = TRUE}
 ggplot(billboard, aes(x = wk1, y = wk2)) +
   geom_point() +
-  geom_smooth() +
-  labs(
-    title = "Billboard Rankings: Week 1 vs. Week 2",
-    subtitle = "Shows how a song’s debut ranking relates to its second week performance",
-    caption = "Source: Billboard dataset (2000)",
-    x = "Week 1 Rank",
-    y = "Week 2 Rank"
-  )
+  geom_smooth()
 ```
 
 ###
 
 ### Exercise 5
 
-In a new prompt for AI provide a tibble of `billboard` again.
+Ask AI: Continue the code by adding a `title`, `subtitle`, `caption`, and axis labels using the `labs()` function.
 
-Ask AI: Create a simple graph plotting a line graph showing the rank of 3 songs over the first 5 weeks, mainly using the functions `ggplot()`, `aes()`, and `geom_line()`. 
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code again and run `Cmd/Ctrl + Shift + Enter`.
 
-Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+CP/CR.
 
 ```{r billboards-5}
 question_text(NULL,
@@ -332,6 +324,42 @@ question_text(NULL,
 Our code:
 
 ```{r billboards-5-test, echo = TRUE}
+ggplot(billboard, aes(x = wk1, y = wk2)) +
+  geom_point() +
+  geom_smooth() +
+  labs(
+    title = "Billboard Rankings: Week 1 vs. Week 2",
+    subtitle = "Shows how a song’s debut ranking relates to its second week performance",
+    caption = "Source: Billboard dataset (2000)",
+    x = "Week 1 Rank",
+    y = "Week 2 Rank"
+  )
+```
+
+###
+
+### Exercise 6
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple graph plotting a line graph showing the rank of 3 songs over the first 5 weeks, mainly using the functions `ggplot()`, `aes()`, and `geom_line()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-6-test, echo = TRUE}
 billboard |>
   filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
   pivot_longer(
@@ -346,42 +374,9 @@ billboard |>
 
 ###
 
-### Exercise 6
-
-Ask AI: Continue the code to split the graph into 3 graphs, 1 per track, using `facet_wrap()`. 
-
-Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
-
-```{r billboards-6}
-question_text(NULL,
-	answer(NULL, correct = TRUE),
-	allow_retry = TRUE,
-	try_again_button = "Edit Answer",
-	incorrect = NULL,
-	rows = 5)
-```
-
-###
-
-```{r billboards-6-test, echo = TRUE}
-billboard |>
-  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
-  pivot_longer(
-    cols = wk1:wk5,
-    names_to = "week",
-    values_to = "rank",
-    values_drop_na = TRUE
-  ) |>
-  ggplot(aes(x = week, y = rank, color = track, group = track)) +
-  geom_line() + 
-  facet_wrap(~ track)
-```
-
-###
-
 ### Exercise 7
 
-Ask AI: Continue the code to save the graph with `ggsave()`.
+Ask AI: Continue the code to split the graph into 3 graphs, 1 per track, using `facet_wrap()`. 
 
 Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
 
@@ -408,8 +403,114 @@ billboard |>
   ggplot(aes(x = week, y = rank, color = track, group = track)) +
   geom_line() + 
   facet_wrap(~ track)
+```
+
+###
+
+### Exercise 8
+
+Ask AI: Continue the code to save the graph with `ggsave()`.
+
+Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-8-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk5,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = week, y = rank, color = track, group = track)) +
+  geom_line() + 
+  facet_wrap(~ track)
 
 ggsave("billboard_tracks.png")
+```
+
+###
+
+### Exercise 9
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple graph with boxplots showing the distribution of ranks of 3 songs, mainly using the functions `ggplot()`, `aes()`, and `geom_boxplot()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-9-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Kryptonite", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk76,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = track, y = rank)) +
+  geom_boxplot()
+```
+
+###
+
+### Exercise 10
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a simple bar graph with bars showing the count of weeks 3 songs were ranked in the top 100, mainly using the functions `ggplot()`, `aes()`, and `geom_bar()`. 
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Shift + Enter`.
+
+```{r billboards-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-10-test, echo = TRUE}
+billboard |>
+  filter(track %in% c("Kryptonite", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk76,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  filter(rank <= 100) |>
+  ggplot(aes(x = track)) +
+  geom_bar()
 ```
 
 ###
@@ -418,7 +519,7 @@ ggsave("billboard_tracks.png")
 
 <!-- LL: No need for the end of the section to finish with a plot for this one? We are learning how to plot and have not focused on pipes to change data yet. -->
 
-### Exercise 8
+### Exercise 11
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -432,7 +533,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-8}
+```{r billboards-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -445,7 +546,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 9
+### Exercise 12
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -457,7 +558,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-9}
+```{r billboards-12}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -478,13 +579,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 10
+### Exercise 13
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-10}
+```{r billboards-13}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -505,7 +606,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 11
+### Exercise 14
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -519,7 +620,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-11}
+```{r billboards-14}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
