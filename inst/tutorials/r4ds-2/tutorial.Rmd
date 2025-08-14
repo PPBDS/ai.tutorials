@@ -45,17 +45,11 @@ xw <- read_excel("data/wine.xlsx")|>
 
 <!-- DK: Knowledge drops. -->
 
-<!-- DK: Add data directory question. -->
-
-<!-- DK: Change download.file() to that directory. -->
 
 ## Introduction
 ###
 
 This section covers key concepts from [Chapter 9: Layers](https://r4ds.hadley.nz/layers.html), [Chapter 10: Exploratory Data Analysis](https://r4ds.hadley.nz/eda.html), [Chapter 11: Communication](https://r4ds.hadley.nz/communication.html), and [Chapter 20: Spreadsheets](https://r4ds.hadley.nz/spreadsheets.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
-
-<!-- DK: Add the links to functions and to the packages. Function names have backticks. -->
-
 
 You will learn about working with categorical and continuous variables using different types of variation and exploratory data analysis using core packages such as **[readxl](https://readxl.tidyverse.org/)**, **[dbplyr](https://dbplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html), [`coord_flip()`](https://ggplot2.tidyverse.org/reference/coord_flip.html), and  [`geom_jitter()`](https://ggplot2.tidyverse.org/reference/geom_jitter.html). 
 
@@ -967,7 +961,7 @@ You can write data back to disk as an Excel file using the `write_xlsx()` functi
 
 ### Exercise 2
 
-Ask AI how to read a `.xlsx` spreadsheet called `data/wine.xlsx` using `read_excel()`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line and run `Cmd/Ctrl + Enter`. Type `wine` in the console to retreive the contents of `wine`.
+Ask AI how to read a `.xlsx` spreadsheet called `data/wine.xlsx` using `read_excel()`. Add this code to a new code chunk in your QMD. Place your cursor at the beginning of the line and run `Cmd/Ctrl + Enter`. Type `wine` in the Console to retrieve the contents of `wine`.
 
 CP/CR.
 
@@ -990,7 +984,7 @@ read_excel("data/wine.xlsx")
 
 ###
 
-We use `scale_y_continuous` when we want to modify the y-axis for continuous data. [This documentation here](https://ggplot2.tidyverse.org/reference/scale_continuous.html) will tell you more, and all the possible arguments you can use with `scale_y_continuous`
+We use `scale_y_continuous()` when we want to modify the y-axis for continuous data. [This documentation here](https://ggplot2.tidyverse.org/reference/scale_continuous.html) will tell you more, and all the possible arguments you can use with `scale_y_continuous()`.
 
 ### Exercise 3
 
@@ -1017,16 +1011,19 @@ Our code:
 
 ```{r wine-3-test, echo = TRUE}
 summary(read_excel("data/wine.xlsx"))
-
 ```
 
 ###
+
+<!-- DK: Add package. -->
 
 You can also create a brand new Google sheet with `gs4_create()` or write to an existing sheet with `sheet_write()`.
 
 ### Exercise 4
 
 Ask AI to pipe `read_excel("data/wine.xlsx")` into a bar plot with `aes` only mapped to `x = Type` using `geom_bar()`. Add this code to a new code chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `read_excel` and run `Cmd/Ctrl + Shift + K` to render.
+
+<!-- DK: Default is `Cmd/Ctrl + Enter` followed by CP/CR. -->
 
 In the Console, run:
 
@@ -1053,14 +1050,16 @@ Our code:
 read_excel("data/wine.xlsx")|>
   ggplot(aes(x = Type)) + 
   geom_bar()
-
 ```
 
 ###
 
-On the x-axis, the chart displays `Type`, a variable from `wine`. On the y-axis, it displays `count`, but `count` is not a variable in `wine`. Where does count come from? Many graphs, like scatterplots, plot the raw values of your dataset. The algorithm used to calculate new values for a graph is called a stat, short for statistical transformation.
+`count` appears in the plot but is not a variable in `wine`. `count` is an example of a `stat`, short for statistical transformation, something calculated from the raw data for display in the graphic.
 
-`?geom_bar` shows that the default value for `stat` is “count”, which means that `geom_bar()` uses `stat_count()`.
+
+<!-- DK: If you don't understand a knowledge drop, then it is a bad knowledge drop. -->
+
+<!-- `?geom_bar` shows that the default value for `stat` is “count”, which means that `geom_bar()` uses `stat_count()`. -->
 
 ### Exercise 5
 
@@ -1088,7 +1087,7 @@ question_text(NULL,
 Our code:
 
 ```{r wine-5-test, echo=TRUE}
-read_excel("data/wine.xlsx")|>
+read_excel("data/wine.xlsx") |>
   select(Phenols, Color, Flavanoids)
 ```
 
@@ -1128,6 +1127,8 @@ Within the recent code chunk, add the option: `#| cache: true`. Assign the resul
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved fitted object.
 
 Place your cursor on the line where the pipe is assigned to `xw`, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `xw`.
+
+<!-- DK: Nit xw but wine_tibble or wine_data or just wine. -->
 
 CP/CR.
 
