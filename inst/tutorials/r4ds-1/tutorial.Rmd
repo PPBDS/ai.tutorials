@@ -167,20 +167,14 @@ You answer should look something like, although your path will be different.
 
 The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of the song rankings for Billboard top 100 in the year 2000, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
 
-We will use the following functions for this section (and we will mention more):
+We will use these following functions and more for this section:
 [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html)
 
-[aes()](https://ggplot2.tidyverse.org/reference/aes.html)
-
 [geom_point()](https://ggplot2.tidyverse.org/reference/geom_point.html)
-
-[geom_smooth()](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
 
 [labs()](https://ggplot2.tidyverse.org/reference/labs.html)
 
 [facet_wrap()](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
-
-[ggsave()](https://ggplot2.tidyverse.org/reference/ggsave.html)
 
 [filter()](https://dplyr.tidyverse.org/reference/filter.html)
 
