@@ -1,6 +1,10 @@
 ## Sruthi
 
-Continue work on r4ds-2.
+Continue work on r4ds-4. and 5.
+
+For 5, use https://r4ds.hadley.nz/webscraping.html#imdb-top-films. So, there is no data directory (?) and no download responsible. 
+
+For 5 also, https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
 
 ## Luke
 

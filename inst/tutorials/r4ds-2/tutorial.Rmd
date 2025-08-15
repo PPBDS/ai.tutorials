@@ -43,8 +43,6 @@ wine_tibble <- read_excel("data/wine.xlsx")|>
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Knowledge drops. -->
-
 
 ## Introduction
 ###
@@ -125,7 +123,7 @@ You can read a single worksheet from a spreadsheet with the `sheet` argument in 
 ### Exercise 3
 
 Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line. Do this again for the `library(readxl)` line and the `library(dbplyr)` line. 
-<!-- SG: Should this be one exercise or worded differently? -->
+
 Note that this causes `library(tidyverse)`, `library(readxl)`, and `library(dbplyr)` to be copied down to the Console and then executed. 
 
 CP/CR.
@@ -968,8 +966,6 @@ summary(read_excel("data/wine.xlsx"))
 
 ###
 
-<!-- DK: Add package. --> done
-
 You can also create a brand new Google sheet using with `gs4_create()` or write to an existing sheet with `sheet_write()` using the **googlesheets4** package.
 
 If two variables covary, you can use the values of one variable to make better predictions about the values of the second. If the covariation is due to a causal relationship (a special case), then you can use the value of one variable to control the value of the second.z
@@ -977,8 +973,6 @@ If two variables covary, you can use the values of one variable to make better p
 ### Exercise 4
 
 Ask AI to pipe `read_excel("data/wine.xlsx")` into a bar plot with `aes` only mapped to `x = Type` using `geom_bar()`. Add this code to a new code chunk in your QMD. Place your cursor on the first line of the code in your current code chunk at the start of `read_excel` and run `Cmd/Ctrl + Enter`.
-
-<!-- DK: Default is `Cmd/Ctrl + Enter` followed by CP/CR. --> done.
 
 
 CP/CR.
@@ -1005,11 +999,6 @@ read_excel("data/wine.xlsx")|>
 ###
 
 `count` appears in the plot but is not a variable in `wine`. `count` is an example of a `stat`, short for statistical transformation, something calculated from the raw data for display in the graphic.
-
-
-<!-- DK: If you don't understand a knowledge drop, then it is a bad knowledge drop. -->
-
-<!-- `?geom_bar` shows that the default value for `stat` is “count”, which means that `geom_bar()` uses `stat_count()`. -->
 
 ### Exercise 5
 
@@ -1291,8 +1280,6 @@ Within the recent code chunk, add the option: `#| cache: true`. Assign the resul
 
 Place your cursor on the line where the pipe is assigned to `wine_tibble`, run `Cmd/Ctrl + Enter`. Now, the workspace also includes a copy of `wine_tibble`.
 
-<!-- DK: Nit wine_tibble but wine_tibble or wine_data or just wine. -->
-
 CP/CR.
 
 ```{r wine-14}
@@ -1341,7 +1328,6 @@ wine_tibble
 Covariation is the tendency for the values of two or more variables to vary together in a related way. The best way to spot covariation is to visualize the relationship between two or more variables.
 
 ### Exercise 16 
-<!-- SG: I only have 16 exercises in both sections. Is this too little? Not sure what other exercises to add though. -->
 
 Ask AI to write R code to create a scatter plot form `wine_tibble` to explore the relationship of `Phenols` and `Flavanoids`, two categorical variables with a loess smoothing curve that shows the outlier.
 
