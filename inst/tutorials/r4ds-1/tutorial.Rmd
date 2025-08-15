@@ -123,7 +123,9 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Notice how **gplot2** is loaded with **tidyverse**.
+
+R has several systems for making graphs, but [**ggplot2**](https://ggplot2.tidyverse.org/index.html) is one of the most elegant and most versatile. **ggplot2** implements the *grammar of graphics*, a coherent system for describing and building graphs. With **ggplot2**, you can do more and faster by learning one system and applying it in many places.
 
 ### Exercise 4
 
@@ -192,7 +194,9 @@ We will use these following functions and more for this section:
 
 ### Exercise 1
 
-Since we have already loaded **tidyverse**, we have therefore loaded **tidyr**, one of the component packages of the "core" *Tidyverse*. 
+Since we have already loaded **tidyverse**, we have therefore loaded **tidyr** and **ggplot2**, some of the component packages of the "core" *Tidyverse*. 
+
+`billboard` is a dataset within **tidyr**.
 
 Type `billboard` into the Console.
 
@@ -216,7 +220,13 @@ billboard
 
 ###
 
+In the realm of data analysis, a fundamental concept is the notion of a variable. A variable represents a quantity, quality, or property that can be measured or observed. Variables can take different forms, depending on the nature of the data being studied. They can be numeric or categorical, continuous or discrete, qualitative or quantitative.
 
+**Tabular data** is data organized in a table. A table is a group of cells, organized in rows and columns. Tabular data is considered *tidy* if and only if it satisfies the following rules:
+
+1.  Each variable is a column; each column is a variable.
+2.  Each observation is a row, each row is an observation.
+3.  Each value is a cell, each cell is a single value.
 
 ### Exercise 2
 
@@ -248,9 +258,17 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ###
 
+When you're working with `ggplot()`, you typically won't be using just the `data` **parameter** (input into a function). You'll be using the `mapping` parameter as well. The `mapping` parameter lets you set, among other things, variables for the x- and y-axis.
+
+To use the `mapping` parameter, you have to give `ggplot()` an *aesthetic*, which you get by calling the `aes()` function. For example, if you wanted to set the variable for the x-axis to be `wk1`, you would add `mapping = aes(x = wk1)` in your call to `ggplot()`. 
+
+The aesthetic function, `aes()`, has more parameters than just `x` and `y`. `aes()` has parameters like `color`, `shape`, and `size` as well! You can add them in the same way you added the `x` and `y` parameters: add `color = foo` or `shape = bar(baz)` to your `aes()` call in `ggplot()`. 
+
+See [aesthetic mappings](https://ggplot2.tidyverse.org/reference/aes.html) for more examples.
+
 ### Exercise 3
 
-Now, within the code in your QMD, remove the `aes()` argument and `geom_point()`.
+Now, within the code in your QMD, remove the `geom_point()`.
 
 Place your cursor on the line of code and run `Cmd/Ctrl + Enter`.
 
@@ -266,16 +284,18 @@ question_text(NULL,
 ###
 
 ```{r billboards-3-test, echo = TRUE}
-ggplot(billboard)
+ggplot(billboard, aes(x = wk1, y = wk2))
 ```
 
 ###
 
+To display the data points, we need to add a geometric object, or, in ggplot terms, a `geom`. A `geom` is the geometrical object that a plot uses to represent data. These geometric objects are made available in **ggplot2** with functions that start with `geom_`.
 
+`geom_point()` is one of those functions, and it creates a scatterplot which plots the relationship between 2 numerical variables.
 
 ###
 
-Revert this change with `Cmd/Ctrl + Z` so that `aes()` and `geom_point()` are restored.
+Revert this change with `Cmd/Ctrl + Z` so that `geom_point()` is restored.
 
 ### Exercise 4
 
@@ -303,6 +323,12 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 ```
 
 ###
+
+`geom_smooth()` creates a fitted line or curve which can help identify trends and patterns in data. It offers different smoothing methods like linear or polynomial regression and *loess* smoothing. The shaded error around the fitted line represents uncertainty about the estimate.
+
+Within `geom_smooth()`, you can specify the smoothing `method` to be `"lm"`, `"glm"`, or `"loess"`, the specific model `formula` to be a relationship between `y` and `x` like `y ~ x` (default) or `y ~ log(x)`, and `se` to be `TRUE` or `FALSE` to shown the confidence interval for the fitted line or not.
+
+The `"lm"` method stands for **l**inear **m**odel, meaning that R do its best to fit a straight line through the points.
 
 ### Exercise 5
 
@@ -340,6 +366,12 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 
 ###
 
+The `labs()` function takes in several arguments to modify the plot labels, including `x`, `y`, `title`, `subtitle`, `caption`, and `tag`. The `x` and `y` arguments are used to modify the axis labels, while the `title`, `subtitle`, and `caption` arguments are used to modify the plot title, subtitle, and caption, respectively. The `tag` argument is used to add a label to the plot that can be used for reference in later code.
+
+The `labs()` function can also be used with the `ggtitle()` function to modify the plot title. This can be useful when you want to have more control over the formatting of the plot title, such as changing the font size or color.
+
+Finally, it's worth noting that the `labs()` function is just one way to modify plot labels in **ggplot2**. Other functions, such as `xlab()`, `ylab()`, and `ggtitle()`, can be used to modify specific plot labels without affecting others. It's important to choose the appropriate function for your needs depending on the level of customization you require.
+
 ### Exercise 6
 
 In a new prompt for AI provide a tibble of `billboard` again.
@@ -376,6 +408,14 @@ billboard |>
 
 ###
 
+<!-- LL: is a knowledge drop this in depth about pipes necessary or has it been covered by the introduction tutorial? -->
+
+The code that the AI produced like contained the symbol `%>%` or `|>`, which are pipe operators. We aim to use the `|>` operator because it is a base R function, leading to fewer dependencies and potentially better performance for these simple cases. If your code has `%>%`, replace it with `|>`.
+
+`XX` on the left of the pipe becomes the input to the function on the right side. This generates the same output as `function(data = XX)`. While indentation may not affect how the code performs, it does make the code more readable. We start each command in a pipe on a new line. Each line of code in a pipe ends with the pipe itself: `|>`.
+
+Always keep in mind that steps in the pipeline are separated by `|>` while steps in the construction of your `ggplot()` object are separated with `+`. 
+
 ### Exercise 7
 
 Ask AI: Continue the code to split the graph into 3 graphs, 1 per track, using `facet_wrap()`. 
@@ -409,9 +449,13 @@ billboard |>
 
 ###
 
+For categorical variables, splitting your plot into **facets** creates subplots that each display one subset of the data. The first argument of `facet_wrap()` is a formula, which you create with `~` followed by a variable name. The variable that you pass to `facet_wrap()` should be categorical.
+
 ### Exercise 8
 
-Ask AI: Continue the code to save the graph with `ggsave()`.
+Provide the AI with your current code.
+
+Ask AI: Continue the code by assigning the plot to the variable `line_graph`, and then save `line_graph` with `ggsave()`.
 
 Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
@@ -426,10 +470,10 @@ question_text(NULL,
 
 ###
 
-<!-- DK: Change to create an object and then save the object. -->
+<!-- DK: Change to create an object and then save the object. DONE -->
 
 ```{r billboards-8-test, echo = TRUE}
-billboard |>
+line_graph <- billboard |>
   filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
   pivot_longer(
     cols = wk1:wk5,
@@ -441,12 +485,16 @@ billboard |>
   geom_line() + 
   facet_wrap(~ track)
 
-ggsave("billboard_tracks.png")
+ggsave(filename = "billboard_tracks.png", plot = line_graph)
 ```
 
 ###
 
+In order to save a copy of this plot, we use the [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). By default, `ggsave()` saves the most recently created plot, but the argument `plot` allows it to save any plot as long as the plot is assigned to an object.
 
+By default, `ggsave()` saves the PNG file in your current working directory. You can find your current working directory using `getwd()`, and you can set it with `setwd()`.
+
+You can now use the PNG file of the graph anywhere, and the graph is no longer limited to R code.
 
 ### Exercise 9
 
@@ -483,6 +531,18 @@ billboard |>
 ```
 
 ###
+
+<!-- LL: this is too long. How should I shorten? -->
+
+To visualize the relationship between a numerical and a categorical variable we can use side-by-side box plots. A boxplot is a type of visual shorthand for measures of position (percentiles) that describe a distribution. It is also useful for identifying potential outliers. 
+
+A boxplot consists of:
+
+* A box that indicates the range of the middle half of the data, a distance known as the interquartile range (IQR), stretching from the 25th percentile of the distribution to the 75th percentile. In the middle of the box is a line that displays the median, i.e. 50th percentile, of the distribution. These three lines give you a sense of the spread of the distribution and whether or not the distribution is symmetric about the median or skewed to one side.
+
+* Visual points that display observations that fall more than 1.5 times the IQR from either edge of the box. These outlying points are unusual so are plotted individually.
+
+* A line (or whisker) that extends from each end of the box and goes to the farthest non-outlier point in the distribution.
 
 ### Exercise 10
 
@@ -521,7 +581,7 @@ billboard |>
 
 ###
 
-
+`geom_bar()` makes the height of the bar proportional to the number of cases in each group. If you want the heights of the bars to represent values in the data, use `geom_col()` instead. `geom_bar()` uses `stat_count()` by default: it counts the number of cases at each x position. `geom_col()` uses `stat_identity()`: it leaves the data as is.
 
 ### Exercise 11
 
