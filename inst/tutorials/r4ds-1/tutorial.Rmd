@@ -674,9 +674,72 @@ billboard |>
 
 ###
 
-
-
 ### Exercise 14
+
+Ask AI: Continue the pipe with `billboard` to select the columns `artist` through `improvement`.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-14}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-14-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2) |>
+  select(artist:improvement)
+```
+
+###
+
+### Exercise 15
+
+Ask AI: Continue the pipe with `billboard` to rename the columns `wk1` and `wk2` to be `week1` and `week2` respectively.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-15}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-15-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2) |>
+  select(artist:improvement) |>
+  rename(week1 = wk1, week2 = wk2)
+```
+
+###
+
+
+
+### Exercise 16
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -690,7 +753,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-14}
+```{r billboards-16}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -703,7 +766,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 15
+### Exercise 17
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -715,7 +778,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-15}
+```{r billboards-17}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -736,13 +799,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 16
+### Exercise 18
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-16}
+```{r billboards-18}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -763,7 +826,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 17
+### Exercise 19
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -777,7 +840,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-17}
+```{r billboards-19}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
