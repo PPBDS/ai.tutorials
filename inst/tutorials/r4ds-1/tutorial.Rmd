@@ -907,6 +907,8 @@ question_text(NULL,
 
 A function we didn't talk about was `relocate()`. We use `relocate()` to move variables around. You might want to collect related variables together or move important variables to the front of your tibble. By default `relocate()` moves variables to the front. 
 
+We also didn't talk about `distinct()`. `distinct()` finds all the unique rows in a dataset and primarily operates on the rows. If you want to find the number of occurrences instead use  `count()` with the `sort = TRUE` argument which will arrange them in descending order of number of occurrences
+
 ### Exercise 19
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
@@ -1046,43 +1048,7 @@ An alternative visualization for distributions of numerical variables is a densi
 
 We can use stacked bar plots to visualize the relationship between two categorical variables while a scatterplot is probably the most commonly used plot for visualizing the relationship between two numerical variables.
 
-TRANSFOMRATION knowledge drops 13
-
-### 
-
-`XX` is a tibble, a special type of data frame used by the tidyverse to avoid some common gotchas. The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
-
-### 
-
-`filter()` changes which rows are present without changing their order. When you run `filter()`, **dplyr** executes the filtering operation, creating a new data frame, and then prints it. It doesn’t modify the existing flights dataset because **dplyr** functions never modify their inputs.
-
-###
-
-You can use boolean logic when filtering. For example, `&` means *and* and `|` means *or*.  However, instead of `&`, you can use a simple comma, `,`, because `filter()` treats statements separated by commas as all being required.
-
-An easy mistake to make is to use `=` instead of `==` when testing for equality. `filter()` will let you know when this happens.
-
-There’s a useful shortcut when you’re combining `|` and `==`: `%in%`. It keeps rows where the variable equals one of the values on the right. 
-
-### 
-
-`arrange()` changes the order of the rows based on the value of the columns. It takes a data frame and a set of column names (or more complicated expressions) to order by. If you provide more than one column name, each additional column will be used to break ties in the values of preceding columns. 
-
-###
-
-`distinct()` finds all the unique rows in a dataset and primarily operates on the rows. 
-
-If you want to find the number of occurrences instead use  `count()` with the `sort = TRUE` argument which will arrange them in descending order of number of occurrences
-
-### 
-
-There are four important verbs that affect the columns without changing the rows: `mutate()` creates new columns that are derived from the existing columns, `select()` changes which columns are present; `rename()` changes the names of the columns; and `relocate()` changes the positions of the columns. You will use `mutate()` and `select()` often.
-
-### 
-
-The `.` is a sign that `.before` is an argument to the function, not the name of a third new variable we are creating. Remember that in RStudio, the easiest way to see a dataset with many columns is `View()`.
-
-`.after`, like .`before` and many **tidyverse** functions, uses the [`<tidy-select>`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) argument modifier which enables multiple ways of selecting columns other than just providing a column name.
+TRANSFOMRATION remaining knowledge drops
 
 ### 
 
@@ -1095,53 +1061,6 @@ The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"non
 * "unused" retains only the columns not used in `...` to create new columns. This is useful if you generate new columns, but no longer need the columns used to generate them.
 
 * "none" doesn't retain any extra columns from `.data`. Only the grouping variables and columns created by `...` are kept.
-
-### 
-
-Many data sets come with hundreds or even thousands of variables. We often want to focus on just a handful of these. `select()`, one of the four most important functions in **dplyr**, is the easiest approach for keeping just some of the columns.
-
-From the `select()` [help page](https://dplyr.tidyverse.org/reference/select.html):
-
-Tidyverse selections implement a dialect of R where operators make it easy to select variables:
-
-* `:` for selecting a range of consecutive variables.
-
-* `!` for taking the complement of a set of variables.
-
-* `&` and `|` for selecting the intersection or the union of two sets of variables.
-
-* `c()` for combining selections.
-
-There are a number of helper functions you can use within `select()`:
-
-* `starts_with("abc")`: matches names that begin with “abc”.
-* `ends_with("xyz")`: matches names that end with “xyz”.
-* `contains("ijk")`: matches names that contain “ijk”.
-* `num_range("x", 1:3)`: matches x1, x2 and x3.
-
-### 
-
-You can rename variables as you `select()` them by using `=`. The new name appears on the left hand side of the `=`, and the old variable appears on the right hand side. 
-
-You can also rename a variable with the `rename()` function. This has no impact on the other variables. 
-
-Use `relocate()` to move variables around. You might want to collect related variables together or move important variables to the front of your tibble. By default `relocate()` moves variables to the front. 
-
-### 
-
-The function `summarize()` applies a function like `mean()` to a variable like `dep_delay` within the **dplyr** framework.
-
-Almost all statistical functions in R produce an `NA` result by default if any of the input values are `NA`. We can ignore the `NA` values when using `mean()` by adding `na.rm = TRUE` to `mean()`..
-
-###
-
-There are five handy functions, all part of the [`slice_*()`](https://dplyr.tidyverse.org/reference/slice.html) family, that allow you to extract specific rows.
-
-### 
-
-Note that `.by` is a relatively new addition to **dplyr** functions. In the past, to calculate group statistics you needed to issue the `group_by()` command in the pipe before the call to `summarize()`.
-
-Using `.by` is a much better approach. Never use `group_by()` unless you have a really good reason to do so.
 ````
 
 
