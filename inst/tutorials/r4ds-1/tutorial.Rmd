@@ -25,7 +25,7 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Add in the knowledge drops. -->
+<!-- DK: Add in the knowledge drops. DONE (for visualization and transformation) -->
 
 <!-- DK: Delete all XX comments. Of course you should read/follow them first. -->
 
@@ -128,8 +128,6 @@ Notice how **gplot2** is loaded with **tidyverse**.
 R has several systems for making graphs, but [**ggplot2**](https://ggplot2.tidyverse.org/index.html) is one of the most elegant and most versatile. **ggplot2** implements the *grammar of graphics*, a coherent system for describing and building graphs. With **ggplot2**, you can do more and faster by learning one system and applying it in many places.
 
 ### Exercise 4
-
-<!-- XX: Delete this question if you do not make use of the `data` directory in this tutorial. -->
 
 From the Console, run these three commands:
 
