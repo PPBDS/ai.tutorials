@@ -382,6 +382,8 @@ Ask AI: Create a simple graph plotting a line graph showing the rank of 3 songs 
 
 Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-6}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -424,6 +426,8 @@ Ask AI: Continue the code to split the graph into 3 graphs, 1 per track, using `
 
 Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-7}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -460,6 +464,8 @@ Provide the AI with your current code.
 Ask AI: Continue the code by assigning the plot to the variable `line_graph`, and then save `line_graph` with `ggsave()`.
 
 Copy and paste this code to continue the previous code and save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r billboards-8}
 question_text(NULL,
@@ -505,6 +511,8 @@ In a new prompt for AI provide a tibble of `billboard` again.
 Ask AI: Create a simple graph with boxplots showing the distribution of ranks of 3 songs, mainly using the functions `ggplot()`, `aes()`, and `geom_boxplot()`. 
 
 Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r billboards-9}
 question_text(NULL,
@@ -554,6 +562,8 @@ Ask AI: Create a simple bar graph with bars showing the count of weeks 3 songs w
 
 Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-10}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -595,6 +605,8 @@ Ask AI: Create a pipe with `billboard` to filter for the rows where the values i
 
 Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -622,6 +634,8 @@ Ask AI: Continue the pipe with `billboard` to arrange the rows by `wk1` rank val
 If your using a different AI, provide the `billboard` tibble again and the previous code.
 
 Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r billboards-12}
 question_text(NULL,
@@ -652,6 +666,8 @@ If your using a different AI, provide the `billboard` tibble again and the previ
 
 Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-13}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -681,6 +697,8 @@ Ask AI: Continue the pipe with `billboard` to select the columns `artist` throug
 If your using a different AI, provide the `billboard` tibble again and the previous code.
 
 Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r billboards-14}
 question_text(NULL,
@@ -713,6 +731,8 @@ If your using a different AI, provide the `billboard` tibble again and the previ
 
 Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
+
 ```{r billboards-15}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
@@ -737,11 +757,83 @@ billboard |>
 
 ###
 
-
+<!-- LL: should I add an exercise for group_by() even if we would rather only use the .by argument in summarize() in the future? -->
 
 ### Exercise 16
 
-<!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
+Ask AI: Continue the pipe with `billboard` to make a new column titled `week1tens` that takes the values in `week1` and makes them the multiple of ten that they belong to. For example, 87 becomes 80, 72 becomes 70, etc. Then, group the data by `week1tens` values and make a new column titled `averageimprovement` that takes the mean from `improvement`. Use `summarize()` with the `.by` argument instead of `group_by()`. Make sure to drop NA values.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r billboards-16}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-16-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2) |>
+  select(artist:improvement) |>
+  rename(week1 = wk1, week2 = wk2) |>
+  mutate(week1tens = floor(week1 / 10) * 10) |>
+  summarize(
+    averageimprovement = mean(improvement, na.rm = TRUE),
+    .by = week1tens
+  )
+```
+
+###
+
+### Exercise 17
+
+Now, remove the part of the pipe from the second `mutate()` to the end. It should be the code that we had before exercise 16.
+
+Ask AI: Continue the pipe with `billboard` to slice the data for the top 5 songs by `improvement`.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r billboards-17}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-17-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2) |>
+  select(artist:improvement) |>
+  rename(week1 = wk1, week2 = wk2) |>
+  slice_max(improvement, n = 5)
+```
+
+###
+
+
+
+### Exercise 18
 
 Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from the previous exercise with our code.
 
@@ -753,7 +845,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-16}
+```{r billboards-18}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -766,7 +858,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 17
+### Exercise 19
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -778,7 +870,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-17}
+```{r billboards-19}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -799,13 +891,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 18
+### Exercise 20
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-18}
+```{r billboards-20}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -826,7 +918,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 19
+### Exercise 21
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -840,7 +932,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-19}
+```{r billboards-21}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
