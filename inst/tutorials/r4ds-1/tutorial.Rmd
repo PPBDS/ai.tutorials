@@ -167,7 +167,7 @@ You answer should look something like, although your path will be different.
 ## Billboards
 ###
 
-The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of the song rankings for Billboard top 100 in the year 2000, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
+The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of 317 songs and their weekly song rankings in the Billboard top 100 for 76 weeks after they were released. Almost all of the songs were released in the year 2000, with a few in late 1999, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
 
 We will use these following functions and more for this section:
 [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html)
@@ -194,7 +194,7 @@ We will use these following functions and more for this section:
 
 ### Exercise 1
 
-Since we have already loaded **tidyverse**, we have therefore loaded **tidyr** and **ggplot2**, some of the component packages of the "core" *Tidyverse*. 
+Since we have already loaded **tidyverse**, we have therefore loaded **tidyr**, **ggplot2**, and **dplyr**, some of the component packages of the "core" *Tidyverse*. 
 
 `billboard` is a dataset within **tidyr**.
 
@@ -257,6 +257,8 @@ ggplot(billboard, aes(x = wk1, y = wk2)) +
 ```
 
 ###
+
+For now, we will be working with functions from the **ggplot2** package.
 
 When you're working with `ggplot()`, you typically won't be using just the `data` **parameter** (input into a function). You'll be using the `mapping` parameter as well. The `mapping` parameter lets you set, among other things, variables for the x- and y-axis.
 
@@ -585,6 +587,97 @@ billboard |>
 
 ### Exercise 11
 
+Now, we'll move onto functions from the **dplyr** package.
+
+In a new prompt for AI provide a tibble of `billboard` again.
+
+Ask AI: Create a pipe with `billboard` to filter for the rows where the values in `wk1` are less than 101.
+
+Copy and paste the AI generated code into a new code chunk with your QMD. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-11}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-11-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101)
+```
+
+###
+
+### Exercise 12
+
+Ask AI: Continue the pipe with `billboard` to arrange the rows by `wk1` rank values.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-12}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-12-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1)
+```
+
+###
+
+### Exercise 13
+
+Ask AI: Continue the pipe with `billboard` to create a new column titled `improvement` that contains the difference between `wk1` and `wk2` rankings, and place it after the `wk2` column.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+```{r billboards-13}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r billboards-13-test, echo = TRUE}
+billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2)
+```
+
+###
+
+
+
+### Exercise 14
+
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
 Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from the previous exercise with our code.
@@ -597,7 +690,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-11}
+```{r billboards-14}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -610,7 +703,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 12
+### Exercise 15
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -622,7 +715,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r billboards-12}
+```{r billboards-15}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -643,13 +736,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 13
+### Exercise 16
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r billboards-13}
+```{r billboards-16}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -670,7 +763,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 14
+### Exercise 17
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -684,7 +777,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r billboards-14}
+```{r billboards-17}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -708,97 +801,22 @@ Our code:
 
 
 ````
-VISUALIZATION knowledge drops 15 (more than average because it is R4DS tutorial)
-
-### 
-
-R has several systems for making graphs, but [**ggplot2**](https://ggplot2.tidyverse.org/index.html) is one of the most elegant and most versatile. **ggplot2** implements the *grammar of graphics*, a coherent system for describing and building graphs. With **ggplot2**, you can do more and faster by learning one system and applying it in many places.
-[**ggthemes**](https://jrnold.github.io/ggthemes/) is one of many packages which add functionality to [**ggplot2**](https://ggplot2.tidyverse.org/index.html).
-
-### 
-
-**Tabular data** is data organized in a table. A table is a group of cells, organized in rows and columns. Tabular data is considered *tidy* if and only if it satisfies the following rules:
-
-1.  Each variable is a column; each column is a variable.
-2.  Each observation is a row, each row is an observation.
-3.  Each value is a cell, each cell is a single value.
-
-### 
-
-In the realm of data analysis, a fundamental concept is the notion of a variable. A variable represents a quantity, quality, or property that can be measured or observed. Variables can take different forms, depending on the nature of the data being studied. They can be numeric or categorical, continuous or discrete, qualitative or quantitative.
-
-### 
-
-`XX`, on the left of the pipe, becomes the input to `ggplot()`, on the right side. This generates the same output as `ggplot(data = XX)`. While indentation may not affect how the code performs, it does make the code more readable. We start each command in a pipe on a new line. Each line of code in a pipe ends with the pipe itself: `|>`.
-
-### 
-
-When you're working with `ggplot()`, you typically won't be using just the `data` **parameter** (input into a function). You'll be using the `mapping` parameter as well. The `mapping` parameter lets you set, among other things, variables for the x- and y-axis.
-
-To use the `mapping` parameter, you have to give `ggplot()` an *aesthetic*, which you get by calling the `aes()` function. For example, if you wanted to set the variable for the x-axis to be `foo`, you would add `mapping = aes(x = foo)` in your call to `ggplot()`. 
-
-The aesthetic function, `aes()`, has more parameters than just `x` and `y`. `aes()` has parameters like `color`, `shape`, and `size` as well! You can add them in the same way you added the `x` and `y` parameters: add `color = foo` or `shape = bar(baz)` to your `aes()` call in `ggplot()`. 
-
-See [aesthetic mappings](https://ggplot2.tidyverse.org/reference/aes.html) for more examples.
-
-### 
-
-To display the data points, we need to add a geometric object, or, in ggplot terms, a `geom`. A `geom` is the geometrical object that a plot uses to represent data. These geometric objects are made available in **ggplot2** with functions that start with `geom_`.
-
-### 
-
-`geom_smooth()` creates a fitted line or curve which can help identify trends and patterns in data. It offers different smoothing methods like linear or polynomial regression and *loess* smoothing. The shaded error around the fitted line represents uncertainty about the estimate.
-
-### 
-
-The `"lm"` method stands for **l**inear **m**odel, meaning that R do its best to fit a straight line through the points.
+VISUALIZATION remaining knowledge drops
 
 ### 
 
 In **ggplot2**, when aesthetic mappings are defined at the global level, they are passed down to all subsequent geom layers in the plot. However, each geom function in **ggplot2** can also accept a mapping argument, allowing for local-level aesthetic mappings that are added to those inherited from the global level.
 
-### 
-
-The `labs()` function takes in several arguments to modify the plot labels, including `x`, `y`, `title`, `subtitle`, `caption`, and `tag`. The `x` and `y` arguments are used to modify the axis labels, while the `title`, `subtitle`, and `caption` arguments are used to modify the plot title, subtitle, and caption, respectively. The `tag` argument is used to add a label to the plot that can be used for reference in later code.
-
-The `labs()` function can also be used with the `ggtitle()` function to modify the plot title. This can be useful when you want to have more control over the formatting of the plot title, such as changing the font size or color.
-
-Finally, it's worth noting that the `labs()` function is just one way to modify plot labels in **ggplot2**. Other functions, such as `xlab()`, `ylab()`, and `ggtitle()`, can be used to modify specific plot labels without affecting others. It's important to choose the appropriate function for your needs depending on the level of customization you require.
-
-### 
+###
 
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
 An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
 
-### 
-
-To visualize the relationship between a numerical and a categorical variable we can use side-by-side box plots. A boxplot is a type of visual shorthand for measures of position (percentiles) that describe a distribution. It is also useful for identifying potential outliers. 
-
-A boxplot consists of:
-
-* A box that indicates the range of the middle half of the data, a distance known as the interquartile range (IQR), stretching from the 25th percentile of the distribution to the 75th percentile. In the middle of the box is a line that displays the median, i.e. 50th percentile, of the distribution. These three lines give you a sense of the spread of the distribution and whether or not the distribution is symmetric about the median or skewed to one side.
-
-* Visual points that display observations that fall more than 1.5 times the IQR from either edge of the box. These outlying points are unusual so are plotted individually.
-
-* A line (or whisker) that extends from each end of the box and goes to the farthest non-outlier point in the distribution.
-
 ###
 
 We can use stacked bar plots to visualize the relationship between two categorical variables while a scatterplot is probably the most commonly used plot for visualizing the relationship between two numerical variables.
 
-### 
-
-For categorical variables, splitting your plot into **facets** creates subplots that each display one subset of the data. The first argument of `facet_wrap()` is a formula, which you create with `~` followed by a variable name. The variable that you pass to `facet_wrap()` should be categorical.
-
-### 
-
-In order to save a copy of this plot, we use the [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) by running `ggsave(filename = "penguin-plot.png")` immediately after creating the plot.
-
-By default, `ggsave()` saves the most recently created plot.
-````
-
-````
 TRANSFOMRATION knowledge drops 13
 
 ### 
