@@ -627,6 +627,11 @@ billboard |>
 
 ###
 
+`filter()` changes which rows are present without changing their order. When you run `filter()`, **dplyr** executes the filtering operation, creating a new data frame, and then prints it. It doesn’t modify the existing flights dataset because **dplyr** functions never modify their inputs.
+
+You can use boolean logic when filtering. For example, `&` means *and* and `|` means *or*. `==` tests for equality while `=` leads to an error. Also, there’s a useful shortcut when you’re combining `|` and `==`: `%in%`. It keeps rows where the variable equals one of the values on the right. 
+
+
 ### Exercise 12
 
 Ask AI: Continue the pipe with `billboard` to arrange the rows by `wk1` rank values.
@@ -657,6 +662,8 @@ billboard |>
 ```
 
 ###
+
+`arrange()` changes the order of the rows based on the value of the columns. It takes a data frame and a set of column names (or more complicated expressions) to order by. If you provide more than one column name, each additional column will be used to break ties in the values of preceding columns. 
 
 ### Exercise 13
 
@@ -689,6 +696,13 @@ billboard |>
 ```
 
 ###
+
+`mutate()` creates new columns that are derived from the existing columns. 
+
+The `.` is a sign that `.after` is an argument to the function, not the name of a third new variable we are creating.
+
+`.after`, like .`before` and many **tidyverse** functions, uses the [`<tidy-select>`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) argument modifier which enables multiple ways of selecting columns other than just providing a column name.
+
 
 ### Exercise 14
 
@@ -723,6 +737,27 @@ billboard |>
 
 ###
 
+`select()` changes which columns to include from the current data frame in the new data frame.
+
+From the `select()` [help page](https://dplyr.tidyverse.org/reference/select.html):
+
+Tidyverse selections implement a dialect of R where operators make it easy to select variables:
+
+* `:` for selecting a range of consecutive variables.
+
+* `!` for taking the complement of a set of variables.
+
+* `&` and `|` for selecting the intersection or the union of two sets of variables.
+
+* `c()` for combining selections.
+
+There are a number of helper functions you can use within `select()`:
+
+* `starts_with("abc")`: matches names that begin with “abc”.
+* `ends_with("xyz")`: matches names that end with “xyz”.
+* `contains("ijk")`: matches names that contain “ijk”.
+* `num_range("x", 1:3)`: matches x1, x2 and x3.
+
 ### Exercise 15
 
 Ask AI: Continue the pipe with `billboard` to rename the columns `wk1` and `wk2` to be `week1` and `week2` respectively.
@@ -756,6 +791,10 @@ billboard |>
 ```
 
 ###
+
+`rename()` changes the names of the columns with no impact on the other variables.
+
+You can also rename variables as you `select()` them by using `=`. The new name appears on the left hand side of the `=`, and the old variable appears on the right hand side. 
 
 <!-- LL: should I add an exercise for group_by() even if we would rather only use the .by argument in summarize() in the future? -->
 
@@ -796,9 +835,17 @@ billboard |>
 
 ###
 
+The funciton `summarize()`, if being used to calculate a single summary statistic, reduces the data frame to have a single row for each group, and also reduces columns to the group and the statistic.
+
+Almost all statistical functions in R produce an `NA` result by default if any of the input values are `NA`. We can ignore the `NA` values when using `mean()` by adding `na.rm = TRUE` to `mean()` or any calculation function.
+
+Note that the argument `.by` is a relatively new addition to **dplyr** functions. In the past, to calculate group statistics you needed to issue the `group_by()` command in the pipe before the call to `summarize()`.
+
+Using `.by` is a much better approach. Never use `group_by()` unless you have a really good reason to do so.
+
 ### Exercise 17
 
-Now, remove the part of the pipe from the second `mutate()` to the end. It should be the code that we had before exercise 16.
+Now, remove the newly created part of the pipe so that the pipe should be the code that we had before exercise 16.
 
 Ask AI: Continue the pipe with `billboard` to slice the data for the top 5 songs by `improvement`.
 
@@ -831,7 +878,7 @@ billboard |>
 
 ###
 
-
+There are five handy functions, all part of the [`slice_*()`](https://dplyr.tidyverse.org/reference/slice.html) family, that allow you to extract specific rows.
 
 ### Exercise 18
 
@@ -858,7 +905,7 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+A function we didn't talk about was `relocate()`. We use `relocate()` to move variables around. You might want to collect related variables together or move important variables to the front of your tibble. By default `relocate()` moves variables to the front. 
 
 ### Exercise 19
 
@@ -896,7 +943,7 @@ x <- billboard |>
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+The pipe takes the thing on its left and passes it along to the function on its right so that `billboard |> filter(wk1 < 101)` is equivalent to `filter(billboard, wk1 < 101)`, and `billboard |> filter(wk1 < 101) |> arrange(wk1)` is equivalent to `arrange(filter(billboard, wk1 < 101), wk1)`. The easiest way to pronounce the pipe is “then”.
 
 ### Exercise 20
 
@@ -923,7 +970,9 @@ x
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+`billboard` is a tibble, a special type of data frame used by the tidyverse to avoid some common gotchas. The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
+
+`x` is also a tibble as **tidyverse** functions return tibbles by default.
 
 ### Exercise 21
 
@@ -976,7 +1025,9 @@ ggplot(x, aes(x = improvement)) +
 
 <!-- LL: I want to income theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
 
+A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
+An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
 
 ````
 VISUALIZATION remaining knowledge drops
