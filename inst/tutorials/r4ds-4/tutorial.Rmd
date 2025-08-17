@@ -14,16 +14,122 @@ description: 'This tutorial for "R for Data Science" covers Chapter 16: Factors,
 ```{r setup, include = FALSE}
 library(learnr)
 library(tutorial.helpers)
-library(arrow)
-library(dplyr)
-library(lubridate)
-library(forcats)
-library(stringr)
-library(tidyr)
+
+library(tidyverse)
+library(arrow)      
+library(plotly)     
+library(viridis)   
+library(scales)     
+
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
         tutorial.storage = "local") 
+
+nba_clean <- open_dataset("data/game.parquet") |>
+  collect() |>
+  left_join(
+    open_dataset("data/line_score.parquet") |> collect(),
+    by = "game_id",
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    game_date = ymd_hms(game_date),
+    game_date_est = ymd_hms(game_date_est)
+  ) |>
+  drop_na(pts_home.x)|>
+	mutate(
+    game_date = as_datetime(game_date),
+    game_year = year(game_date),
+    season_label = paste0(season_id %/% 10000, "-", str_sub(season_id + 1, 3, 4))
+  ) %>%
+  filter(!is.na(game_date), game_year >= 1946) %>%
+	mutate(
+	wl_home = factor(wl_home, levels = c("W", "L")),
+    game_era = case_when(
+      game_year <= 1979 ~ "Pre-Three Point",
+      game_year <= 1999 ~ "Modern Era", 
+      game_year <= 2019 ~ "Analytics Era",
+      TRUE ~ "Current Era"
+    ),
+    game_era = factor(game_era, levels = c("Pre-Three Point", "Modern Era", "Analytics Era", "Current Era"))
+  ) |>	
+	mutate(
+    	across(contains("pct"), ~replace_na(.x, 0)),
+    	across(c(pts_home.x, pts_away.x), ~replace_na(.x, 0)),
+    	total_points = pts_home.x + pts_away.x
+ 	 ) %>%
+ 	 filter(total_points > 0, !is.na(pts_home.x), !is.na(pts_away.x))|>
+  group_by(game_year, game_era, season_label) %>%
+  summarise(
+    avg_points = mean(total_points, na.rm = TRUE),
+    games_count = n(),
+    home_win_pct = mean(wl_home == "W", na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(game_year)
+
+time_series_plot <- nba_clean %>%
+  ggplot(aes(x = game_year, y = avg_points, color = game_era)) +
+  geom_line(linewidth = 1.2, alpha = 0.8) +
+  geom_point(aes(size = games_count),
+             alpha = 0.7) +
+  scale_color_viridis_d(option = "plasma") +
+  scale_size_continuous(range = c(2, 6), guide = "none") +
+  labs(
+    title = "NBA Scoring Evolution: 75+ Years of Basketball",
+    subtitle = "Average points per game by season with era classifications",
+    x = "Season Year",
+    y = "Average Points Per Game",
+    color = "NBA Era"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12, color = "gray60"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+final_fifa <- "data/fifa.parquet" |>
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x))) |>
+  mutate(
+    joined_date = mdy(Joined),
+    years_at_club = as.numeric(today() - joined_date) / 365.25,
+    long_tenure = years_at_club > 10
+  ) |>
+  drop_na(joined_date) |>
+  mutate(
+    value_numeric = case_when(
+      is.na(Value) | Value == "" | Value == "0" ~ 0,
+      str_detect(Value, "M") ~ as.numeric(str_remove_all(Value, "[€M★-]")) * 1000000,
+      str_detect(Value, "K") ~ as.numeric(str_remove_all(Value, "[€K★-]")) * 1000,
+      str_detect(Value, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Value, "€")),
+      TRUE ~ 0
+    ),
+    wage_numeric = case_when(
+      is.na(Wage) | Wage == "" | Wage == "0" ~ 0,
+      str_detect(Wage, "K") ~ as.numeric(str_remove_all(Wage, "[€K★-]")) * 1000,
+      str_detect(Wage, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Wage, "€")),
+      TRUE ~ 0
+    ),
+    release_clause_numeric = case_when(
+      is.na(Release.Clause) | Release.Clause == "" | Release.Clause == "0" ~ 0,
+      str_detect(Release.Clause, "M") ~ as.numeric(str_remove_all(Release.Clause, "[€M★-]")) * 1000000,
+      str_detect(Release.Clause, "K") ~ as.numeric(str_remove_all(Release.Clause, "[€K★-]")) * 1000,
+      str_detect(Release.Clause, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Release.Clause, "€")),
+      TRUE ~ 0
+    )
+  )
+
 ```
 
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
@@ -170,7 +276,7 @@ You answer should look something like, although your path will be different.
 
 <!-- XX: You will probably have two or three Sections, in between the Introduction and Summary. We provide on example below. Before editing it, you may want to copy/paste it to create the skeleton for Second section. Any tutorial which both uses a lot of AI and is supppsed to take an hour or so will probably only have two Sections.  -->
 
-## NBA Games
+## NBA
 ###
 
 <!-- XX: Mention the packages/functions which you plan on covering in this Section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
@@ -196,7 +302,7 @@ download.file(
 
 CP/CR.
 
-```{r nba-games-1}
+```{r nba-1}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -217,7 +323,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-2}
+```{r nba-2}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -230,7 +336,7 @@ question_text(NULL,
 
 Our code:
 
-```{r nba-games-2-test, echo = TRUE}
+```{r nba-2-test, echo = TRUE}
 "data/game.parquet" |> 
   open_dataset()
 ```
@@ -247,7 +353,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-3}
+```{r nba-3}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -260,7 +366,7 @@ question_text(NULL,
 
 Our code:
 
-```{r nba-games-3-test, echo = TRUE}
+```{r nba-3-test, echo = TRUE}
 "data/game.parquet" |> 
   open_dataset()|>
   select(game_id, game_date, season_id) |>
@@ -298,7 +404,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-4}
+```{r nba-4}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -309,7 +415,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-4-test, echo = TRUE}
+```{r nba-4-test, echo = TRUE}
 "data/game.parquet" |> 
   open_dataset()|>
   collect() |>
@@ -342,7 +448,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-5}
+```{r nba-5}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -353,7 +459,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-5-test, echo = TRUE}
+```{r nba-5-test, echo = TRUE}
 "data/game.parquet" |> 
   open_dataset()|>
   collect() |>
@@ -388,7 +494,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-6}
+```{r nba-6}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -399,7 +505,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-6-test, echo = TRUE}
+```{r nba-6-test, echo = TRUE}
 "data/game.parquet" |> 
   open_dataset() |>
   collect() |>
@@ -428,7 +534,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-7}
+```{r nba-7}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -439,7 +545,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-7-test, echo = TRUE}
+```{r nba-7-test, echo = TRUE}
  open_dataset("data/line_score.parquet") |>
   collect() |>
   mutate(
@@ -476,7 +582,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-8}
+```{r nba-8}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -487,7 +593,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-8-test, echo = TRUE}
+```{r nba-8-test, echo = TRUE}
  open_dataset("data/line_score.parquet") |>
   collect() |>
   mutate(
@@ -538,7 +644,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-9}
+```{r nba-9}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -549,7 +655,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-9-test, echo = TRUE}
+```{r nba-9-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
   collect() |>
   left_join(
@@ -576,7 +682,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-10}
+```{r nba-10}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -587,7 +693,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-10-test, echo = TRUE}
+```{r nba-10-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
   collect() |>
   left_join(
@@ -620,7 +726,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-11}
+```{r nba-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -631,7 +737,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-11-test, echo = TRUE}
+```{r nba-11-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
   collect() |>
   left_join(
@@ -674,7 +780,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-12}
+```{r nba-12}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -685,7 +791,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-12-test, echo = TRUE}
+```{r nba-12-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
   collect() |>
   left_join(
@@ -734,7 +840,7 @@ Place your cursor at the beginning of the line where it says `data/game.parquet`
 
 CP/CR.
 
-```{r nba-games-13}
+```{r nba-13}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -745,7 +851,7 @@ question_text(NULL,
 
 ###
 
-```{r nba-games-13-test, echo = TRUE}
+```{r nba-13-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
   collect() |>
   left_join(
@@ -804,7 +910,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r nba-games-14}
+```{r nba-14}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -829,7 +935,7 @@ Place your cursor on the line where the pipe is assigned to `nba_clean`, run `Cm
 
 CP/CR.
 
-```{r nba-games-15}
+```{r nba-15}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -897,7 +1003,7 @@ Within the Console, type `nba_clean`, which we previously assigned to a pipe and
 
 CP/CR.
 
-```{r nba-games-16}
+```{r nba-16}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -932,7 +1038,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r nba-games-17}
+```{r nba-17}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -989,8 +1095,834 @@ ggplotly(time_series_plot,
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
 
-##
+
+## FIFA
 ###
+
+### Exercise 1
+
+We begin by downloading our parquet file `data/fifa.parquet` directly from GitHub using `download.file()`. 
+
+This adds the parquet file `fifa.parquet` to our working directory so we can use it in this tutorial.
+
+In the Console, run:
+
+```         
+download.file(
+  "https://github.com/PPBDS/ai.tutorials/raw/refs/heads/main/inst/tutorials/r4ds-4/data/fifa.parquet",
+  destfile = "data/fifa.parquet"
+)
+```
+
+CP/CR.
+
+```{r fifa-1}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 2
+
+Ask AI to write R code that opens `data/fifa.parquet` using `open_dataset()` and `collect()`, then uses `glimpse()` to examine the structure of the FIFA dataset. Make sure this code is not assigned to a variable and the pipe starts with `data/fifa.parquet`. Add this code to a new code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-2}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Our code:
+
+```{r fifa-2-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  glimpse()
+```
+
+###
+
+This gives us a quick overview of all columns and their data types in the FIFA dataset.
+
+Data exploration: open_dataset(), collect(), glimpse()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 3
+
+Ask AI to write R code that opens the FIFA dataset and uses `select()` to examine just the `Height` and `Weight` columns, then uses `slice_head()` to show the first 10 rows so we can see the format of these columns before cleaning them. This is a separate analysis from the previous exercise - start fresh with `data/fifa.parquet`. Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Our code:
+
+```{r fifa-3-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  select(Height, Weight) |>
+  slice_head(n = 10)
+```
+
+###
+
+This shows us the exact format of height and weight data so we know how to clean it properly.
+
+Data inspection: select(), slice_head()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 4
+
+Ask AI to write R code that opens the FIFA dataset and uses `mutate()` to create clean numeric versions of height and weight. Use `str_extract()` with the pattern `"\\d+"` to extract only the numeric digits from `Height` and `Weight` columns, then convert them to numeric with `as.numeric()`. Create new columns called `height_cm` and `weight_kg`. Use `select()` to show only the original and new height/weight columns, then `slice_head()` to verify the cleaning worked. Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-4}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-4-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  select(Height, Weight, height_cm, weight_kg) |>
+  slice_head(n = 10)
+```
+
+###
+
+This extracts numeric values from text strings containing units, a common data cleaning task.
+
+String pattern extraction: str_extract(), regex patterns, as.numeric()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 5
+
+Ask AI to write R code that opens the FIFA dataset and examines which columns contain newline characters. Use `select()` with `where()` and `is.character` to get only character columns, then use `summarise()` with `across()` to count how many values in each character column contain `"\\n"` using `str_detect()` and `sum()`.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-5-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  select(where(is.character)) |>
+  summarise(across(everything(), ~sum(str_detect(.x, "\\n"), na.rm = TRUE)))
+```
+
+###
+
+The `Club` character column contains a lot of problematic newline characters that need cleaning.
+
+Missing value analysis: where(), across(), str_detect(), summarise()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 6
+
+Ask AI to write R code that opens the FIFA dataset and focuses on the `Joined` column to understand date formats. Use `select()` to get `Name`, `Club`, and `Joined` columns, then `slice_sample()` to look at 15 random rows so we can see the variety of date formats before parsing. Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Our code:
+
+```{r fifa-6-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  select(Name, Club, Joined) |>
+  slice_sample(n = 15)
+```
+
+###
+
+This shows us the date format patterns we need to handle when parsing the Joined column.
+
+Random sampling: slice_sample()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 7
+
+Ask AI to write R code that opens the FIFA dataset from `"data/fifa.parquet"` and parses the `Joined` column as dates using `mdy()` (for Month-Day-Year format). Then calculate `years_at_club` by subtracting `joined_date` from `today()` and dividing by 365.25. Create a logical column `long_tenure` for players with more than 10 years at a club. Use `filter()` to keep only players with `long_tenure == TRUE`, `select()` key columns such as `Name`, `Club`, `Joined`, and `years_at_club`, and `arrange()` the results in descending order of `years_at_club`.
+
+Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-7-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+ mutate(
+  joined_date = mdy(Joined),           
+  years_at_club = as.numeric(today() - joined_date) / 365.25,
+  long_tenure = years_at_club > 10
+) |>
+  filter(long_tenure == TRUE) |>
+  select(Name, Club, Joined, years_at_club) |>
+  arrange(desc(years_at_club))
+```
+
+###
+
+This identifies the most loyal players who have stayed at their clubs for over a decade.
+
+Date-time processing: ymd(), today(), date arithmetic, logical operations
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 8
+
+Ask AI to write R code that opens the dataset and examines the format of financial columns. Use `select()` to get `Name`, `Value`, `Wage`, and `Release.Clause` columns, then `slice_head()` to see 20 rows so we understand the string formats with "M", "K", and "€" symbols before converting them to numbers.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 3)
+```
+
+###
+
+Our code:
+
+```{r fifa-8-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  select(Name, Value, Wage, Release.Clause) |>
+  slice_head(n = 20)
+```
+
+###
+
+This shows us the variety of financial string formats we need to parse into numeric values.
+
+Financial data inspection: column selection for analysis
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 9
+
+Ask AI to write R code that opens the FIFA dataset and uses `case_when()` with `str_detect()` to convert the `Value` column from text to numeric. Handle "M" (multiply by 1,000,000), "K" (multiply by 1,000), and plain "€" values. Use `str_remove_all()` to clean currency symbols and `as.numeric()` for conversion. Create a `value_numeric` column, then use `select()` to show `Name`, original `Value`, and `value_numeric`, and `arrange()` by descending value to see the most valuable players.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-9-test, echo = TRUE}
+"data/fifa.parquet" |>
+  open_dataset() |>
+  collect() |>
+  mutate(
+    Value_clean = str_trim(str_remove_all(Value, "[€★]")),         # remove € and stars, trim spaces
+    Value_clean = ifelse(str_detect(Value_clean, "^[0-9\\.]+[MK]?$"), Value_clean, "0"), # non-numeric → "0"
+    value_numeric = case_when(
+      str_detect(Value_clean, "M") ~ as.numeric(str_remove_all(Value_clean, "M")) * 1e6,
+      str_detect(Value_clean, "K") ~ as.numeric(str_remove_all(Value_clean, "K")) * 1e3,
+      TRUE ~ as.numeric(Value_clean)
+    )
+  ) |>
+  select(Name, Value, value_numeric) |>
+  arrange(desc(value_numeric)) |>
+  slice_head(n = 15)
+```
+
+###
+
+This converts financial text strings with multipliers into proper numeric values for analysis.
+
+The warnings are coming from `as.numeric()` in `case_when()` because some rows still contain non-numeric characters, like empty strings, spaces, or other symbols not removed by our current `str_remove_all()`.
+
+Complex string parsing: case_when(), str_detect(), str_remove_all()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 10
+
+Ask AI to write R code that opens the FIFA dataset and identifies columns with star ("★") characters. Use `select()` with `where()` and a function that checks if any values contain "★" using `any(str_detect(.x, "★"))`. Then use `names()` to show just the column names that contain stars. Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-10-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  select(where(~any(str_detect(.x, "★"), na.rm = TRUE))) |>
+  names()
+```
+
+###
+
+This identifies which columns use star ratings that need to be converted to numeric values.
+
+Advanced column selection: where() with custom functions
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 11
+
+ Ask AI to write R code that opens the FIFA dataset with `open_dataset()` and `collect()`, then begins cleaning with `mutate()` to create numeric height and weight columns using `str_extract()` with pattern `"\\d+"`.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-11}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-11-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  )
+```
+
+###
+
+This begins our comprehensive data cleaning pipeline with numeric conversion of physical measurements.
+
+Pipeline start: Data loading and basic cleaning
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 12
+
+Ask AI to write R code that continues our pipeline and adds text cleaning using `mutate()` with `across()`. Remove newline characters from all character columns using `str_replace_all(.x, "\\n", "")`, then in a second `mutate()`, trim whitespace from character columns using `str_trim()`. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-12}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-12-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x)))
+```
+
+###
+
+This continues our pipeline by cleaning text formatting issues across all character columns.
+
+Text cleaning: across(), where(), str_replace_all(), str_trim()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 13
+
+Ask AI to write R code that continues our pipeline and adds date parsing with club tenure calculation. Use `mutate()` to parse `Joined` as a date with `mdy()`, calculate `years_at_club` using `today()` and date arithmetic (divide by 365.25), and create a `long_tenure` logical column for players with more than 10 years. Also use `drop_na()` to remove rows where joined date parsing failed. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-13}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-13-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x))) |>
+  mutate(
+    joined_date = mdy(Joined),
+    years_at_club = as.numeric(today() - joined_date) / 365.25,
+    long_tenure = years_at_club > 10
+  ) |>
+  drop_na(joined_date)
+```
+
+###
+
+This adds date processing and tenure analysis while handling missing values appropriately.
+
+Date processing and missing values: ymd(), today(), drop_na()
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 14
+
+Ask AI to write R code that continues our pipeline and converts financial columns to numeric. Use `mutate()` to create `value_numeric`, `wage_numeric`, and `release_clause_numeric` columns. For each, use `case_when()` with `str_detect()` to handle "M" (multiply by 1,000,000), "K" (multiply by 1,000), and plain values, using `str_remove_all()` to clean currency symbols. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-14}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r fifa-14-test, echo = TRUE}
+"data/fifa.parquet" |> 
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x))) |>
+  mutate(
+    joined_date = mdy(Joined),
+    years_at_club = as.numeric(today() - joined_date) / 365.25,
+    long_tenure = years_at_club > 10
+  ) |>
+  drop_na(joined_date) |>
+  mutate(
+    value_numeric = case_when(
+      str_detect(Value, "M") ~ as.numeric(str_remove_all(Value, "[€M]")) * 1000000,
+      str_detect(Value, "K") ~ as.numeric(str_remove_all(Value, "[€K]")) * 1000,
+      TRUE ~ as.numeric(str_remove_all(Value, "€"))
+    ),
+    wage_numeric = case_when(
+      str_detect(Wage, "K") ~ as.numeric(str_remove_all(Wage, "[€K]")) * 1000,
+      TRUE ~ as.numeric(str_remove_all(Wage, "€"))
+    ),
+    release_clause_numeric = case_when(
+      str_detect(Release.Clause, "M") ~ as.numeric(str_remove_all(Release.Clause, "[€M]")) * 1000000,
+      str_detect(Release.Clause, "K") ~ as.numeric(str_remove_all(Release.Clause, "[€K]")) * 1000,
+      TRUE ~ as.numeric(str_remove_all(Release.Clause, "€"))
+    )
+  )
+```
+
+###
+
+This converts complex financial strings with various multipliers into clean numeric values.
+
+Financial data parsing: Complex case_when() with multiple conditions
+
+<!-- SG: Insert knowledge drop.-->
+
+### Exercise 15
+
+Ask AI to complete our pipeline by adding star rating cleaning and creating an amazing interactive visualization. Continue the pipe to remove stars from skill columns using `mutate()` and `across()` with `contains("Skill")`, then add `#| cache: true` and assign the result to `fifa_clean`. Create an interactive plot with `ggplotly()` that shows the relationship between `value_numeric` and `wage_numeric`, identifying undervalued players (high value, relatively low wages). Filter for players with value > €5M and wage < €200K, use point size for `Overall` rating, color for `Age`, add smooth trend lines by `Position` (limit to top 6 positions by count), and include hover text with player names and clubs. Use log scales, viridis colors, and proper labels. Add this code as a continuation and plot creation in the same code chunk.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r fifa-15}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 15)
+```
+
+###
+
+Our code:
+
+```{r fifa-15-test, echo = TRUE}
+"data/fifa.parquet" |>
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x))) |>
+  mutate(
+    joined_date = mdy(Joined),
+    years_at_club = as.numeric(today() - joined_date) / 365.25,
+    long_tenure = years_at_club > 10
+  ) |>
+  drop_na(joined_date) |>
+  mutate(
+    value_numeric = case_when(
+      is.na(Value) | Value == "" | Value == "0" ~ 0,
+      str_detect(Value, "M") ~ as.numeric(str_remove_all(Value, "[€M★-]")) * 1000000,
+      str_detect(Value, "K") ~ as.numeric(str_remove_all(Value, "[€K★-]")) * 1000,
+      str_detect(Value, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Value, "€")),
+      TRUE ~ 0
+    ),
+    wage_numeric = case_when(
+      is.na(Wage) | Wage == "" | Wage == "0" ~ 0,
+      str_detect(Wage, "K") ~ as.numeric(str_remove_all(Wage, "[€K★-]")) * 1000,
+      str_detect(Wage, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Wage, "€")),
+      TRUE ~ 0
+    ),
+    release_clause_numeric = case_when(
+      is.na(Release.Clause) | Release.Clause == "" | Release.Clause == "0" ~ 0,
+      str_detect(Release.Clause, "M") ~ as.numeric(str_remove_all(Release.Clause, "[€M★-]")) * 1000000,
+      str_detect(Release.Clause, "K") ~ as.numeric(str_remove_all(Release.Clause, "[€K★-]")) * 1000,
+      str_detect(Release.Clause, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Release.Clause, "€")),
+      TRUE ~ 0
+    )
+  )
+```
+
+###
+
+This creates a comprehensive interactive analysis revealing the most undervalued players in world football - those with high market values but surprisingly low wages, representing potential transfer bargains.
+
+Complete pipeline: Data cleaning, factor analysis, advanced visualization with ggplotly()
+
+
+### Exercise 16
+
+Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from the previous exercise with our code.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r fifa-16}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 6)
+```
+
+###
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 17
+
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `final_fifa`. 
+
+`Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
+
+If you have not done so already, you should add `analysis_cache` to the `.gitginore`. The content of the cache file does not belong on GitHub.
+
+Place your cursor on the line where the pipe is assigned to `final_fifa`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `final_fifa`.
+
+CP/CR.
+
+```{r fifa-17}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 8)
+```
+
+###
+
+Our code:
+
+```{r, echo = TRUE}
+final_fifa <- "data/fifa.parquet" |>
+  open_dataset() |>
+  collect() |>
+  mutate(
+    height_cm = as.numeric(str_extract(Height, "\\d+")),
+    weight_kg = as.numeric(str_extract(Weight, "\\d+"))
+  ) |>
+  mutate(across(where(is.character), ~str_replace_all(.x, "\\n", ""))) |>
+  mutate(across(where(is.character), ~str_trim(.x))) |>
+  mutate(
+    joined_date = mdy(Joined),
+    years_at_club = as.numeric(today() - joined_date) / 365.25,
+    long_tenure = years_at_club > 10
+  ) |>
+  drop_na(joined_date) |>
+  mutate(
+    value_numeric = case_when(
+      is.na(Value) | Value == "" | Value == "0" ~ 0,
+      str_detect(Value, "M") ~ as.numeric(str_remove_all(Value, "[€M★-]")) * 1000000,
+      str_detect(Value, "K") ~ as.numeric(str_remove_all(Value, "[€K★-]")) * 1000,
+      str_detect(Value, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Value, "€")),
+      TRUE ~ 0
+    ),
+    wage_numeric = case_when(
+      is.na(Wage) | Wage == "" | Wage == "0" ~ 0,
+      str_detect(Wage, "K") ~ as.numeric(str_remove_all(Wage, "[€K★-]")) * 1000,
+      str_detect(Wage, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Wage, "€")),
+      TRUE ~ 0
+    ),
+    release_clause_numeric = case_when(
+      is.na(Release.Clause) | Release.Clause == "" | Release.Clause == "0" ~ 0,
+      str_detect(Release.Clause, "M") ~ as.numeric(str_remove_all(Release.Clause, "[€M★-]")) * 1000000,
+      str_detect(Release.Clause, "K") ~ as.numeric(str_remove_all(Release.Clause, "[€K★-]")) * 1000,
+      str_detect(Release.Clause, "^€?[0-9.]+$") ~ as.numeric(str_remove_all(Release.Clause, "€")),
+      TRUE ~ 0
+    )
+  )
+```
+
+###
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 18
+
+Within the Console, type `final_fifa`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
+
+CP/CR.
+
+```{r fifa-18}
+question_text(NULL,
+    answer(NULL, correct = TRUE),
+    allow_retry = TRUE,
+    try_again_button = "Edit Answer",
+    incorrect = NULL,
+    rows = 8)
+```
+
+###
+
+Our code:
+
+```{r, echo=TRUE}
+final_fifa
+```
+
+###
+
+<!-- XX: Insert a knowledge drop related to this project. -->
+
+### Exercise 19
+
+"Ask AI to use the `final_fifa` dataset to generate a bubble chart using `geom_line()` and `geom_point()`. Mention that you want to use the data from `final_fifa` and include the top 3 rows of the tibble (just enough to show the column names). Use `filter()` to keep only rows where `value_numeric > 0` and `X.OVA > 60`. Map `Age` to the x-axis and `X.OVA` to the y-axis. Use `geom_point()` to plot bubbles with `size` and `color` both mapped to `value_numeric`. Then use `scale_size_continuous()` with `label_currency()` to format market values in millions of euros, and `scale_color_viridis_c()` with the `"plasma"` option to color the points. Add labels and subtitles with `labs()`. Finally, apply `theme_minimal()` and customize the chart using `theme()` to adjust title, subtitle, legend position, panel grid, and background."
+
+Within `labs()`, edit or add a proper title, subtitle, and caption. If axis labels would be useful, add them, but if unnecessary, don't bother. Don't assign the code for the plot to any variable. Put the plot code in a new code chunk. Run `Cmd/Ctrl + Shift + K` to ensure that everything works. Make your plot look nice.
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r fifa-19}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 12)
+```
+
+###
+
+Our code:
+
+```{r, echo=TRUE}
+final_fifa %>%
+  filter(value_numeric > 0, X.OVA > 60) %>%
+  ggplot(aes(x = Age, y = X.OVA, size = value_numeric, color = value_numeric)) +
+  geom_point(alpha = 0.7) +
+  scale_size_continuous(range = c(0.5, 8), 
+                       labels = label_currency(prefix = "€", suffix = "M", scale = 1e-6),
+                       name = "Market Value") +
+  scale_color_viridis_c(option = "plasma", 
+                       labels = label_currency(prefix = "€", suffix = "M", scale = 1e-6),
+                       name = "Market Value") +
+  labs(
+    title = "FIFA Player Performance vs Age",
+    subtitle = "Size and color represent market value • Larger bubbles = higher value",
+    x = "Age", 
+    y = "Overall Rating",
+    caption = "Data: FIFA Player Dataset"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", color = "#2C3E50"),
+    plot.subtitle = element_text(size = 12, color = "#7F8C8D"),
+    legend.position = "right",
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#FAFAFA", color = NA)
+  )
+```
+
+###
+
+<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
+
 
 ## Summary
 ###
