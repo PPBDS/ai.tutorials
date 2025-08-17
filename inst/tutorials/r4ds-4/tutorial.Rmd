@@ -136,16 +136,24 @@ final_fifa <- "data/fifa.parquet" |>
 ```
 
 <!-- XX: CHECKLIST BEFORE STARTING: -->
+
 <!-- * If you need to use the copy code button, you must load the relevant child document. -->
+
 <!-- * Use check_current_tutorial() and make_exercise(). Very helpful! -->
+
 <!-- * Edit yaml at the top of this file -->
+
 <!-- * Save the file as "tutorial.Rmd" in the correct directory under inst/tutorials/. -->
+
 <!-- * Load any necessary libraries for the tutorial in the first code chunk -->
+
 <!-- * Anytime to have a student `Cmd/Ctrl + Enter`, you ask for CP/CR and then provide your code. -->
+
 <!-- * Delete this and the other commented instructions below. -->
 
 ## Introduction
-###
+
+### 
 
 <!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
 
@@ -153,7 +161,7 @@ final_fifa <- "data/fifa.parquet" |>
 
 Create a Github repo called `r4ds-4`. Make sure to click the "Add a README file" check box.
 
-Connect the repo to a project on your computer using `File -> New Folder from Git ...`.  Make sure to select the "Open in a new window" box. 
+Connect the repo to a project on your computer using `File -> New Folder from Git ...`. Make sure to select the "Open in a new window" box.
 
 You need two Positon windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
 
@@ -220,7 +228,7 @@ question_text(NULL,
 
 Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
 
-Note that this causes `library(tidyverse)` to be copied down to the Console and then executed. 
+Note that this causes `library(tidyverse)` to be copied down to the Console and then executed.
 
 CP/CR.
 
@@ -233,10 +241,9 @@ question_text(NULL,
 	rows = 8)
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
-
 
 ### Exercise 4
 
@@ -244,9 +251,7 @@ question_text(NULL,
 
 From the Console, run these three commands:
 
-`getwd()`
-`dir.create("data")`
-`list.files()`
+`getwd()` `dir.create("data")` `list.files()`
 
 This will create a `data` directory in your project. This is a good place to store any data that you are working with.
 
@@ -261,29 +266,30 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 You answer should look something like, although your path will be different.
 
-````
+```         
 > getwd()
 [1] "/Users/dkane/Desktop/projects/XX"
 > dir.create("data")
 > list.files()
  [1] "analysis.qmd"        "data"    "README.md"
 >
-````
+```
 
 <!-- XX: You will probably have two or three Sections, in between the Introduction and Summary. We provide on example below. Before editing it, you may want to copy/paste it to create the skeleton for Second section. Any tutorial which both uses a lot of AI and is supppsed to take an hour or so will probably only have two Sections.  -->
 
 ## NBA
-###
+
+### 
 
 <!-- XX: Mention the packages/functions which you plan on covering in this Section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
-We begin by downloading our parquet files `data/game.parquet` and `line_score.parquet` directly from GitHub using `download.file()`. 
+We begin by downloading our parquet files `data/game.parquet` and `line_score.parquet` directly from GitHub using `download.file()`.
 
 This adds the parquet files, `game.parquet` and `line_score.parquet`, to our working directory so we can use it in this tutorial.
 
@@ -311,9 +317,9 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 2
 
@@ -332,7 +338,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 Our code:
 
@@ -341,9 +347,9 @@ Our code:
   open_dataset()
 ```
 
-###
+### 
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 3
 
@@ -362,7 +368,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -385,18 +391,17 @@ Our code:
   arrange(desc(n))
 ```
 
-###
+### 
 
-This tibble shows that the most amount of NBA games occur on Friday and Wedesday, while the least amount occurs on Monday. 
+This tibble shows that the most amount of NBA games occur on Friday and Wedesday, while the least amount occurs on Monday.
 
-Dates-Times
-Key Functions: ymd_hms(), year(), month(), wday()
+Dates-Times Key Functions: ymd_hms(), year(), month(), wday()
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 4
 
-Paste our pipe into AI and ask AI to change our pipe so that it selects the columns for home and away stats (`reb_home, reb_away, fg3m_home, fg3m_away, stl_home, stl_away, blk_home, blk_away`), then calculates how many missing values each column has. Then, reshape the results with `pivot_longer()` into `column/missing_count` format, add a column for total rows (65,698) and missing percentage, and finally arrange in descending order of missing percentage. 
+Paste our pipe into AI and ask AI to change our pipe so that it selects the columns for home and away stats (`reb_home, reb_away, fg3m_home, fg3m_away, stl_home, stl_away, blk_home, blk_away`), then calculates how many missing values each column has. Then, reshape the results with `pivot_longer()` into `column/missing_count` format, add a column for total rows (65,698) and missing percentage, and finally arrange in descending order of missing percentage.
 
 Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
@@ -413,7 +418,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-4-test, echo = TRUE}
 "data/game.parquet" |> 
@@ -429,18 +434,17 @@ question_text(NULL,
   arrange(desc(missing_pct))
 ```
 
-###
+### 
 
-On average, 25% of our data is missing from our selected columns of home and away rebounds, 3-pointers, and steals. 
+On average, 25% of our data is missing from our selected columns of home and away rebounds, 3-pointers, and steals.
 
-is.na(), summarise_all(), sum()
-pivot_longer
+is.na(), summarise_all(), sum() pivot_longer
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 5
 
-Ask AI to write R code that changes our pipe so that it parses `game_date` with `ymd_hms()`, and creates a new variable called `decade` by flooring the year to the nearest decade, then filters out missing decades and groups by decade (using `group_by()`) and summarises the total number of games plus the percentage of missing values for `reb_home`, `fg3m_home`, and `stl_home`.  Make sure the AI uses `.groups` to drop the grouping at the end. 
+Ask AI to write R code that changes our pipe so that it parses `game_date` with `ymd_hms()`, and creates a new variable called `decade` by flooring the year to the nearest decade, then filters out missing decades and groups by decade (using `group_by()`) and summarises the total number of games plus the percentage of missing values for `reb_home`, `fg3m_home`, and `stl_home`. Make sure the AI uses `.groups` to drop the grouping at the end.
 
 Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
@@ -457,7 +461,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-5-test, echo = TRUE}
 "data/game.parquet" |> 
@@ -478,15 +482,15 @@ question_text(NULL,
   )
 ```
 
-###
+### 
 
-This helps us understand what data is reliable for different time periods.  The `missing_3pt_pct` column shows that data for 3-point shots before 1980 are 90 - 100% missing. This is because the 3-point line was not introduced in the NBA until the 1979 - 1980 season.
+This helps us understand what data is reliable for different time periods. The `missing_3pt_pct` column shows that data for 3-point shots before 1980 are 90 - 100% missing. This is because the 3-point line was not introduced in the NBA until the 1979 - 1980 season.
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 6
 
-Ask AI to write R code that changes our pipe and groups it by `team_name_home`, then calculates the average home points per team using `mean()` and `na.rm = TRUE`, sorts the results in descending order using `arrange(desc())`, selects the top 4 teams using `slice_head()`, and then reorders `team_name_home` as a factor by `avg_pts` for plotting using `fct_reorder`. Make sure the AI uses `.groups` to drop the grouping at the end. 
+Ask AI to write R code that changes our pipe and groups it by `team_name_home`, then calculates the average home points per team using `mean()` and `na.rm = TRUE`, sorts the results in descending order using `arrange(desc())`, selects the top 4 teams using `slice_head()`, and then reorders `team_name_home` as a factor by `avg_pts` for plotting using `fct_reorder`. Make sure the AI uses `.groups` to drop the grouping at the end.
 
 Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
@@ -503,7 +507,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-6-test, echo = TRUE}
 "data/game.parquet" |> 
@@ -516,11 +520,11 @@ question_text(NULL,
   mutate(team_name_home = fct_reorder(team_name_home, avg_pts))
 ```
 
-###
+### 
 
-The top four teams that have the highest points seem to be names of players and not actual NBA teams. This is because they are from NBA: All Stars where only star players compete, therefore skewing the data since a team of only star players will likely score more points during a game. This parquet file contains all kinds of NBA game data, not just the standard ones. 
+The top four teams that have the highest points seem to be names of players and not actual NBA teams. This is because they are from NBA: All Stars where only star players compete, therefore skewing the data since a team of only star players will likely score more points during a game. This parquet file contains all kinds of NBA game data, not just the standard ones.
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 7
 
@@ -543,7 +547,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-7-test, echo = TRUE}
  open_dataset("data/line_score.parquet") |>
@@ -566,13 +570,13 @@ question_text(NULL,
   )
 ```
 
-###
+### 
 
-<!-- SG: Insert knowledge drop.--> 
+<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 8
 
-We are going to use the number of wins and points to determine if the game was considered a close win, a moderatley close win, or a absolute blowout win then count how many of each type of win occured in the early era of the NBA. 
+We are going to use the number of wins and points to determine if the game was considered a close win, a moderatley close win, or a absolute blowout win then count how many of each type of win occured in the early era of the NBA.
 
 Ask AI to continue our pipe from the last exercise and categorize `margin_category` based on the absolute point difference using `case_when()`, then order it with `factor()` and `fct_relevel()`. Create an `era` factor using `game_year` with `case_when()` and `fct_relevel()`. Compute `month_start` with `floor_date()`, `days_since_jan1` by subtracting `floor_date(game_date, "year")` from `game_date`, and `next_week` by adding `days(7)`. Finally, arrange the dataset by `game_date` with `arrange()`, limit to 1000 rows with `slice_head()`, and count games by `era` and `margin_category` using `count()`.
 
@@ -591,7 +595,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-8-test, echo = TRUE}
  open_dataset("data/line_score.parquet") |>
@@ -631,12 +635,11 @@ question_text(NULL,
   print()
 ```
 
-###
-
+### 
 
 ### Exercise 9
 
-Ask AI to use `data/game.parquet` and `data/line_score.parquet` and join them together by `game_id` using `left_join()` and parses `game_date` and `game_date_est` as `datetimes` in one singular pipe without creating intermediate variables. Make sure the `relationship` is set to `many-to-many` and `NA` values are dropped using `drop_na()`. 
+Ask AI to use `data/game.parquet` and `data/line_score.parquet` and join them together by `game_id` using `left_join()` and parses `game_date` and `game_date_est` as `datetimes` in one singular pipe without creating intermediate variables. Make sure the `relationship` is set to `many-to-many` and `NA` values are dropped using `drop_na()`.
 
 Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
@@ -653,7 +656,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-9-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
@@ -670,7 +673,7 @@ open_dataset("data/game.parquet") |>
   drop_na(pts_home.x)
 ```
 
-###
+### 
 
 ### Exercise 10
 
@@ -691,7 +694,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-10-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
@@ -714,7 +717,7 @@ open_dataset("data/game.parquet") |>
   filter(!is.na(game_date), game_year >= 1946)
 ```
 
-###
+### 
 
 ### Exercise 11
 
@@ -735,7 +738,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-11-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
@@ -768,7 +771,7 @@ open_dataset("data/game.parquet") |>
   ) 
 ```
 
-###
+### 
 
 ### Exercise 12
 
@@ -789,7 +792,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-12-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
@@ -828,7 +831,7 @@ open_dataset("data/game.parquet") |>
  	 filter(total_points > 0, !is.na(pts_home.x), !is.na(pts_away.x))
 ```
 
-###
+### 
 
 ### Exercise 13
 
@@ -849,7 +852,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 ```{r nba-13-test, echo = TRUE}
 open_dataset("data/game.parquet") |>
@@ -896,7 +899,7 @@ open_dataset("data/game.parquet") |>
   arrange(game_year)
 ```
 
-###
+### 
 
 ### Exercise 14
 
@@ -919,13 +922,13 @@ question_text(NULL,
 	rows = 6)
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
 ### Exercise 15
 
-Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `nba_clean`. 
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `nba_clean`.
 
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
 
@@ -944,7 +947,7 @@ question_text(NULL,
     rows = 8)
 ```
 
-###
+### 
 
 Our code:
 
@@ -993,7 +996,7 @@ nba_clean <- open_dataset("data/game.parquet") |>
   arrange(game_year)
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
@@ -1012,7 +1015,7 @@ question_text(NULL,
     rows = 8)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1020,7 +1023,7 @@ Our code:
 nba_clean
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
@@ -1047,7 +1050,7 @@ question_text(NULL,
 	rows = 12)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1091,17 +1094,17 @@ ggplotly(time_series_plot,
   config(displayModeBar = TRUE, displaylogo = FALSE)
 ```
 
-###
+### 
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
 
-
 ## FIFA
-###
+
+### 
 
 ### Exercise 1
 
-We begin by downloading our parquet file `data/fifa.parquet` directly from GitHub using `download.file()`. 
+We begin by downloading our parquet file `data/fifa.parquet` directly from GitHub using `download.file()`.
 
 This adds the parquet file `fifa.parquet` to our working directory so we can use it in this tutorial.
 
@@ -1125,7 +1128,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 <!-- SG: Insert knowledge drop.-->
 
@@ -1146,7 +1149,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1157,7 +1160,7 @@ Our code:
   glimpse()
 ```
 
-###
+### 
 
 This gives us a quick overview of all columns and their data types in the FIFA dataset.
 
@@ -1182,7 +1185,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1194,7 +1197,7 @@ Our code:
   slice_head(n = 10)
 ```
 
-###
+### 
 
 This shows us the exact format of height and weight data so we know how to clean it properly.
 
@@ -1219,7 +1222,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1235,7 +1238,7 @@ Our code:
   slice_head(n = 10)
 ```
 
-###
+### 
 
 This extracts numeric values from text strings containing units, a common data cleaning task.
 
@@ -1245,7 +1248,7 @@ String pattern extraction: str_extract(), regex patterns, as.numeric()
 
 ### Exercise 5
 
-Ask AI to write R code that opens the FIFA dataset and examines which columns contain newline characters. Use `select()` with `where()` and `is.character` to get only character columns, then use `summarise()` with `across()` to count how many values in each character column contain `"\\n"` using `str_detect()` and `sum()`.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+Ask AI to write R code that opens the FIFA dataset and examines which columns contain newline characters. Use `select()` with `where()` and `is.character` to get only character columns, then use `summarise()` with `across()` to count how many values in each character column contain `"\\n"` using `str_detect()` and `sum()`. Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
 
@@ -1260,7 +1263,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1272,7 +1275,7 @@ Our code:
   summarise(across(everything(), ~sum(str_detect(.x, "\\n"), na.rm = TRUE)))
 ```
 
-###
+### 
 
 The `Club` character column contains a lot of problematic newline characters that need cleaning.
 
@@ -1297,7 +1300,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1309,7 +1312,7 @@ Our code:
   slice_sample(n = 15)
 ```
 
-###
+### 
 
 This shows us the date format patterns we need to handle when parsing the Joined column.
 
@@ -1336,7 +1339,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1354,7 +1357,7 @@ Our code:
   arrange(desc(years_at_club))
 ```
 
-###
+### 
 
 This identifies the most loyal players who have stayed at their clubs for over a decade.
 
@@ -1364,7 +1367,7 @@ Date-time processing: ymd(), today(), date arithmetic, logical operations
 
 ### Exercise 8
 
-Ask AI to write R code that opens the dataset and examines the format of financial columns. Use `select()` to get `Name`, `Value`, `Wage`, and `Release.Clause` columns, then `slice_head()` to see 20 rows so we understand the string formats with "M", "K", and "€" symbols before converting them to numbers.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+Ask AI to write R code that opens the dataset and examines the format of financial columns. Use `select()` to get `Name`, `Value`, `Wage`, and `Release.Clause` columns, then `slice_head()` to see 20 rows so we understand the string formats with "M", "K", and "€" symbols before converting them to numbers. Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
 
@@ -1379,7 +1382,7 @@ question_text(NULL,
 	rows = 3)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1391,7 +1394,7 @@ Our code:
   slice_head(n = 20)
 ```
 
-###
+### 
 
 This shows us the variety of financial string formats we need to parse into numeric values.
 
@@ -1401,7 +1404,7 @@ Financial data inspection: column selection for analysis
 
 ### Exercise 9
 
-Ask AI to write R code that opens the FIFA dataset and uses `case_when()` with `str_detect()` to convert the `Value` column from text to numeric. Handle "M" (multiply by 1,000,000), "K" (multiply by 1,000), and plain "€" values. Use `str_remove_all()` to clean currency symbols and `as.numeric()` for conversion. Create a `value_numeric` column, then use `select()` to show `Name`, original `Value`, and `value_numeric`, and `arrange()` by descending value to see the most valuable players.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+Ask AI to write R code that opens the FIFA dataset and uses `case_when()` with `str_detect()` to convert the `Value` column from text to numeric. Handle "M" (multiply by 1,000,000), "K" (multiply by 1,000), and plain "€" values. Use `str_remove_all()` to clean currency symbols and `as.numeric()` for conversion. Create a `value_numeric` column, then use `select()` to show `Name`, original `Value`, and `value_numeric`, and `arrange()` by descending value to see the most valuable players. Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
 
@@ -1416,7 +1419,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1438,7 +1441,7 @@ Our code:
   slice_head(n = 15)
 ```
 
-###
+### 
 
 This converts financial text strings with multipliers into proper numeric values for analysis.
 
@@ -1465,7 +1468,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1477,7 +1480,7 @@ Our code:
   names()
 ```
 
-###
+### 
 
 This identifies which columns use star ratings that need to be converted to numeric values.
 
@@ -1487,7 +1490,7 @@ Advanced column selection: where() with custom functions
 
 ### Exercise 11
 
- Ask AI to write R code that opens the FIFA dataset with `open_dataset()` and `collect()`, then begins cleaning with `mutate()` to create numeric height and weight columns using `str_extract()` with pattern `"\\d+"`.  Add this code as a replacement to your current code in the same code chunk in the same QMD.
+Ask AI to write R code that opens the FIFA dataset with `open_dataset()` and `collect()`, then begins cleaning with `mutate()` to create numeric height and weight columns using `str_extract()` with pattern `"\\d+"`. Add this code as a replacement to your current code in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
 
@@ -1502,7 +1505,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1516,7 +1519,7 @@ Our code:
   )
 ```
 
-###
+### 
 
 This begins our comprehensive data cleaning pipeline with numeric conversion of physical measurements.
 
@@ -1525,6 +1528,12 @@ Pipeline start: Data loading and basic cleaning
 <!-- SG: Insert knowledge drop.-->
 
 ### Exercise 12
+
+Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
+
+Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 Ask AI to write R code that continues our pipeline and adds text cleaning using `mutate()` with `across()`. Remove newline characters from all character columns using `str_replace_all(.x, "\\n", "")`, then in a second `mutate()`, trim whitespace from character columns using `str_trim()`. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
 
@@ -1541,7 +1550,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1557,7 +1566,7 @@ Our code:
   mutate(across(where(is.character), ~str_trim(.x)))
 ```
 
-###
+### 
 
 This continues our pipeline by cleaning text formatting issues across all character columns.
 
@@ -1582,7 +1591,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1604,7 +1613,7 @@ Our code:
   drop_na(joined_date)
 ```
 
-###
+### 
 
 This adds date processing and tenure analysis while handling missing values appropriately.
 
@@ -1629,7 +1638,7 @@ question_text(NULL,
 	rows = 5)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1667,7 +1676,7 @@ Our code:
   )
 ```
 
-###
+### 
 
 This converts complex financial strings with various multipliers into clean numeric values.
 
@@ -1677,7 +1686,7 @@ Financial data parsing: Complex case_when() with multiple conditions
 
 ### Exercise 15
 
-Ask AI to complete our pipeline by adding star rating cleaning and creating an amazing interactive visualization. Continue the pipe to remove stars from skill columns using `mutate()` and `across()` with `contains("Skill")`, then add `#| cache: true` and assign the result to `fifa_clean`. Create an interactive plot with `ggplotly()` that shows the relationship between `value_numeric` and `wage_numeric`, identifying undervalued players (high value, relatively low wages). Filter for players with value > €5M and wage < €200K, use point size for `Overall` rating, color for `Age`, add smooth trend lines by `Position` (limit to top 6 positions by count), and include hover text with player names and clubs. Use log scales, viridis colors, and proper labels. Add this code as a continuation and plot creation in the same code chunk.
+Ask AI to complete our pipeline by adding star rating cleaning and creating an amazing interactive visualization. Continue the pipe to remove stars from skill columns using `mutate()` and `across()` with `contains("Skill")`, then add `#| cache: true` and assign the result to `fifa_clean`. Create an interactive plot with `ggplotly()` that shows the relationship between `value_numeric` and `wage_numeric`, identifying undervalued players (high value, relatively low wages). Filter for players with value \> €5M and wage \< €200K, use point size for `Overall` rating, color for `Age`, add smooth trend lines by `Position` (limit to top 6 positions by count), and include hover text with player names and clubs. Use log scales, viridis colors, and proper labels. Add this code as a continuation and plot creation in the same code chunk.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
 
@@ -1692,7 +1701,7 @@ question_text(NULL,
 	rows = 15)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1736,12 +1745,11 @@ Our code:
   )
 ```
 
-###
+### 
 
 This creates a comprehensive interactive analysis revealing the most undervalued players in world football - those with high market values but surprisingly low wages, representing potential transfer bargains.
 
 Complete pipeline: Data cleaning, factor analysis, advanced visualization with ggplotly()
-
 
 ### Exercise 16
 
@@ -1764,13 +1772,13 @@ question_text(NULL,
 	rows = 6)
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
 ### Exercise 17
 
-Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `final_fifa`. 
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `final_fifa`.
 
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
 
@@ -1789,7 +1797,7 @@ question_text(NULL,
     rows = 8)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1833,7 +1841,7 @@ final_fifa <- "data/fifa.parquet" |>
   )
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
@@ -1852,7 +1860,7 @@ question_text(NULL,
     rows = 8)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1860,7 +1868,7 @@ Our code:
 final_fifa
 ```
 
-###
+### 
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
@@ -1887,7 +1895,7 @@ question_text(NULL,
 	rows = 12)
 ```
 
-###
+### 
 
 Our code:
 
@@ -1919,23 +1927,23 @@ final_fifa %>%
   )
 ```
 
-###
+### 
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
 
-
 ## Summary
-###
+
+### 
 
 <!-- XX: The exact same two to four sentence about the main packages/functions used in the Introduction, but written here in the past tense. You made a promise and you kept it.  -->
 
 ### Exercise 1
 
-`Cmd/Ctrl + Shift + K` to ensure that everything works.  The resulting HTML page should be attractive, showing clean versions of your plots.
+`Cmd/Ctrl + Shift + K` to ensure that everything works. The resulting HTML page should be attractive, showing clean versions of your plots.
 
 At the Console, run:
 
-```
+```         
 tutorial.helpers::show_file("analysis.qmd")
 ```
 
@@ -1958,9 +1966,9 @@ question_text(NULL,
 
 Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
-````
+```         
 quarto publish gh-pages XX.qmd
-````
+```
 
 Copy/paste the resulting URL below.
 
