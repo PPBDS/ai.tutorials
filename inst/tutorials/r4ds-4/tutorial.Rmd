@@ -135,24 +135,8 @@ final_fifa <- "data/fifa.parquet" |>
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- XX: CHECKLIST BEFORE STARTING: -->
-
-<!-- * If you need to use the copy code button, you must load the relevant child document. -->
-
-<!-- * Use check_current_tutorial() and make_exercise(). Very helpful! -->
-
-<!-- * Edit yaml at the top of this file -->
-
-<!-- * Save the file as "tutorial.Rmd" in the correct directory under inst/tutorials/. -->
-
-<!-- * Load any necessary libraries for the tutorial in the first code chunk -->
-
-<!-- * Anytime to have a student `Cmd/Ctrl + Enter`, you ask for CP/CR and then provide your code. -->
-
-<!-- * Delete this and the other commented instructions below. -->
 
 ## Introduction
-
 ### 
 
 <!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
@@ -190,7 +174,9 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Parquet files are “column-oriented”. This means that they’re organized column-by-column, much like R’s data frame. This typically leads to better performance for data analysis tasks compared to CSV files, which are organized row-by-row.
+
+Parquet files are “chunked”, which makes it possible to work on different parts of the file at the same time, and, if you’re lucky, to skip some chunks all together.
 
 ### Exercise 2
 
@@ -222,7 +208,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Like CSV, parquet is used for rectangular data, but instead of being a text format that you can read with any file editor, it’s a custom binary format designed specifically for the needs of big data.
 
 ### Exercise 3
 
@@ -243,11 +229,9 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Both **arrow** and **dbplyr** provide **dplyr** backends, so you might wonder when to use each. In many cases, the choice is made for you, as in the data is already in a database or in parquet files, and you’ll want to work with it as is. But if you’re starting with your own data (perhaps CSV files), you can either load it into a database or convert it to parquet.
 
 ### Exercise 4
-
-<!-- XX: Delete this question if you do not make use of the `data` directory in this tutorial. -->
 
 From the Console, run these three commands:
 
@@ -278,11 +262,12 @@ You answer should look something like, although your path will be different.
  [1] "analysis.qmd"        "data"    "README.md"
 >
 ```
+###
 
-<!-- XX: You will probably have two or three Sections, in between the Introduction and Summary. We provide on example below. Before editing it, you may want to copy/paste it to create the skeleton for Second section. Any tutorial which both uses a lot of AI and is supppsed to take an hour or so will probably only have two Sections.  -->
+Parquet files are usually smaller than the equivalent CSV file. Parquet relies on [efficient encodings](https://parquet.apache.org/docs/file-format/data-pages/encodings/) to keep file size down, and supports file compression. This helps make parquet files fast because there’s less data to move from disk to memory.
+
 
 ## NBA
-
 ### 
 
 <!-- XX: Mention the packages/functions which you plan on covering in this Section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
@@ -319,7 +304,7 @@ question_text(NULL,
 
 ### 
 
-<!-- SG: Insert knowledge drop.-->
+We’ll pair parquet files with [Apache Arrow](https://arrow.apache.org/), a multi-language toolbox designed for efficient analysis and transport of large datasets. We’ll use Apache Arrow via the the [**arrow**](https://arrow.apache.org/docs/r/) package, which provides a **dplyr** backend allowing you to analyze larger-than-memory datasets using familiar **dplyr** syntax. 
 
 ### Exercise 2
 
@@ -349,7 +334,7 @@ Our code:
 
 ### 
 
-<!-- SG: Insert knowledge drop.-->
+`open_dataset()` will scan a few thousand rows to figure out the structure of the dataset. We can see what’s actually in it with `glimpse()`.
 
 ### Exercise 3
 
@@ -395,9 +380,7 @@ Our code:
 
 This tibble shows that the most amount of NBA games occur on Friday and Wedesday, while the least amount occurs on Monday.
 
-Dates-Times Key Functions: ymd_hms(), year(), month(), wday()
-
-<!-- SG: Insert knowledge drop.-->
+`ymd()` and friends create dates. To create a date-time, add an underscore and one or more of “h”, “m”, and “s” to the name of the parsing function
 
 ### Exercise 4
 
@@ -438,9 +421,7 @@ question_text(NULL,
 
 On average, 25% of our data is missing from our selected columns of home and away rebounds, 3-pointers, and steals.
 
-is.na(), summarise_all(), sum() pivot_longer
-
-<!-- SG: Insert knowledge drop.-->
+In the rare case you need to distinguish an `NA` from a `NaN`, you can use `is.nan(x)`.
 
 ### Exercise 5
 
@@ -486,7 +467,7 @@ question_text(NULL,
 
 This helps us understand what data is reliable for different time periods. The `missing_3pt_pct` column shows that data for 3-point shots before 1980 are 90 - 100% missing. This is because the 3-point line was not introduced in the NBA until the 1979 - 1980 season.
 
-<!-- SG: Insert knowledge drop.-->
+A date-time is a date plus a time: it uniquely identifies an instant in time (typically to the nearest second). Tibbles print this as `<dttm>`. Base R calls these POSIXct, but doesn’t exactly trip off the tongue.
 
 ### Exercise 6
 
@@ -524,7 +505,7 @@ question_text(NULL,
 
 The top four teams that have the highest points seem to be names of players and not actual NBA teams. This is because they are from NBA: All Stars where only star players compete, therefore skewing the data since a team of only star players will likely score more points during a game. This parquet file contains all kinds of NBA game data, not just the standard ones.
 
-<!-- SG: Insert knowledge drop.-->
+To create a date/time  we use `make_date()` for dates, or `make_datetime()` for date-times
 
 ### Exercise 7
 
@@ -572,7 +553,7 @@ question_text(NULL,
 
 ### 
 
-<!-- SG: Insert knowledge drop.-->
+When using these three formats (ymd, mdy, dmy)  we need to identify the order in which year, month, and day appear in your dates, then arrange “y”, “m”, and “d” in the same order. That gives you the name of the lubridate function that will parse your date.
 
 ### Exercise 8
 
@@ -637,6 +618,9 @@ question_text(NULL,
 
 ### 
 
+
+`make_datetime_100` is a function that takes in the `year`, `month`, `day` and `time` variables to create a datetime. It is not always necessary to make a function like this, but, it does make life easier.
+
 ### Exercise 9
 
 Ask AI to use `data/game.parquet` and `data/line_score.parquet` and join them together by `game_id` using `left_join()` and parses `game_date` and `game_date_est` as `datetimes` in one singular pipe without creating intermediate variables. Make sure the `relationship` is set to `many-to-many` and `NA` values are dropped using `drop_na()`.
@@ -674,6 +658,8 @@ open_dataset("data/game.parquet") |>
 ```
 
 ### 
+
+If you are doing this deliberately, you can set `relationship = "many-to-many"`, as the warning suggests. This will silence the warning and allow you to see the tibble.
 
 ### Exercise 10
 
@@ -718,6 +704,8 @@ open_dataset("data/game.parquet") |>
 ```
 
 ### 
+
+You can use the `.direction` argument to fill in missing values that have been generated in more exotic ways.
 
 ### Exercise 11
 
@@ -773,9 +761,11 @@ open_dataset("data/game.parquet") |>
 
 ### 
 
+`tidyr::complete()` allows you to generate explicit missing values by providing a set of variables that define the combination of rows that should exist.
+
 ### Exercise 12
 
-Ask AI to write R code that continues your piep and uses `mutate()` with `across()` to replace missing values with 0 for all columns containing `"pct"` and for the columns `pts_home.x` and `pts_away.x` so that `NA`s are handled. Then, use `mutate()` again to create a new column `total_points` as the sum of `pts_home.x` and `pts_away.x`. Finally, use `filter()` to keep only rows where `total_points` is greater than 0 and neither `pts_home.x` nor `pts_away.x` are `NA`.
+Ask AI to write R code that continues your pipe and uses `mutate()` with `across()` to replace missing values with 0 for all columns containing `"pct"` and for the columns `pts_home.x` and `pts_away.x` so that `NA`s are handled. Then, use `mutate()` again to create a new column `total_points` as the sum of `pts_home.x` and `pts_away.x`. Finally, use `filter()` to keep only rows where `total_points` is greater than 0 and neither `pts_home.x` nor `pts_away.x` are `NA`.
 
 Add this code as a continuation to your current code in the same code chunk in the same QMD.
 
@@ -832,6 +822,8 @@ open_dataset("data/game.parquet") |>
 ```
 
 ### 
+
+A **mutating join** allows you to combine variables from two data frames: it first matches observations by their keys, then copies across variables from one data frame to the other. Like `mutate()`, the join functions add variables to the right, so if your dataset has many variables, you won’t see the new ones. For these examples, we’ll make it easier to see what’s going on by creating a narrower dataset with just six variables.
 
 ### Exercise 13
 
@@ -901,6 +893,8 @@ open_dataset("data/game.parquet") |>
 
 ### 
 
+There are four types of mutating join, but there’s one that you’ll use almost all of the time: `left_join()`. It’s special because the output will always have the same rows as `x`, the data frame you’re joining to. The primary use of `left_join()` is to add in additional metadata. 
+
 ### Exercise 14
 
 Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from the previous exercise with our code.
@@ -924,7 +918,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+**Anti-joins** are the opposite: they return all rows in x that don’t have a match in y. They’re useful for finding missing values that are **implicit** in the data. Implicitly missing values don’t show up as `NA`s but instead only exist as an absence.
 
 ### Exercise 15
 
@@ -998,7 +992,7 @@ nba_clean <- open_dataset("data/game.parquet") |>
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+To describe a specific type of join, we indicate matches with dots. The matches determine the rows in the output, a new data frame that contains the key, the x values, and the y values. 
 
 ### Exercise 16
 
@@ -1025,7 +1019,7 @@ nba_clean
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+A **right join** keeps all observations in `y` Every row of y is preserved in the output because it can fall back to matching a row of `NAs` in `x`. The output still matches `x` as much as possible; any extra rows from `y` are added to the end.
 
 ### Exercise 17
 
@@ -1096,7 +1090,7 @@ ggplotly(time_series_plot,
 
 ### 
 
-<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
+A **full join** keeps all observations that appear in `x` or `y`, like the image above. Every row of x and y is included in the output because both `x` and `y` have a fall back row of `NAs`. Again, the output starts with all rows from `x`, followed by the remaining unmatched `y` rows.
 
 ## FIFA
 
@@ -1130,7 +1124,7 @@ question_text(NULL,
 
 ### 
 
-<!-- SG: Insert knowledge drop.-->
+A cross join matches everything, generating the Cartesian product of rows. This means the output will have `nrow(x) * nrow(y)` rows. Cross joins are useful when generating permutations.
 
 ### Exercise 2
 
@@ -1164,9 +1158,7 @@ Our code:
 
 This gives us a quick overview of all columns and their data types in the FIFA dataset.
 
-Data exploration: open_dataset(), collect(), glimpse()
-
-<!-- SG: Insert knowledge drop.-->
+Like `mutate()`, the join functions add variables to the right, so if your dataset has many variables, you won’t see the new ones as we saw in the previous code.
 
 ### Exercise 3
 
@@ -1201,9 +1193,7 @@ Our code:
 
 This shows us the exact format of height and weight data so we know how to clean it properly.
 
-Data inspection: select(), slice_head()
-
-<!-- SG: Insert knowledge drop.-->
+Factors are used for categorical variables --- variables that have a fixed and known set of possible values. They are also useful when you want to display character vectors in a non-alphabetical order.
 
 ### Exercise 4
 
@@ -1242,9 +1232,7 @@ Our code:
 
 This extracts numeric values from text strings containing units, a common data cleaning task.
 
-String pattern extraction: str_extract(), regex patterns, as.numeric()
-
-<!-- SG: Insert knowledge drop.-->
+One of the nine core packages within the *Tidyverse* is [**forcats**](https://forcats.tidyverse.org/), a package dedicated to working with factors. By loading **tidyverse**, we automatically get access to **forcats** and the other "core" *Tidyverse* packages.
 
 ### Exercise 5
 
@@ -1279,9 +1267,7 @@ Our code:
 
 The `Club` character column contains a lot of problematic newline characters that need cleaning.
 
-Missing value analysis: where(), across(), str_detect(), summarise()
-
-<!-- SG: Insert knowledge drop.-->
+**forcats** provides tools for dealing with **cat**egorical variables --- and it’s an anagram of the word "factors" --- using a wide range of helpers for working with factors.
 
 ### Exercise 6
 
@@ -1316,9 +1302,7 @@ Our code:
 
 This shows us the date format patterns we need to handle when parsing the Joined column.
 
-Random sampling: slice_sample()
-
-<!-- SG: Insert knowledge drop.-->
+The function `factor()` is a part of base R, not **forcats**. It creates a factor variable. Notice how, in addition to the values of `x1` being printed, as they are when we print a character variable, we also see the levels, printed out in order.
 
 ### Exercise 7
 
@@ -1361,9 +1345,7 @@ Our code:
 
 This identifies the most loyal players who have stayed at their clubs for over a decade.
 
-Date-time processing: ymd(), today(), date arithmetic, logical operations
-
-<!-- SG: Insert knowledge drop.-->
+Instead of `factor()`, we recommend using the `fct()` function from the **forcats** package, precisely because it generates an explicit error rather than a silent conversion to `NA`.
 
 ### Exercise 8
 
@@ -1398,9 +1380,7 @@ Our code:
 
 This shows us the variety of financial string formats we need to parse into numeric values.
 
-Financial data inspection: column selection for analysis
-
-<!-- SG: Insert knowledge drop.-->
+`col_factor()`, when used within `read_csv()` and similar import functions, is the most common way of creating factor variables.
 
 ### Exercise 9
 
@@ -1447,9 +1427,7 @@ This converts financial text strings with multipliers into proper numeric values
 
 The warnings are coming from `as.numeric()` in `case_when()` because some rows still contain non-numeric characters, like empty strings, spaces, or other symbols not removed by our current `str_remove_all()`.
 
-Complex string parsing: case_when(), str_detect(), str_remove_all()
-
-<!-- SG: Insert knowledge drop.-->
+All statistical functions in R will produce a value of NA if even a single one of the input values is NA, consistent with the rules of mathematics. Most statistical functions have a `na.rm` --- short for NA remove --- which allows us to remove any NA values prior to the calculation.
 
 ### Exercise 10
 
@@ -1484,9 +1462,7 @@ Our code:
 
 This identifies which columns use star ratings that need to be converted to numeric values.
 
-Advanced column selection: where() with custom functions
-
-<!-- SG: Insert knowledge drop.-->
+`fct_reorder2(f, x, y)` reorders the factor `f` by the `y` values associated with the largest `x` values.
 
 ### Exercise 11
 
@@ -1523,9 +1499,7 @@ Our code:
 
 This begins our comprehensive data cleaning pipeline with numeric conversion of physical measurements.
 
-Pipeline start: Data loading and basic cleaning
-
-<!-- SG: Insert knowledge drop.-->
+`fct_recode()` will leave the levels that aren’t explicitly mentioned as they are, and will warn you if you accidentally refer to a level that doesn’t exist.
 
 ### Exercise 12
 
@@ -1570,9 +1544,8 @@ Our code:
 
 This continues our pipeline by cleaning text formatting issues across all character columns.
 
-Text cleaning: across(), where(), str_replace_all(), str_trim()
+If you want to collapse a lot of levels, `fct_collapse()` is a useful variant of `fct_recode()`. For each new variable, you can provide a vector of old levels.
 
-<!-- SG: Insert knowledge drop.-->
 
 ### Exercise 13
 
@@ -1617,9 +1590,7 @@ Our code:
 
 This adds date processing and tenure analysis while handling missing values appropriately.
 
-Date processing and missing values: ymd(), today(), drop_na()
-
-<!-- SG: Insert knowledge drop.-->
+`fct_lump_lowfreq()` is a simple starting point that progressively lumps the smallest groups categories into “Other”, always keeping “Other” as the smallest category.
 
 ### Exercise 14
 
@@ -1680,9 +1651,7 @@ Our code:
 
 This converts complex financial strings with various multipliers into clean numeric values.
 
-Financial data parsing: Complex case_when() with multiple conditions
-
-<!-- SG: Insert knowledge drop.-->
+We can also use the `fct_lump_n()` to specify that we want exactly a number of groups
 
 ### Exercise 15
 
@@ -1749,7 +1718,7 @@ Our code:
 
 This creates a comprehensive interactive analysis revealing the most undervalued players in world football - those with high market values but surprisingly low wages, representing potential transfer bargains.
 
-Complete pipeline: Data cleaning, factor analysis, advanced visualization with ggplotly()
+Oftentimes when working with non-English dates and `%b` or `%B` you will need to use `locale()`. Check out [**date_names_langs()**](https://readr.tidyverse.org/reference/date_names.html) for more information.
 
 ### Exercise 16
 
@@ -1774,7 +1743,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+We can find out what R thinks our current time zone is with `Sys.timezone()`. If R doesn't know, you will get an `NA`
 
 ### Exercise 17
 
@@ -1843,7 +1812,7 @@ final_fifa <- "data/fifa.parquet" |>
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Unless otherwise specified, lubridate always uses UTC. UTC (Coordinated Universal Time) is the standard time zone used by the scientific community and is roughly equivalent to GMT (Greenwich Mean Time). It does not have DST, which makes a convenient representation for computation. Operations that combine date-times, like `c()`, will often drop the time zone. In that case, the date-times will display in the time zone of the first element.
 
 ### Exercise 18
 
@@ -1870,7 +1839,7 @@ final_fifa
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+You can recognize ordered factors when printing because they use `<` between the factor levels. We don't recommend using ordered factors unless you have a compelling reason for doing so.
 
 ### Exercise 19
 
@@ -1929,7 +1898,7 @@ final_fifa %>%
 
 ### 
 
-<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
+Ordered factors, created with `ordered()`, imply a strict ordering and equal distance between levels: the first level is “less than” the second level by the same amount that the second level is “less than” the third level, and so on.
 
 ## Summary
 
