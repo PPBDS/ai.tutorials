@@ -10,12 +10,7 @@ For 5 also, https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
 
 Work on: r4ds-1/tutorial.Rmd
 
-### r4ds-1
 
-data visualization
-data transformations
-data tidying
-data import
 
 Grab the most important 40 knowledge drops from the relevant tutorials in r4ds.tutorials, about 10 per chapter. Think about the most important packages and functions. Not all the packages and functions will get mentioned in the Introduction/Summary, but it is still nice to have a list.
 
@@ -34,9 +29,6 @@ Where data? Find some plots you think are cool which have the data available.
 
 * https://r-graph-gallery.com/
 
-Think ahead about r4ds-4. Note that it explores date-times, missing, joins. 
-
-
 
 
 # Introductions
@@ -52,6 +44,13 @@ In essence, each of our five tutorials should start with a get-the-data section 
 
 We don't cover any of the workflow chapters, or chapters 27-29.
 
+
+### r4ds-1
+
+data import
+data visualization
+data transformations
+data tidying
 
 
 ### r4ds-2
@@ -100,4 +99,18 @@ Most R4DS tutorials require the use of some strange data structures, like arrow 
 
 * The files should be much less than 100 megabytes each because we want students to be able to easily download them and back them up in their personal repos.
 
-* The big problem is that if we keep the datasets in the `data` directories, then we can't put the [ackage on CRAN because it will be too big. Solution? Maybe we just keep all the data in extdata, then there is a script which downloads the files and puts them in the correct `data` directories. That script might be run by hand, sort of like the script which sets up tinytex. Appropriate checks would then need to be added to the tutorials so that they might report if the data is not there.
+* The big problem is that if we keep the datasets in the `data` directories, then we can't put the package on CRAN because it will be too big. Solution? Maybe we just keep all the data in extdata, then there is a script which downloads the files and puts them in the correct `data` directories. That script might be run by hand, sort of like the script which sets up tinytex. Appropriate checks would then need to be added to the tutorials so that they might report if the data is not there.
+
+
+### Preceptor
+
+* Finish skeleton in tutorial.helpers
+
+* Create function for downloading data from extdata on GitHub and installing the relevant data in the correct data directory. Really want to put this package on CRAN!
+
+* Finish "Tutorials in the Age of AI" in tutorial.helpers.
+
+* Rewrite "Instructions"
+
+
+
