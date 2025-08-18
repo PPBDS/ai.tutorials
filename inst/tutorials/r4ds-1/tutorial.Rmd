@@ -1126,9 +1126,187 @@ read_csv("data/music.csv")
 
 ###
 
-Now, assign this code to the variable `music` so that it looks like `music <- read_csv("data/music.csv")`. Save the file.
+
 
 ### Exercise 3
+
+Provide AI with the line of code from the question above, as well as the tibble of data.
+
+Ask AI: Edit the code so that the `read_csv()` skips the first 5 lines.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-3}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-3-test, echo = TRUE}
+read_csv("data/music.csv", skip = 5)
+```
+
+###
+
+
+
+### Exercise 4
+
+Ask AI: Edit the code so that the `read_csv()` also to not read the first row as headings.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-4}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-4-test, echo = TRUE}
+read_csv("data/music.csv", skip = 5, col_names = FALSE)
+```
+
+###
+
+
+
+### Exercise 5
+
+Ask AI: Edit the code so that the `read_csv()` instead changes the first 3 column names to be replaced by a character vector of 1, 2, and 3.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-5}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-5-test, echo = TRUE}
+read_csv("data/music.csv", skip = 5, 
+         col_names = c("1", "2", "3"))
+```
+
+###
+
+
+
+<!-- LL: in an email you said "no warnings about col_types". Does that mean no questions regarding the argument? Should we teach students how to debug if an automatically generated column type is incorrect? -->
+
+### Exercise 6
+
+Ask AI: Edit the code so that the `skip` and `col_names` arguments are removed, and that the `read_csv()` is assigned to an object `df` and `read_csv()` is told with `col_types` that the column `artist.familiarity` is a double and to check if it fails. Then run `problems(df)`.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-6}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-6-test, echo = TRUE}
+df <- read_csv(
+   "data/music.csv",
+   col_types = cols(
+     artist.familiarity = col_double()
+   )
+)
+ 
+problems(df)
+```
+
+###
+
+### Exercise 7
+
+Ask AI: Edit the code `read_csv("data/music.csv")` so that the `read_csv()` only selects the column `artist.familiarity` with `cols_only()`, and then overrides the code type to be a string.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-7}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-7-test, echo = TRUE}
+read_csv(
+  "data/music.csv",
+  col_types = cols_only(
+    artist.familiarity = col_character()
+  )
+)
+```
+
+###
+
+### Exercise 8
+
+
+```{r music-8}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-8-test, echo = TRUE}
+
+```
+
+###
+
+
+
+### Exercise 9
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -1142,7 +1320,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-3}
+```{r music-9}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -1155,7 +1333,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 4
+### Exercise 10
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -1167,7 +1345,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r music-4}
+```{r music-10}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1188,13 +1366,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 5
+### Exercise 11
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r music-5}
+```{r music-11}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1216,7 +1394,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 6
+### Exercise 12
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -1230,7 +1408,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-6}
+```{r music-12}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
