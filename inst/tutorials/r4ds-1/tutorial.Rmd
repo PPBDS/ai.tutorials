@@ -51,6 +51,10 @@ df <- read_csv(
    )
 )
 
+library(quarto) # Total hack to shut up renv! Really need to put this in the package help file.
+
+
+
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
         tutorial.storage = "local") 

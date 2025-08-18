@@ -19,15 +19,19 @@ Imports:
     learnr,
     tutorial.helpers
 Suggests: 
+    arrow,
     babynames,
     DBI,
     dbplyr,
     duckdb,
+    leaflet,
     nycflights13,
+    plotly,
     quarto,
     rsconnect,
     testthat (>= 3.0.0),
-    tidyverse
+    tidyverse,
+    viridis
 VignetteBuilder: quarto  
 Config/testthat/edition: 3 
 Remotes: 
