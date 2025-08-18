@@ -16,6 +16,14 @@ library(learnr)
 library(tutorial.helpers)
 library(tidyverse)
 
+music_1 <- read_csv(
+   "data/music.csv",
+   col_types = cols_only(
+     artist.familiarity = col_character(),
+ artist.hotttnesss = col_character(),
+ artist.id = col_character()
+   )
+)
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
@@ -1108,6 +1116,7 @@ Add this code to a new code chunk in your QMD. Make sure the code is not assigne
 
 Place your cursor at the beginning of the line and run `Cmd/Ctrl + Enter`.
 
+CP/CR.
 
 ```{r music-2}
 question_text(NULL,
@@ -1134,7 +1143,7 @@ Provide AI with the line of code from the question above, as well as the tibble 
 
 Ask AI: Edit the code so that the `read_csv()` skips the first 5 lines.
 
-Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1163,7 +1172,7 @@ Ask AI: Edit the code so that the `read_csv()` also to not read the first row as
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1192,7 +1201,7 @@ Ask AI: Edit the code so that the `read_csv()` instead changes the first 3 colum
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1224,7 +1233,7 @@ Ask AI: Edit the code so that the `skip` and `col_names` arguments are removed, 
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1254,11 +1263,11 @@ problems(df)
 
 ### Exercise 7
 
-Ask AI: Edit the code `read_csv("data/music.csv")` so that the `read_csv()` only selects the column `artist.familiarity` with `cols_only()`, and then overrides the code type to be a string.
+Ask AI: Edit the code `read_csv("data/music.csv")` so that the `read_csv()` only selects the columns `artist.familiarity`, `artist.hotttnesss`, and `artist.id` with `cols_only()`, and then overrides the code type to be a string.
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1277,15 +1286,26 @@ question_text(NULL,
 read_csv(
   "data/music.csv",
   col_types = cols_only(
-    artist.familiarity = col_character()
+    artist.familiarity = col_character(),
+	artist.hotttnesss = col_character(),
+	artist.id = col_character()
   )
 )
 ```
 
 ###
 
+Assign this code to the object `music_1`.
+
 ### Exercise 8
 
+Ask AI: Based off of the `music.csv` tibble previously provided, create a similar tibble with only 3 rows of data using `tibble()`, and only with the first 3 columns from `music.csv`. Don't assign the tibble to an object.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
 
 ```{r music-8}
 question_text(NULL,
@@ -1299,14 +1319,81 @@ question_text(NULL,
 ###
 
 ```{r music-8-test, echo = TRUE}
+tibble(
+  artist.familiarity = c("0.85", "0.67", "0.92"),
+  artist.hotttnesss  = c("0.78", "0.55", "0.88"),
+  artist.id          = c("AR123", "AR456", "AR789")
+)
+```
 
+###
+
+### Exercise 9
+
+Ask AI: Continue the previous code with the new tibble so that it is fed through a pipe and is written into a new csv file titled `music_fake.csv`.
+
+If your using a different AI, provide the previous code.
+
+Manually, using the same command, do the same for the `music_1` tibble.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-9}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-9-test, echo = TRUE}
+tibble(
+  artist.familiarity = c("0.85", "0.67", "0.92"),
+  artist.hotttnesss  = c("0.78", "0.55", "0.88"),
+  artist.id          = c("AR123", "AR456", "AR789")
+) |>
+  write_csv("data/music_fake.csv")
+
+write_csv(music_1, "data/music_1.csv")
+```
+
+###
+
+### Exercise 10
+
+Ask AI: Creating a vector of both csv files, use `read_csv()` to read both csv files `"music_1.csv"` and `"music_fake.csv"` and create a new column showing the file that the data comes from with the argument `id`. Don't assign the combined data frame to an object.
+
+If your using a different AI, provide the `music.csv` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-10}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r music-10-test, echo = TRUE}
+read_csv(c("data/music_1.csv", "data/music_fake.csv"), id = "source")
 ```
 
 ###
 
 
 
-### Exercise 9
+### Exercise 11
 
 <!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
 
@@ -1320,7 +1407,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-9}
+```{r music-11}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -1333,7 +1420,7 @@ question_text(NULL,
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 10
+### Exercise 12
 
 Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
 
@@ -1345,7 +1432,7 @@ Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl +
 
 CP/CR.
 
-```{r music-10}
+```{r music-12}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1366,13 +1453,13 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 11
+### Exercise 13
 
 Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r music-11}
+```{r music-13}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1394,7 +1481,7 @@ Our code:
 
 <!-- XX: Insert a knowledge drop related to this project. -->
 
-### Exercise 12
+### Exercise 14
 
 Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
@@ -1408,7 +1495,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-12}
+```{r music-14}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
