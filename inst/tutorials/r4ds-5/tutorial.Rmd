@@ -177,19 +177,14 @@ top_movies <- request("https://web.archive.org/web/20220201012049/https://www.im
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- XX: CHECKLIST BEFORE STARTING: -->
-<!-- * If you need to use the copy code button, you must load the relevant child document. -->
-<!-- * Use check_current_tutorial() and make_exercise(). Very helpful! -->
-<!-- * Edit yaml at the top of this file -->
-<!-- * Save the file as "tutorial.Rmd" in the correct directory under inst/tutorials/. -->
-<!-- * Load any necessary libraries for the tutorial in the first code chunk -->
-<!-- * Anytime to have a student `Cmd/Ctrl + Enter`, you ask for CP/CR and then provide your code. -->
-<!-- * Delete this and the other commented instructions below. -->
 
 ## Introduction
 ###
 
-<!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
+This section covers key concepts from [Chapter 23: Hierarchical Data](https://r4ds.hadley.nz/hierarchical), [Chapter 24: Web Scraping](https://r4ds.hadley.nz/webscraping), [Chapter 25: Functions](https://r4ds.hadley.nz/functions), and [Chapter 26: Iterations](https://r4ds.hadley.nz/iteration) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. 
+
+You will learn about working with nested data structures, web scraping techniques, and creating custom functions using core packages such as **[jsonlite](https://cran.r-project.org/package=jsonlite)**, **[rvest](https://rvest.tidyverse.org/)**, **[httr2](https://httr2.r-lib.org/)**, and **[purrr](https://purrr.tidyverse.org/)**. Important functions include: [`pluck()`](https://purrr.tidyverse.org/reference/pluck.html), [`unnest_wider()`](https://tidyr.tidyverse.org/reference/unnest_wider.html), [`html_table()`](https://rvest.tidyverse.org/reference/html_table.html), and [`separate_wider_regex()`](https://tidyr.tidyverse.org/reference/separate_wider_delim.html).
+
 
 ### Exercise 1
 
@@ -224,7 +219,8 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+List-columns tend to come in two basic forms: named and unnamed. When the children are named, they tend to have the same names in every row.
+When the children are unnamed, the number of elements tends to vary from row-to-row. **`tidyr`** provides two functions for these two cases: `unnest_wider()` and `unnest_longer()`.
 
 ### Exercise 2
 
@@ -256,7 +252,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Explicit missing values usually show up as NA, but missing values can also be implicitly missing, if an entire row of data is simply absent from the data.
 
 ### Exercise 3
 
@@ -319,7 +315,9 @@ You answer should look something like, although your path will be different.
 ## Earthquakes
 ###
 
-<!-- XX: Mention the packages/functions which you plan on covering in this Section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
+This section focuses on working with hierarchical JSON data structures and creating custom functions using **[jsonlite](https://cran.r-project.org/package=jsonlite)**, **[tidyr](https://tidyr.tidyverse.org/)**, and **[leaflet](https://rstudio.github.io/leaflet/)**. You will learn how to extract nested data from GeoJSON files, convert Unix timestamps to datetime objects, and create interactive maps. Key functions include: [`pluck()`](https://purrr.tidyverse.org/reference/pluck.html) for extracting nested elements, [`unnest_wider()`](https://tidyr.tidyverse.org/reference/unnest_wider.html) for expanding list columns, [`hoist()`](https://tidyr.tidyverse.org/reference/hoist.html) for selective extraction, and custom functions like `convert_earthquake_time()` and `categorize_magnitude()` for data transformation.
+
+For this tutorial, we use `earthquakes.geojson` which comes from the **USGS real-time earthquake feed**, which is a live GeoJSON feed maintained by the U.S. Geological Survey, providing a programmatic interface for accessing recent seismic activity—including magnitude, location, depth, and other metadata—in an easily consumable JSON format with options from the past hour to the past 30 days.
 
 ### Exercise 1
 
@@ -1052,7 +1050,7 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+`unnest_auto()` automatically picks between `unnest_longer()` and `unnest_wider()` based on the structure of the list-column. It’s great for rapid exploration, but ultimately it’s a bad idea because it doesn’t force you to understand how your data is structured, and makes your code harder to understand.
 
 ### Exercise 17
 
@@ -1223,6 +1221,10 @@ Remember that `ggsave()` is a convenient function for saving a plot. It defaults
 
 ## Top Movies
 ###
+
+This section covers web scraping techniques and data extraction from HTML tables using **[rvest](https://rvest.tidyverse.org/)**, **[httr2](https://httr2.r-lib.org/)**, and **[stringr](https://stringr.tidyverse.org/)**. You will learn how to scrape IMDb's Top 250 movies list, extract structured data from HTML elements, and clean messy text data. Important functions include: [`html_element()`](https://rvest.tidyverse.org/reference/html_element.html) and [`html_elements()`](https://rvest.tidyverse.org/reference/html_element.html) for selecting HTML nodes, [`html_table()`](https://rvest.tidyverse.org/reference/html_table.html) for extracting tabular data, [`html_attr()`](https://rvest.tidyverse.org/reference/html_attr.html) for accessing element attributes, and [`separate_wider_regex()`](https://tidyr.tidyverse.org/reference/separate_wider_delim.html) for parsing complex text patterns.
+
+For this section, we use a archived version **The IMDb Top 250 Movies list** which is a curated ranking of the top-rated films on IMDb, based on user ratings and votes . The data includes attributes such as movie titles, release years, directors, and user ratings. 
 
 ### Exercise 1
 
@@ -1942,7 +1944,7 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+`unnest()` expands both rows and columns. It’s useful when you have a list-column that contains a 2d structure like a data frame.
 
 ### Exercise 16
 
@@ -2026,7 +2028,7 @@ top_movies <- request("https://web.archive.org/web/20220201012049/https://www.im
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+You can often get the same results from `across()` by first using `pivot_longer()`, summarizing by groups, and then reshaping back with `pivot_wider()`. This approach is especially powerful when you need to work with paired columns (e.g., values and weights) that across() can’t currently handle, such as calculating weighted means.
 
 ### Exercise 17
 
@@ -2053,7 +2055,7 @@ top_movies
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Note that JSON doesn’t have any native way to represent dates or date-times, so they’re often stored as strings, and you’ll need to use `readr::parse_date()` or `readr::parse_datetime(`) to turn them into the correct data structure. Similarly, JSON’s rules for representing floating point numbers in JSON are a little imprecise, so you’ll also sometimes find numbers stored in strings. Apply `readr::parse_double()` as needed to get the correct variable type.
 
 ### Exercise 18
 
@@ -2132,12 +2134,19 @@ filter(year >= 1990, year <= 2010) |>
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+`fct_reorder()` takes three arguments:
+
+1. `.f`, the factor whose levels you want to modify.
+2. `.x`, a numeric vector that you want to use to reorder the levels.
+3. Optionally, `.fun`, a function that’s used if there are multiple values of .x for each value of .f. The default value is median.
 
 ## Summary
 ###
 
-<!-- XX: The exact same two to four sentence about the main packages/functions used in the Introduction, but written here in the past tense. You made a promise and you kept it.  -->
+This section covered key concepts from [Chapter 23: Hierarchical Data](https://r4ds.hadley.nz/hierarchical), [Chapter 24: Web Scraping](https://r4ds.hadley.nz/webscraping), [Chapter 25: Functions](https://r4ds.hadley.nz/functions), and [Chapter 26: Iterations](https://r4ds.hadley.nz/iteration) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+You learned about working with nested data structures, web scraping techniques, and creating custom functions using core packages such as **[jsonlite](https://cran.r-project.org/package=jsonlite)**, **[rvest](https://rvest.tidyverse.org/)**, **[httr2](https://httr2.r-lib.org/)**, and **[purrr](https://purrr.tidyverse.org/)**. Important functions included [`pluck()`](https://purrr.tidyverse.org/reference/pluck.html), [`unnest_wider()`](https://tidyr.tidyverse.org/reference/unnest_wider.html), [`html_table()`](https://rvest.tidyverse.org/reference/html_table.html), and [`separate_wider_regex()`](https://tidyr.tidyverse.org/reference/separate_wider_delim.html).
+
 
 ### Exercise 1
 
@@ -2162,7 +2171,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+If you want to collapse a lot of levels, `fct_collapse()` is a useful variant of `fct_recode()`.
 
 ### Exercise 2
 
@@ -2185,7 +2194,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+There’s one special type of missing value that you’ll encounter from time to time: a NaN (pronounced “nan”), or **n**ot **a** **n**umber. In the rare case you need to distinguish an NA from a NaN, you can use `is.nan(x)`.
 
 ### Exercise 3
 
