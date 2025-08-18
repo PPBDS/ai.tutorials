@@ -59,7 +59,7 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Add in the knowledge drops. DONE (for visualization and transformation) -->
+<!-- DK: Add in the knowledge drops. DONE (for visualization, transformation, and import) -->
 
 <!-- DK: Delete all XX comments. Of course you should read/follow them first. -->
 
@@ -69,7 +69,9 @@ options(tutorial.exercise.timelimit = 60,
 ## Introduction
 ###
 
-<!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
+This section covers key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 
 ### Exercise 1
 
