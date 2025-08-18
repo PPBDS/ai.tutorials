@@ -1,33 +1,24 @@
-## Sruthi
-
-Continue work on r4ds-4. and 5.
-
-For 5, use https://r4ds.hadley.nz/webscraping.html#imdb-top-films. So, there is no data directory (?) and no download responsible. 
-
-For 5 also, https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
 
 ## Luke
 
-Work on: r4ds-1/tutorial.Rmd
+Goal for the week: Finish ai.tutorials
 
+As a student, complete r4ds-4, email me HTML answers.
 
+As a student, complete r4ds-5, email me HTML answers.
 
-Grab the most important 40 knowledge drops from the relevant tutorials in r4ds.tutorials, about 10 per chapter. Think about the most important packages and functions. Not all the packages and functions will get mentioned in the Introduction/Summary, but it is still nice to have a list.
+In above, keep track of errors and comments on a piece of paper, probably by just noting the phrase or exercise number.
 
-Let's use billboards for the first example.
+Then, go back and submit separate pull requests which fix mistakes, and leave comments, in 4 and 5. Add you name as author.
 
-What csv file do we use for the second example? Pick an a graphic you like from here: https://r-graph-gallery.com/
+Think about what we need to do to standardize across the tutorials.
 
 
 
 
 ## Preceptor
 
-Our goal is to finish the other 4 tutorials in this collection.
-
-Where data? Find some plots you think are cool which have the data available.
-
-* https://r-graph-gallery.com/
+Think about what to do with Introduction.
 
 
 
