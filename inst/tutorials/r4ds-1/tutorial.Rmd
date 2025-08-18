@@ -63,7 +63,7 @@ options(tutorial.exercise.timelimit = 60,
 
 <!-- DK: Delete all XX comments. Of course you should read/follow them first. -->
 
-<!-- DK: Introduction/Summary -->
+<!-- DK: Introduction / Summary DONE (except for summary knowledge drops) -->
 
 
 ## Introduction
@@ -1653,7 +1653,10 @@ Here are the other 5 column types from **readr**.
 ## Summary
 ###
 
-<!-- XX: The exact same two to four sentence about the main packages/functions used in the Introduction, but written here in the past tense. You made a promise and you kept it.  -->
+This section covered key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+You learned about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+
 
 ### Exercise 1
 
