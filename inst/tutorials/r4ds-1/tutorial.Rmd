@@ -1261,13 +1261,15 @@ problems(df)
 
 ###
 
+Now delete `df` along with the code. The chunk should be empty.
+
 ### Exercise 7
 
 Ask AI: Edit the code `read_csv("data/music.csv")` so that the `read_csv()` only selects the columns `artist.familiarity`, `artist.hotttnesss`, and `artist.id` with `cols_only()`, and then overrides the code type to be a string.
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place to edit the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code into the empty chunk. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1299,11 +1301,11 @@ Assign this code to the object `music_1`.
 
 ### Exercise 8
 
-Ask AI: Based off of the `music.csv` tibble previously provided, create a similar tibble with only 3 rows of data using `tibble()`, and only with the first 3 columns from `music.csv`. Don't assign the tibble to an object.
+Provide AI with a tibble of `music_1`.
 
-If your using a different AI, provide the `music.csv` tibble again and the previous code.
+Ask AI: Based off of the `music_1` tibble previously provided, create a similar tibble with only 3 rows of data using `tibble()`, and with the same 3 columns. Don't assign the tibble to an object.
 
-Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code below the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1330,13 +1332,15 @@ tibble(
 
 ### Exercise 9
 
-Ask AI: Continue the previous code with the new tibble so that it is fed through a pipe and is written into a new csv file titled `music_fake.csv`.
+Ask AI: Continue the previous code with the new tibble so that it is fed through a pipe and is written into a new csv file titled `music_fake.csv` within the `data` directory.
 
 If your using a different AI, provide the previous code.
 
 Manually, using the same command, do the same for the `music_1` tibble.
 
-Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+<!-- LL: is this too messy? -->
+
+Copy and paste the AI generated code into the appropriate place. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1386,12 +1390,16 @@ question_text(NULL,
 ###
 
 ```{r music-10-test, echo = TRUE}
-read_csv(c("data/music_1.csv", "data/music_fake.csv"), id = "source")
+read_csv(c("data/music_1.csv", "data/music_fake.csv"), id = "file")
 ```
 
 ###
 
 
+
+Now, delete all code and rewrite `read_csv("data/music.csv")`. That is all that should remain.
+
+<!-- LL: should I ask them to delete all previous code? They could reference it in the future but also it would be too messy.  -->
 
 ### Exercise 11
 
