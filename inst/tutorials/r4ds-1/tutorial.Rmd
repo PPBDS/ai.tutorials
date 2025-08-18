@@ -206,25 +206,13 @@ The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) datase
 We will use these following functions and more for this section:
 [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html)
 
-[geom_point()](https://ggplot2.tidyverse.org/reference/geom_point.html)
-
-[labs()](https://ggplot2.tidyverse.org/reference/labs.html)
-
 [facet_wrap()](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
 
 [filter()](https://dplyr.tidyverse.org/reference/filter.html)
 
-[arrange()](https://dplyr.tidyverse.org/reference/arrange.html)
-
 [mutate()](https://dplyr.tidyverse.org/reference/mutate.html)
 
-[select()](https://dplyr.tidyverse.org/reference/select.html)
-
 [summarize()](https://dplyr.tidyverse.org/reference/summarise.html)
-
-[slice_head()](https://dplyr.tidyverse.org/reference/slice.html)
-
-<!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
@@ -1059,7 +1047,7 @@ ggplot(x, aes(x = improvement)) +
 
 <!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
 
-<!-- LL: I want to income theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
+<!-- LL: I want to include theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
 
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
@@ -1103,7 +1091,13 @@ The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"non
 
 The **music** CSV file comes from the [**Million Song Dataset**](https://corgis-edu.github.io/corgis/csv/music/), which used a company called the Echo Nest to derive data points about one million popular contemporary songs. **Music** only contains 10,000 rows of data of the songs from the **Million Song Dataset**.
 
-<!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
+We will use these following functions and more for this section:
+[read_csv()](https://readr.tidyverse.org/reference/read_delim.html)
+
+[tibble()](https://tibble.tidyverse.org/reference/tibble.html)
+
+[write_csv()](https://readr.tidyverse.org/reference/write_delim.html)
+
 
 ### Exercise 1
 
