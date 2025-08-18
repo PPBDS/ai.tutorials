@@ -16,12 +16,38 @@ library(learnr)
 library(tutorial.helpers)
 library(tidyverse)
 
+line_graph <- billboard |>
+  filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
+  pivot_longer(
+    cols = wk1:wk5,
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  ggplot(aes(x = week, y = rank, color = track, group = track)) +
+  geom_line() + 
+  facet_wrap(~ track)
+
+x <- billboard |>
+  filter(wk1 < 101) |>
+  arrange(wk1) |>
+  mutate(improvement = wk1 - wk2, .after = wk2) |>
+  select(artist:improvement) |>
+  rename(week1 = wk1, week2 = wk2)
+
 music_1 <- read_csv(
    "data/music.csv",
    col_types = cols_only(
      artist.familiarity = col_character(),
  artist.hotttnesss = col_character(),
  artist.id = col_character()
+   )
+)
+
+df <- read_csv(
+   "data/music.csv",
+   col_types = cols(
+     artist.familiarity = col_double()
    )
 )
 
