@@ -1164,6 +1164,20 @@ read_csv("data/music.csv")
 
 When you run `read_csv()`, it prints out a message telling you the number of rows and columns of data, the delimiter that was used, and the column specifications (names of columns organized by the type of data the column contains). It also prints out some information about retrieving the full column specification and how to quiet this message. 
 
+Once you’ve mastered read_csv(), using readr’s other functions is straightforward; it’s just a matter of knowing which function to reach for:
+
+read_csv2() reads semicolon-separated files. These use ; instead of , to separate fields and are common in countries that use , as the decimal marker.
+
+read_tsv() reads tab-delimited files.
+
+read_delim() reads in files with any delimiter, attempting to automatically guess the delimiter if you don’t specify it.
+
+read_fwf() reads fixed-width files. You can specify fields by their widths with fwf_widths() or by their positions with fwf_positions().
+
+read_table() reads a common variation of fixed-width files where columns are separated by white space.
+
+read_log() reads Apache-style log files.
+
 ### Exercise 3
 
 Provide AI with the line of code from the question above, as well as the tibble of data.
