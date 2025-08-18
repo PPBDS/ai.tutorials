@@ -1099,16 +1099,13 @@ The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"non
 ## Music
 ###
 
-The **music** csv file comes from the [**Million Song Dataset**](https://corgis-edu.github.io/corgis/csv/music/), which used a company called the Echo Nest to derive data points about one million popular contemporary songs. **Music** only contains 10,000 rows of data of the songs from the **Million Song Dataset**.
-
-`read_csv()`
-`pivot_longer()`
+The **music** CSV file comes from the [**Million Song Dataset**](https://corgis-edu.github.io/corgis/csv/music/), which used a company called the Echo Nest to derive data points about one million popular contemporary songs. **Music** only contains 10,000 rows of data of the songs from the **Million Song Dataset**.
 
 <!-- XX: Mention the packages/functions which you plan on covering in this section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referended in one of these Section intro parts, the space before Exercise 1. -->
 
 ### Exercise 1
 
-We begin by downloading our csv file `data/music.csv` directly from the internet using `download.file()`. 
+We begin by downloading our CSV file `data/music.csv` directly from the internet using `download.file()`. 
 
 This adds the spreadsheet, `data/music.csv`, to our the `data` directory so we can use it in this tutorial.
 
@@ -1133,6 +1130,8 @@ question_text(NULL,
 ```
 
 ###
+
+"CSV" stands for **c**omma-**s**eparated **v**alues, meaning that the variable names and data values are separated by commas in the file. CSV files are just one type of **text** file. A text file is any file which includes plain text. The contents of such files are easy to look at in any text editor, or in RStudio.
 
 ### Exercise 2
 
@@ -1161,7 +1160,7 @@ read_csv("data/music.csv")
 
 ###
 
-
+When you run `read_csv()`, it prints out a message telling you the number of rows and columns of data, the delimiter that was used, and the column specifications (names of columns organized by the type of data the column contains). It also prints out some information about retrieving the full column specification and how to quiet this message. 
 
 ### Exercise 3
 
@@ -1190,7 +1189,7 @@ read_csv("data/music.csv", skip = 5)
 
 ###
 
-
+The argument `skip` is used to skip rows, but to skip columns, you can use the `col_only()` function as the argument to `col_types` in order to read in only the columns which you want. 
 
 ### Exercise 4
 
@@ -1219,7 +1218,17 @@ read_csv("data/music.csv", skip = 5, col_names = FALSE)
 
 ###
 
+If you are in a future case where columns are surrounded by backticks. That’s because they contain spaces, breaking R’s usual rules for variable names; they’re *non-syntactic* names. To refer to these variables, you need to surround them with backticks: `` ` ``. 
 
+###
+
+Sometimes, a data set will have scores of weirdly named variables. In that case, we recommend using `clean_names()` from the [**janitor**](https://sfirke.github.io/janitor/) package. 
+
+**janitor** has several useful functions, including `make_clean_names()`, which does the same thing as `clean_names()` but can be used directly during data import rather than as part of a pipe.
+
+`clean_names()` not only fixes the *non-syntactic* names like `Full Name`; it also cleans up any variable name which does not follow the standard approach of, first, no capitalization and, second, using underscores as a word seperator.
+
+The **janitor** package has a function called `remove_empty()` to remove empty spaces, `remove_constant()` to remove columns of constant values, and many more. 
 
 ### Exercise 5
 
@@ -1250,12 +1259,17 @@ read_csv("data/music.csv", skip = 5,
 ###
 
 
+The argument `col_names` can also be used to create custom column names. 
+
+The `col_names` argument is not just specific to `read_csv()`; it can be used in other functions such as `read_excel()` and `read_delim()`
+
+There are many other arguments to `cols`. Type `?cols` into your Console to explore!
 
 <!-- LL: in an email you said "no warnings about col_types". Does that mean no questions regarding the argument? Should we teach students how to debug if an automatically generated column type is incorrect? -->
 
 ### Exercise 6
 
-Ask AI: Edit the code so that the `skip` and `col_names` arguments are removed, and that the `read_csv()` is assigned to an object `df` and `read_csv()` is told with `col_types` that the column `artist.familiarity` is a double and to check if it fails. Then run `problems(df)`.
+Ask AI: Edit the code so that the `skip` and `col_names` arguments are removed, and that the `read_csv()` is assigned to an object `df` and `read_csv()` is told with `col_types` that the column type of `artist.familiarity` is a double and to check if it fails. Then run `problems(df)`.
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
@@ -1284,6 +1298,19 @@ df <- read_csv(
  
 problems(df)
 ```
+
+###
+
+A CSV file doesn’t contain any information about the type of each variable (i.e. whether it’s a logical, number, string, etc.), so **readr** will try to guess the type. 
+
+**readr** uses a heuristic to figure out the column types. For each column, it pulls the values of 1,000 rows spaced evenly from the first row to the last, ignoring missing values. It then works through the following questions:
+
+* Does it contain only `F`, `T`, `FALSE`, or `TRUE` (ignoring case)? If so, it’s a logical.
+* Does it contain only numbers (e.g., `1`, `-4.5`, `5e6`, `Inf`)? If so, it’s a number.
+* Does it match the ISO8601 standard? If so, it’s a date or date-time. 
+* Otherwise, it must be a string.
+
+It is always better to use the `col_types` argument explicitly in order to ensure that the variable types are what you want them to be. 
 
 ###
 
@@ -1325,6 +1352,18 @@ read_csv(
 
 Assign this code to the object `music_1`.
 
+###
+
+**readr** provides a total of nine column types for you to use. Here are the most important 4.
+
+* `col_logical()` and `col_double()` read logicals and real numbers. They’re relatively rarely needed (except as above), since **readr** will usually guess them for you.
+
+* `col_integer()` reads integers. We seldom distinguish integers and doubles because they’re functionally equivalent, but reading integers explicitly can occasionally be useful because they occupy half the memory of doubles.
+
+* `col_character()` reads strings. This is sometimes useful to specify explicitly when you have a column that is a numeric identifier, i.e. long series of digits that identifies some object, but it doesn’t make sense to (e.g.) divide it in half, for example, a phone number, social security number, credit card number, etc.
+
+The [help page](https://readr.tidyverse.org/reference/cols.html) for `cols()` includes more details and discussion.
+
 ### Exercise 8
 
 Provide AI with a tibble of `music_1`.
@@ -1356,9 +1395,11 @@ tibble(
 
 ###
 
+Sometimes you’ll need to assemble a tibble “by hand,” doing a little data entry in your R script. There are two useful functions to help you do this which differ in whether you layout the tibble by columns [`tibble()`](https://tibble.tidyverse.org/reference/tibble.html) or by rows [`tribble()`](https://tibble.tidyverse.org/reference/tribble.html).
+
 ### Exercise 9
 
-Ask AI: Continue the previous code with the new tibble so that it is fed through a pipe and is written into a new csv file titled `music_fake.csv` within the `data` directory.
+Ask AI: Continue the previous code with the new tibble so that it is fed through a pipe and is written into a new CSV file titled `music_fake.csv` within the `data` directory.
 
 If your using a different AI, provide the previous code.
 
@@ -1394,9 +1435,11 @@ write_csv(music_1, "data/music_1.csv")
 
 ###
 
+**readr** also comes with two useful functions for writing data back to disk: `write_csv()` and `write_tsv()`. The most important arguments to these functions are `x` (the data frame or tibble to write) and `file` (the location to write it to). You can also specify how missing values are written with `na`, and if you want to `append` to an existing file.
+
 ### Exercise 10
 
-Ask AI: Creating a vector of both csv files, use `read_csv()` to read both csv files `"music_1.csv"` and `"music_fake.csv"` and create a new column showing the file that the data comes from with the argument `id`. Don't assign the combined data frame to an object.
+Ask AI: Creating a vector of both CSV files, use `read_csv()` to read both CSV files `"music_1.csv"` and `"music_fake.csv"` and create a new column showing the file that the data comes from with the argument `id`. Don't assign the combined data frame to an object.
 
 If your using a different AI, provide the `music.csv` tibble again and the previous code.
 
@@ -1421,7 +1464,9 @@ read_csv(c("data/music_1.csv", "data/music_fake.csv"), id = "file")
 
 ###
 
+With `read_csv()` you can read these multiple CSV files in at once and stack them on top of each other in a single data frame. The code above will only work if you have the CSV files in a data folder in your project.
 
+###
 
 Now, delete all code and rewrite `read_csv("data/music.csv")`. That is all that should remain.
 
