@@ -182,7 +182,7 @@ Parquet files are “chunked”, which makes it possible to work on different pa
 
 ### Exercise 2
 
-In your QMD, put `library(tidyverse)` in a new code chunk. Render the file using `Cmd/Ctrl + Shift + K`.
+In your QMD, put `library(tidyverse)`,`library(arrow)`, `library(plotly)`, `library(viridis)` and `library(scales)`  in a new code chunk. Render the file using `Cmd/Ctrl + Shift + K`.
 
 Notice that the file does not look good because the code is visible and there are annoying messages. To take care of this, add `#| message: false` to remove all the messages in this `setup` chunk. Also, add the following to the YAML header to remove all code echos from the HTML:
 
@@ -214,7 +214,7 @@ Like CSV, parquet is used for rectangular data, but instead of being a text form
 
 ### Exercise 3
 
-Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
+Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line. Do this for all the other libraries as well.
 
 Note that this causes `library(tidyverse)` to be copied down to the Console and then executed.
 

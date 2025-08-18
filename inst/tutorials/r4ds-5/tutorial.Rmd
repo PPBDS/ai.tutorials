@@ -224,7 +224,21 @@ When the children are unnamed, the number of elements tends to vary from row-to-
 
 ### Exercise 2
 
-In your QMD, put `library(tidyverse)` in a new code chunk. Render the file using `Cmd/Ctrl + Shift + K`.
+In your QMD, paste the following `library()` commands in a new code chunk.
+
+```
+library(tidyverse)
+library(leaflet)
+library(rvest)        
+library(dplyr)  
+library(tidyr) 
+library(stringr)      
+library(readr)      
+library(ggplot2) 
+library(purrr)
+library(lubridate)
+```
+Render the file using `Cmd/Ctrl + Shift + K`.
 
 Notice that the file does not look good because the code is visible and there are annoying messages. To take care of this, add `#| message: false` to remove all the messages in this `setup` chunk. Also, add the following to the YAML header to remove all code echos from the HTML:
 
@@ -256,7 +270,7 @@ Explicit missing values usually show up as NA, but missing values can also be im
 
 ### Exercise 3
 
-Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line.
+Place your cursor in the QMD file on the `library(tidyverse)` line. Use `Cmd/Ctrl + Enter` to execute that line. Do this for the consecutive lines as well.
 
 Note that this causes `library(tidyverse)` to be copied down to the Console and then executed. 
 
