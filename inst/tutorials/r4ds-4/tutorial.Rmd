@@ -139,7 +139,9 @@ final_fifa <- "data/fifa.parquet" |>
 ## Introduction
 ### 
 
-<!-- XX: Two to four sentence about the main packages/functions covered in this tutorial. -->
+This tutorial covers key concepts from [Chapter 16: Factors](https://r4ds.hadley.nz/factors.html), [Chapter 17: Dates and Times](https://r4ds.hadley.nz/datetimes.html), [Chapter 18: Missing Values](https://r4ds.hadley.nz/missing-values.html), [Chapter 19: Joins](https://r4ds.hadley.nz/joins.html), and [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+You will learn about working with parquet files using **[arrow](https://arrow.apache.org/docs/r/)**, manipulating categorical variables with **[forcats](https://forcats.tidyverse.org/)**, handling date-time data with **[lubridate](https://lubridate.tidyverse.org/)**, managing missing values, and performing joins. Key functions include [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html), [`fct_reorder()`](https://forcats.tidyverse.org/reference/fct_reorder.html), [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd.html), [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html), and [`drop_na()`](https://tidyr.tidyverse.org/reference/drop_na.html).
 
 ### Exercise 1
 
@@ -270,7 +272,11 @@ Parquet files are usually smaller than the equivalent CSV file. Parquet relies o
 ## NBA
 ### 
 
-<!-- XX: Mention the packages/functions which you plan on covering in this Section. Not everything mentioned here is used in the Introduction/Summary, but everything in Introduction/Summary is referenced in one of these Section intro parts, the space before Exercise 1. -->
+This section focuses on analyzing NBA game data using **[arrow](https://arrow.apache.org/docs/r/)** for efficient parquet file handling, **[lubridate](https://lubridate.tidyverse.org/)** for date-time manipulation, and **[dplyr](https://dplyr.tidyverse.org/)** for data joins and transformations. You will learn to work with large datasets stored in parquet format, parse game dates and times, create era-based classifications using factors, handle missing values in sports statistics, and join multiple related datasets.
+
+Key functions include [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html) for reading parquet files, [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd.html) for parsing datetime strings, [`factor()`](https://forcats.tidyverse.org/reference/fct.html) for creating categorical variables, [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) for combining datasets, and [`replace_na()`](https://tidyr.tidyverse.org/reference/replace_na.html) for handling missing data.
+
+The [NBA Database](https://www.kaggle.com/datasets/wyattowalsh/basketball) is a **Kaggle** dataset compiled by “wyattowalsh.” It provides a comprehensive, daily-updated collection of NBA game data—including 64,000+ games, 4,800+ players, and all 30 teams, plus box scores, play-by-play data, and more. Our parquet files `data/game.parquet` and `data/line_score.parquet` contain two files (`game.csv` and `line_score.csv`) from this dataset converted into parquet format for the pupose of this tutorial.
 
 ### Exercise 1
 
@@ -1093,8 +1099,13 @@ ggplotly(time_series_plot,
 A **full join** keeps all observations that appear in `x` or `y`, like the image above. Every row of x and y is included in the output because both `x` and `y` have a fall back row of `NAs`. Again, the output starts with all rows from `x`, followed by the remaining unmatched `y` rows.
 
 ## FIFA
-
 ### 
+
+This section demonstrates comprehensive data cleaning and analysis of FIFA player data using **[forcats](https://forcats.tidyverse.org/)** for factor manipulation, **[lubridate](https://lubridate.tidyverse.org/)** for date parsing, and **[stringr](https://stringr.tidyverse.org/)** for text processing. You will learn to clean messy text data, convert financial strings with multipliers (K, M) to numeric values, parse various date formats, and create meaningful categorical variables from continuous data.
+
+Key functions include [`str_replace_all()`](https://stringr.tidyverse.org/reference/str_replace.html) for text cleaning, [`mdy()`](https://lubridate.tidyverse.org/reference/ymd.html) for date parsing, [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html) for conditional transformations, [`fct_reorder()`](https://forcats.tidyverse.org/reference/fct_reorder.html) for factor reordering, and [`str_extract()`](https://stringr.tidyverse.org/reference/str_extract.html) for pattern extraction from strings.
+
+The [FIFA 21 dataset](https://www.kaggle.com/datasets/yagunnersya/fifa-21-messy-raw-dataset-for-cleaning-exploring/data) is a [Kaggle](https://www.kaggle.com) dataset originally scraped from [Sofifa.com](https://sofifa.com), which hosts detailed player statistics from EA Sports’ *FIFA 21*. The dataset was collected by a Kaggle user (“yagunnersya”) and contains raw information about thousands of players, including attributes such as ratings, positions, value, and club. Our parquet file `data/fifa21.parquet` contains this data in a parquet format for the purpose of this tutorial.
 
 ### Exercise 1
 
@@ -1901,10 +1912,11 @@ final_fifa %>%
 Ordered factors, created with `ordered()`, imply a strict ordering and equal distance between levels: the first level is “less than” the second level by the same amount that the second level is “less than” the third level, and so on.
 
 ## Summary
-
 ### 
 
-<!-- XX: The exact same two to four sentence about the main packages/functions used in the Introduction, but written here in the past tense. You made a promise and you kept it.  -->
+This tutorial covered key concepts from [Chapter 16: Factors](https://r4ds.hadley.nz/factors.html), [Chapter 17: Dates and Times](https://r4ds.hadley.nz/datetimes.html), [Chapter 18: Missing Values](https://r4ds.hadley.nz/missing-values.html), [Chapter 19: Joins](https://r4ds.hadley.nz/joins.html), and [Chapter 22: Arrow](https://r4ds.hadley.nz/arrow.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+You learned about working with parquet files using **[arrow](https://arrow.apache.org/docs/r/)**, manipulating categorical variables with **[forcats](https://forcats.tidyverse.org/)**, handling date-time data with **[lubridate](https://lubridate.tidyverse.org/)**, managing missing values, and performing joins. Key functions included [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html), [`fct_reorder()`](https://forcats.tidyverse.org/reference/fct_reorder.html), [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd.html), [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html), and [`drop_na()`](https://tidyr.tidyverse.org/reference/drop_na.html).
 
 ### Exercise 1
 
@@ -1929,7 +1941,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+`tempdir()` returns the same directory each time you run it, at least until you restart your R session. To learn more about temporary files and directories, check out `?tempdir`.
 
 ### Exercise 2
 
@@ -1952,7 +1964,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+We recommend using `curl::multi_download()` to get very large files as it’s built for exactly this purpose: it gives you a progress bar and it can resume the download if its interrupted. 
 
 ### Exercise 3
 
@@ -1969,7 +1981,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: The tutorial is now over. Add any necessary acknowledgements and/or provide a link to further high quality readings, ideally readings which you mentioned in at least one knowledge drop above. -->
+Like `dbplyr`, `arrow` only understands some R expressions, so you may not be able to write exactly the same code you usually would. However, the list of operations and functions supported is fairly extensive and continues to grow; find a complete list of currently supported functions in `?acero`.
 
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
 ```
