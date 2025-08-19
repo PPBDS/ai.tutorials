@@ -1108,6 +1108,10 @@ We will use these following functions and more for this section:
 
 [write_csv()](https://readr.tidyverse.org/reference/write_delim.html)
 
+[pivot_longer()](https://tidyr.tidyverse.org/reference/pivot_longer.html)
+
+[pivot_wider()](https://tidyr.tidyverse.org/reference/pivot_wider.html)
+
 
 ### Exercise 1
 
@@ -1546,6 +1550,15 @@ billboard |>
 
 ###
 
+[]`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) "lengthens" data, increasing the number of rows and decreasing the number of columns.
+
+There are three key arguments:
+
+`cols` specifies which columns need to be pivoted, i.e. which columns aren’t variables. This argument uses the same syntax as `select()` so here we could use `!c(artist, track, date.entered)` or `starts_with("wk")`.
+`names_to` names the variable stored in the column names, we named that variable week.
+`values_to` names the variable stored in the cell values, we named that variable rank.
+
+
 ### Exercise 12
 
 Ask AI: Continue the previous code with `billboard` so that NA values are dropped, and the pipe continues so that the number within the week column is parsed.
@@ -1581,6 +1594,8 @@ billboard |>
 ```
 
 ###
+
+This data is now tidy as NA values are removed, but we could make future computation a bit easier by converting values of week from character strings to numbers using `mutate()` and `readr::parse_number()`. `parse_number()` is a handy function that will extract the first number from a string, ignoring all other text.
 
 ### Exercise 13
 
@@ -1618,7 +1633,9 @@ household |>
 
 ###
 
+We use `pivot_longer()` with a vector of column names for `names_to` to split the original variable into values for multiple columns and `names_sep` determines the separator within the original column names, as well as to create a column name for `values_to`.
 
+The special "`.value`" signal isn’t the name of a variable but a unique value that tells `pivot_longer()` to do something different. This overrides the usual `values_to` argument to use the first component of the pivoted column name as a variable name in the output.
 
 <!-- LL: Is it fine to use a different data frame for a better application of splitting column headers between variables and data? -->
 
@@ -1663,7 +1680,11 @@ billboard |>
 
 ###
 
+`pivot_wider()` makes datasets wider by increasing columns and reducing rows and helps when one observation is spread across multiple rows.
 
+`pivot_wider()` has the opposite interface to `pivot_longer()`: instead of choosing new column names, we need to provide the existing columns that define the values (values_from) and the column name (names_from).
+
+If there are multiple rows for the same value in a certain column but it can be reduced into a single row, tell `pivot_wider()` which column or columns have values that uniquely identify each row with the argument `id_cols`.
 
 ### Exercise 15
 
@@ -1690,7 +1711,11 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+There are three interrelated rules that make a dataset tidy:
+
+Each variable is a column; each column is a variable.
+Each observation is a row; each row is an observation.
+Each value is a cell; each cell is a single value.
 
 ### Exercise 16
 
@@ -1730,7 +1755,11 @@ billboard_longer <- billboard |>
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Why ensure that your data is tidy? There are two main advantages:
+
+There’s a general advantage to picking one consistent way of storing data. If you have a consistent data structure, it’s easier to learn the tools that work with it because they have an underlying uniformity.
+
+There’s a specific advantage to placing variables in columns because it allows R’s vectorized nature to shine. Most built-in R functions work with vectors of values and that makes transforming tidy data feel particularly natural.
 
 ### Exercise 17
 
@@ -1757,7 +1786,11 @@ billboard_longer
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+The principles of tidy data might seem so obvious that you wonder if you’ll ever encounter a dataset that isn’t tidy. Unfortunately, however, most real data is untidy. There are two main reasons:
+
+Data is often organized to facilitate some goal other than analysis. For example, it’s common for data to be structured to make data entry, not analysis, easy.
+
+Most people aren’t familiar with the principles of tidy data, and it’s hard to derive them yourself unless you spend a lot of time working with data.
 
 ### Exercise 18
 
@@ -1802,6 +1835,7 @@ billboard_longer |>
 
 ###
 
+Most real analyses will require at least a little tidying. You’ll begin by figuring out what the underlying variables and observations are. Sometimes this is easy; other times you’ll need to consult with the people who originally generated the data. Then, you’ll pivot your data into a tidy form, with variables in the columns and observations in the rows.
 
 
 ````
