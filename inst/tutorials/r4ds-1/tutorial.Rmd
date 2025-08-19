@@ -1497,7 +1497,7 @@ With `read_csv()` you can read these multiple CSV files in at once and stack the
 
 ###
 
-Now, delete all code and rewrite `read_csv("data/music.csv")`. That is all that should remain.
+Now, delete all code regarding the CSV file.
 
 We will now move on to learn how to make our data tidy.
 
@@ -1505,9 +1505,9 @@ We will now move on to learn how to make our data tidy.
 
 ### Exercise 11
 
-Ask AI: 
+We are returning to our previous data frame `billboard`. Within your AI, copy/paste the first 3 rows of the tibble to remind it of what we are now working with.
 
-If your using a different AI, provide the `music.csv` tibble again and the previous code.
+Ask AI: Using the `billboard` tibble, create a pipe to change the columns starting with `wk` to all go in a single column titled `week`, and another column titled `rank` with all the values from the `wk` columns.
 
 Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
@@ -1527,18 +1527,23 @@ question_text(NULL,
 Our code:
 
 ```{r music-10-test, echo = TRUE}
-
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank"
+  )
 ```
 
 ###
 
 ### Exercise 12
 
-Ask AI: 
+Ask AI: Continue the previous code with `billboard` so that NA values are dropped, and the pipe continues so that the number within the week column is parsed.
 
-If your using a different AI, provide the `music.csv` tibble again and the previous code.
+If your using a different AI, provide the `billboard` tibble again and the previous code.
 
-Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+Copy and paste the AI generated code to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
 
@@ -1556,7 +1561,14 @@ question_text(NULL,
 Our code:
 
 ```{r music-10-test, echo = TRUE}
-
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  mutate(week = parse_number(week))
 ```
 
 ###
@@ -1565,7 +1577,7 @@ Our code:
 
 Ask AI: 
 
-If your using a different AI, provide the `music.csv` tibble again and the previous code.
+If your using a different AI, provide the `billboard` tibble again and the previous code.
 
 Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
