@@ -29,7 +29,7 @@ line_graph <- billboard |>
   geom_line() + 
   facet_wrap(~ track)
 
-x <- billboard |>
+billboard_clean <- billboard |>
   filter(wk1 < 101) |>
   arrange(wk1) |>
   mutate(improvement = wk1 - wk2, .after = wk2) |>
@@ -51,6 +51,15 @@ df <- read_csv(
      artist.familiarity = col_double()
    )
 )
+
+billboard_longer <- billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  mutate(week = parse_number(week))
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
@@ -934,13 +943,13 @@ We also didn't talk about `distinct()`. `distinct()` finds all the unique rows i
 
 ### Exercise 19
 
-Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `billboard_clean`. 
 
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
 
 If you have not done so already, you should add `analysis_cache` to the `.gitginore`. The content of the cache file does not belong on GitHub.
 
-Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `x`.
+Place your cursor on the line where the pipe is assigned to `billboard_clean`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `billboard_clean`.
 
 CP/CR.
 
@@ -958,7 +967,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo = TRUE}
-x <- billboard |>
+billboard_clean <- billboard |>
   filter(wk1 < 101) |>
   arrange(wk1) |>
   mutate(improvement = wk1 - wk2, .after = wk2) |>
@@ -972,7 +981,7 @@ The pipe takes the thing on its left and passes it along to the function on its 
 
 ### Exercise 20
 
-Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
+Within the Console, type `billboard_clean`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
@@ -990,18 +999,18 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-x
+billboard_clean
 ```
 
 ###
 
 `billboard` is a tibble, a special type of data frame used by the tidyverse to avoid some common gotchas. The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
 
-`x` is also a tibble as **tidyverse** functions return tibbles by default.
+`billboard_clean` is also a tibble as **tidyverse** functions return tibbles by default.
 
 ### Exercise 21
 
-Ask AI: generate R code that uses `x` to plot a basic graph showing a histogram for `improvement`. Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
+Ask AI: generate R code that uses `billboard_clean` to plot a basic graph showing a histogram for `improvement`. Mention you want to use the data from `billboard_clean` and copy/paste the `billboard_clean` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
 Within `labs()`, edit or add a proper title, subtitle, and caption. If axis labels would be useful, add them, but if unnecessary, don't bother. Don't assign the code for the plot to any variable. Put the plot code in a new code chunk. Run `Cmd/Ctrl + Shift + K` to ensure that everything works. 
 
@@ -1029,7 +1038,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-ggplot(x, aes(x = improvement)) +
+ggplot(billboard_clean, aes(x = improvement)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black") + 
   labs(
 	title = "Distribution of Billboard Top 100 Song Ranking Improvements From Week 1 to Week 2",
