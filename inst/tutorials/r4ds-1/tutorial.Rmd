@@ -1573,9 +1573,11 @@ billboard |>
 
 ###
 
+<!-- LL: I can't quite seem to make a question with either music or billboard that can use pivot_longer on column names with multiple variables. Should I only include it as a knowledge drop? Same with data and variable names in column names, -->
+
 ### Exercise 13
 
-Ask AI: 
+Ask AI: Continue the code with `billboard` so that theh `mutate()` is removed and that it is piped through `pivot_wider()` to make a column for each `week` and the `rank` as its corresponding value.
 
 If your using a different AI, provide the `billboard` tibble again and the previous code.
 
@@ -1597,7 +1599,17 @@ question_text(NULL,
 Our code:
 
 ```{r music-10-test, echo = TRUE}
-
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  pivot_wider(
+    names_from = week,
+    values_from = rank
+  )
 ```
 
 ###
