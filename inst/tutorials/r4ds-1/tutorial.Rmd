@@ -69,9 +69,9 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Add in the knowledge drops. DONE (for visualization, transformation, and import) -->
+<!-- DK: Add in the knowledge drops. DONE -->
 
-<!-- DK: Delete all XX comments. Of course you should read/follow them first. -->
+<!-- DK: Delete all XX comments. Of course you should read/follow them first. DONE -->
 
 <!-- DK: Introduction / Summary DONE (except for summary knowledge drops) -->
 
@@ -81,7 +81,7 @@ options(tutorial.exercise.timelimit = 60,
 
 This section covers key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
 
-You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), and [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Exercise 1
 
@@ -116,7 +116,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Professionals keep their data science work in the cloud because laptops fail.
 
 ### Exercise 2
 
@@ -148,7 +148,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Render again. Everything looks nice, albeit empty, because we have added code to make the file look better and more professional.
 
 ### Exercise 3
 
@@ -168,6 +168,8 @@ question_text(NULL,
 ```
 
 ###
+
+You should practice moving from QMD World to Console World and back.
 
 Notice how **gplot2** is loaded with **tidyverse**.
 
@@ -1055,45 +1057,11 @@ ggplot(billboard_clean, aes(x = improvement)) +
 
 ###
 
-<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
-
 <!-- LL: I want to include theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
 
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
 An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
-
-````
-VISUALIZATION remaining knowledge drops
-
-### 
-
-In **ggplot2**, when aesthetic mappings are defined at the global level, they are passed down to all subsequent geom layers in the plot. However, each geom function in **ggplot2** can also accept a mapping argument, allowing for local-level aesthetic mappings that are added to those inherited from the global level.
-
-###
-
-A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
-
-An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
-
-###
-
-We can use stacked bar plots to visualize the relationship between two categorical variables while a scatterplot is probably the most commonly used plot for visualizing the relationship between two numerical variables.
-
-TRANSFOMRATION remaining knowledge drops
-
-### 
-
-The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"none"`. Look at the `mutate()` [help page](https://dplyr.tidyverse.org/reference/mutate.html).
-
-* "all" retains all columns from `.data`. This is the default.
-
-* "used" retains only the columns used in `...` to create new columns. This is useful for checking your work, as it displays inputs and outputs side-by-side.
-
-* "unused" retains only the columns not used in `...` to create new columns. This is useful if you generate new columns, but no longer need the columns used to generate them.
-
-* "none" doesn't retain any extra columns from `.data`. Only the grouping variables and columns created by `...` are kept.
-````
 
 
 ## Music
@@ -1688,8 +1656,6 @@ If there are multiple rows for the same value in a certain column but it can be 
 
 ### Exercise 15
 
-<!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
-
 Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from exercise 12 with our code and place it within a new code chunk.
 
 In the Console, run:
@@ -1838,40 +1804,12 @@ billboard_longer |>
 Most real analyses will require at least a little tidying. You’ll begin by figuring out what the underlying variables and observations are. Sometimes this is easy; other times you’ll need to consult with the people who originally generated the data. Then, you’ll pivot your data into a tidy form, with variables in the columns and observations in the rows.
 
 
-````
-IMPORT remaining knowledge drops
-
-### 
-
-This tutorial covers [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn how to import data into your R project using [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) and related functions from the [**readr**](https://readr.tidyverse.org/) package. You will also learn how to write out data to files with functions like [`write_csv()`](https://readr.tidyverse.org/reference/write_delim.html).
-
-###
-
-There are functions which specify data: `col_logical()`, `col_double()`, `col_date()`, and so on.
-
-###
-
-The "quotation trick" allows `read_csv()` and related functions to read data directly from a quoted string, rather than a file. 
-It produces the same tibble as if the character string were in a separate file.
-
-### 
-
-Here are the other 5 column types from **readr**.
-
-* `col_factor()`, `col_date()`, and `col_datetime()` create factors, dates, and date-times respectively.
-
-* `col_number()` is a permissive numeric parser that will ignore non-numeric components, and is particularly useful for currencies.
-
-* `col_skip()` skips a column so it’s not included in the result, which can be useful for speeding up reading the data if you have a large CSV file and you only want to use some of the columns.
-````
-
 ## Summary
 ###
 
 This section covered key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
 
-You learned about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-
+You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), and [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Exercise 1
 
@@ -1896,14 +1834,14 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+When creating a data science project, plots are essential to visualize data and show trends to the audience. They catch the eye and are much more attractive than a big block of text.
 
 ### Exercise 2
 
 Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
 ````
-quarto publish gh-pages XX.qmd
+quarto publish gh-pages analysis.qmd
 ````
 
 Copy/paste the resulting URL below.
@@ -1919,7 +1857,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Publishing the QMD allows for there to be a link on the internet that anyone can access to view the rendered project.
 
 ### Exercise 3
 
@@ -1936,7 +1874,12 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: The tutorial is now over. Add any necessary acknowledgements and/or provide a link to further high quality readings, ideally readings which you mentioned in at least one knowledge drop above. -->
+Github repositories are where people can view the code you used to create your project.
+
+###
+
+`pivot_longer()` and `pivot_wider()` are complicated and unique functions, and you can learn more about how they work step by step with the book we used to create this tutorial. The sections for [`pivot_longer()`](https://r4ds.hadley.nz/data-tidy.html#how-does-pivoting-work) and [`pivot_wider()`](https://r4ds.hadley.nz/data-tidy.html#how-does-pivot_wider-work) will explain in depth.
+
 
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
 ```
