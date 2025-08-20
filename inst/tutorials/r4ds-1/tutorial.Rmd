@@ -15,6 +15,7 @@ description: 'This tutorial for "R for Data Science" covers Chapter 1: Data visu
 library(learnr)
 library(tutorial.helpers)
 library(tidyverse)
+library(quarto) # Total hack to shut up renv! Really need to put this in the package help file.
 
 line_graph <- billboard |>
   filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
@@ -28,7 +29,7 @@ line_graph <- billboard |>
   geom_line() + 
   facet_wrap(~ track)
 
-x <- billboard |>
+billboard_clean <- billboard |>
   filter(wk1 < 101) |>
   arrange(wk1) |>
   mutate(improvement = wk1 - wk2, .after = wk2) |>
@@ -51,9 +52,14 @@ df <- read_csv(
    )
 )
 
-library(quarto) # Total hack to shut up renv! Really need to put this in the package help file.
-
-
+billboard_longer <- billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  mutate(week = parse_number(week))
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
@@ -63,9 +69,9 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Add in the knowledge drops. DONE (for visualization, transformation, and import) -->
+<!-- DK: Add in the knowledge drops. DONE -->
 
-<!-- DK: Delete all XX comments. Of course you should read/follow them first. -->
+<!-- DK: Delete all XX comments. Of course you should read/follow them first. DONE -->
 
 <!-- DK: Introduction / Summary DONE (except for summary knowledge drops) -->
 
@@ -75,7 +81,7 @@ options(tutorial.exercise.timelimit = 60,
 
 This section covers key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
 
-You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), and [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Exercise 1
 
@@ -110,7 +116,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Professionals keep their data science work in the cloud because laptops fail.
 
 ### Exercise 2
 
@@ -142,7 +148,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Render again. Everything looks nice, albeit empty, because we have added code to make the file look better and more professional.
 
 ### Exercise 3
 
@@ -162,6 +168,8 @@ question_text(NULL,
 ```
 
 ###
+
+You should practice moving from QMD World to Console World and back.
 
 Notice how **gplot2** is loaded with **tidyverse**.
 
@@ -937,13 +945,13 @@ We also didn't talk about `distinct()`. `distinct()` finds all the unique rows i
 
 ### Exercise 19
 
-Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `billboard_clean`. 
 
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
 
 If you have not done so already, you should add `analysis_cache` to the `.gitginore`. The content of the cache file does not belong on GitHub.
 
-Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `x`.
+Place your cursor on the line where the pipe is assigned to `billboard_clean`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `billboard_clean`.
 
 CP/CR.
 
@@ -961,7 +969,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo = TRUE}
-x <- billboard |>
+billboard_clean <- billboard |>
   filter(wk1 < 101) |>
   arrange(wk1) |>
   mutate(improvement = wk1 - wk2, .after = wk2) |>
@@ -975,7 +983,7 @@ The pipe takes the thing on its left and passes it along to the function on its 
 
 ### Exercise 20
 
-Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
+Within the Console, type `billboard_clean`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
@@ -993,18 +1001,18 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-x
+billboard_clean
 ```
 
 ###
 
 `billboard` is a tibble, a special type of data frame used by the tidyverse to avoid some common gotchas. The most important difference between tibbles and data frames is the way tibbles print; they are designed for large datasets, so they only show the first few rows and only the columns that fit on one screen.
 
-`x` is also a tibble as **tidyverse** functions return tibbles by default.
+`billboard_clean` is also a tibble as **tidyverse** functions return tibbles by default.
 
 ### Exercise 21
 
-Ask AI: generate R code that uses `x` to plot a basic graph showing a histogram for `improvement`. Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
+Ask AI: generate R code that uses `billboard_clean` to plot a basic graph showing a histogram for `improvement`. Mention you want to use the data from `billboard_clean` and copy/paste the `billboard_clean` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
 Within `labs()`, edit or add a proper title, subtitle, and caption. If axis labels would be useful, add them, but if unnecessary, don't bother. Don't assign the code for the plot to any variable. Put the plot code in a new code chunk. Run `Cmd/Ctrl + Shift + K` to ensure that everything works. 
 
@@ -1032,7 +1040,7 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-ggplot(x, aes(x = improvement)) +
+ggplot(billboard_clean, aes(x = improvement)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black") + 
   labs(
 	title = "Distribution of Billboard Top 100 Song Ranking Improvements From Week 1 to Week 2",
@@ -1049,45 +1057,11 @@ ggplot(x, aes(x = improvement)) +
 
 ###
 
-<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
-
 <!-- LL: I want to include theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
 
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
 An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
-
-````
-VISUALIZATION remaining knowledge drops
-
-### 
-
-In **ggplot2**, when aesthetic mappings are defined at the global level, they are passed down to all subsequent geom layers in the plot. However, each geom function in **ggplot2** can also accept a mapping argument, allowing for local-level aesthetic mappings that are added to those inherited from the global level.
-
-###
-
-A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
-
-An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
-
-###
-
-We can use stacked bar plots to visualize the relationship between two categorical variables while a scatterplot is probably the most commonly used plot for visualizing the relationship between two numerical variables.
-
-TRANSFOMRATION remaining knowledge drops
-
-### 
-
-The four allowed values for `.keep` are `"all"`, `"used"`, `"unused"`, and `"none"`. Look at the `mutate()` [help page](https://dplyr.tidyverse.org/reference/mutate.html).
-
-* "all" retains all columns from `.data`. This is the default.
-
-* "used" retains only the columns used in `...` to create new columns. This is useful for checking your work, as it displays inputs and outputs side-by-side.
-
-* "unused" retains only the columns not used in `...` to create new columns. This is useful if you generate new columns, but no longer need the columns used to generate them.
-
-* "none" doesn't retain any extra columns from `.data`. Only the grouping variables and columns created by `...` are kept.
-````
 
 
 ## Music
@@ -1101,6 +1075,10 @@ We will use these following functions and more for this section:
 [tibble()](https://tibble.tidyverse.org/reference/tibble.html)
 
 [write_csv()](https://readr.tidyverse.org/reference/write_delim.html)
+
+[pivot_longer()](https://tidyr.tidyverse.org/reference/pivot_longer.html)
+
+[pivot_wider()](https://tidyr.tidyverse.org/reference/pivot_wider.html)
 
 
 ### Exercise 1
@@ -1156,7 +1134,7 @@ question_text(NULL,
 
 Our code:
 
-```{r music-2-test, echo = TRUE, eval = FALSE}
+```{r music-2-hint-1, echo = TRUE, eval = FALSE}
 read_csv("data/music.csv")
 ```
 
@@ -1500,15 +1478,185 @@ With `read_csv()` you can read these multiple CSV files in at once and stack the
 
 ###
 
-Now, delete all code and rewrite `read_csv("data/music.csv")`. That is all that should remain.
+Now, delete all code regarding the CSV file.
+
+We will now move on to learn how to make our data tidy.
 
 <!-- LL: should I ask them to delete all previous code? They could reference it in the future but also it would be too messy.  -->
 
 ### Exercise 11
 
-<!-- XX: The end of a Section always finishes up with a plot. These four questions set up and then guide the student to creating that plot. If you want the student to mimic a plot, you can place it in the `images` subdirectory and then use knitr::include_graphics("images/plot.png") to show it to students. -->
+We are returning to our previous data frame `billboard`. Within your AI, copy/paste the first 3 rows of the tibble to remind it of what we are now working with.
 
-Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from the previous exercise with our code.
+Ask AI: Using the `billboard` tibble, create a pipe to change the columns starting with `wk` to all go in a single column titled `week`, and another column titled `rank` with all the values from the `wk` columns.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-11}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r music-11-test, echo = TRUE}
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank"
+  )
+```
+
+###
+
+[]`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) "lengthens" data, increasing the number of rows and decreasing the number of columns.
+
+There are three key arguments:
+
+`cols` specifies which columns need to be pivoted, i.e. which columns aren’t variables. This argument uses the same syntax as `select()` so here we could use `!c(artist, track, date.entered)` or `starts_with("wk")`.
+`names_to` names the variable stored in the column names, we named that variable week.
+`values_to` names the variable stored in the cell values, we named that variable rank.
+
+
+### Exercise 12
+
+Ask AI: Continue the previous code with `billboard` so that NA values are dropped, and the pipe continues so that the number within the week column is parsed.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code to continue the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-12}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r music-12-test, echo = TRUE}
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  mutate(week = parse_number(week))
+```
+
+###
+
+This data is now tidy as NA values are removed, but we could make future computation a bit easier by converting values of week from character strings to numbers using `mutate()` and `readr::parse_number()`. `parse_number()` is a handy function that will extract the first number from a string, ignoring all other text.
+
+### Exercise 13
+
+In the Console, type out `household` and press enter. The result should be a tibble that is a part of **tidyverse**.
+
+Provide AI with the first 3 lines of the `household` tibble.
+
+Ask AI: Using the `household` tibble, create code that changes the columns so that there are only 4 columns, `family`, `child`, `dob`, and `name`.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-13}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r music-13-test, echo = TRUE}
+household |>
+  pivot_longer(
+    cols = !family,
+    names_to = c(".value", "child"),
+    names_sep = "_child"
+  )
+```
+
+###
+
+We use `pivot_longer()` with a vector of column names for `names_to` to split the original variable into values for multiple columns and `names_sep` determines the separator within the original column names, as well as to create a column name for `values_to`.
+
+The special "`.value`" signal isn’t the name of a variable but a unique value that tells `pivot_longer()` to do something different. This overrides the usual `values_to` argument to use the first component of the pivoted column name as a variable name in the output.
+
+<!-- LL: Is it fine to use a different data frame for a better application of splitting column headers between variables and data? -->
+
+### Exercise 14
+
+Go back to exercise 12 and copy/paste that code into AI.
+
+Ask AI: Continue the code with `billboard` so that `mutate()` is removed and that it is piped through `pivot_wider()` to make a column for each `week` and the `rank` as its corresponding value.
+
+If your using a different AI, provide the `billboard` tibble again and the previous code.
+
+Copy and paste the AI generated code in the place following the previous code. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
+
+CP/CR.
+
+```{r music-14}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+Our code:
+
+```{r music-14-test, echo = TRUE}
+billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  pivot_wider(
+    names_from = week,
+    values_from = rank
+  )
+```
+
+###
+
+`pivot_wider()` makes datasets wider by increasing columns and reducing rows and helps when one observation is spread across multiple rows.
+
+`pivot_wider()` has the opposite interface to `pivot_longer()`: instead of choosing new column names, we need to provide the existing columns that define the values (values_from) and the column name (names_from).
+
+If there are multiple rows for the same value in a certain column but it can be reduced into a single row, tell `pivot_wider()` which column or columns have values that uniquely identify each row with the argument `id_cols`.
+
+### Exercise 15
+
+Before creating a plot, we need to ensure that your data matches our data. In the QMD, replace your code from exercise 12 with our code and place it within a new code chunk.
 
 In the Console, run:
 
@@ -1518,7 +1666,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-11}
+```{r music-15}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -1529,21 +1677,25 @@ question_text(NULL,
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+There are three interrelated rules that make a dataset tidy:
 
-### Exercise 12
+Each variable is a column; each column is a variable.
+Each observation is a row; each row is an observation.
+Each value is a cell; each cell is a single value.
 
-Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `x`. 
+### Exercise 16
+
+Within the latest code chunk, add the option: `#| cache: true`. Assign the result of the pipe to `billboard_longer`. 
 
 `Cmd/Ctrl + Shift + K`. By including `#| cache: true` you cause Quarto to cache the results of the chunk. The next time you render your QMD, as long as you have not changed the code, Quarto will just load up the saved object.
 
 If you have not done so already, you should add `analysis_cache` to the `.gitginore`. The content of the cache file does not belong on GitHub.
 
-Place your cursor on the line where the pipe is assigned to `x`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `x`.
+Place your cursor on the line where the pipe is assigned to `billboard_longer`, run `Cmd/Ctrl + Enter`, thus ensuring that the workspace also includes a copy of `billboard_longer`.
 
 CP/CR.
 
-```{r music-12}
+```{r music-16}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1557,20 +1709,31 @@ question_text(NULL,
 Our code:
 
 ```{r, echo = TRUE}
-#x <- ...
+billboard_longer <- billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |>
+  mutate(week = parse_number(week))
 ```
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Why ensure that your data is tidy? There are two main advantages:
 
-### Exercise 13
+There’s a general advantage to picking one consistent way of storing data. If you have a consistent data structure, it’s easier to learn the tools that work with it because they have an underlying uniformity.
 
-Within the Console, type `x`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
+There’s a specific advantage to placing variables in columns because it allows R’s vectorized nature to shine. Most built-in R functions work with vectors of values and that makes transforming tidy data feel particularly natural.
+
+### Exercise 17
+
+Within the Console, type `billboard_longer`, which we previously assigned to a pipe and ran in the Console. Hit `Enter`.
 
 CP/CR.
 
-```{r music-13}
+```{r music-17}
 question_text(NULL,
     answer(NULL, correct = TRUE),
     allow_retry = TRUE,
@@ -1584,17 +1747,20 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-#x
-#...
+billboard_longer
 ```
 
 ###
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+The principles of tidy data might seem so obvious that you wonder if you’ll ever encounter a dataset that isn’t tidy. Unfortunately, however, most real data is untidy. There are two main reasons:
 
-### Exercise 14
+Data is often organized to facilitate some goal other than analysis. For example, it’s common for data to be structured to make data entry, not analysis, easy.
 
-Ask AI to generate R code that uses `x` to plot a basic graph showing XX... Mention you want to use the data from `x` and copy/paste the `x` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
+Most people aren’t familiar with the principles of tidy data, and it’s hard to derive them yourself unless you spend a lot of time working with data.
+
+### Exercise 18
+
+Ask AI to generate R code that uses `billboard_longer` to plot a basic graph showing the Billboard rank of each track over the weeks after they were released. Mention you want to use the data from `billboard_longer` and copy/paste the `billboard_longer` you ran in the Console with the resulting tibble. You only need the top 3 lines, mainly to include column names.
 
 Within `labs()`, edit or add a proper title, subtitle, and caption. If axis labels would be useful, add them, but if unnecessary, don't bother. Don't assign the code for the plot to any variable. Put the plot code in a new code chunk. Run `Cmd/Ctrl + Shift + K` to ensure that everything works. Make your plot look nice.
 
@@ -1606,7 +1772,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 CP/CR.
 
-```{r music-14}
+```{r music-18}
 question_text(NULL,
 	answer(NULL, correct = TRUE),
 	allow_retry = TRUE,
@@ -1620,47 +1786,30 @@ question_text(NULL,
 Our code:
 
 ```{r, echo=TRUE}
-  #...
+billboard_longer |>
+  ggplot(aes(x = week, y = rank, group = track)) +
+  geom_line(alpha = 0.2) +
+  scale_y_reverse() +
+  labs(
+    title = "Billboard Track Rankings Over Time",
+	subtitle = "Most tracks rise in Billboard rankings in their first 10 weeks",
+    x = "Weeks Since Release",
+    y = "Billboard Rank",
+	caption = "Source: billboard from tidyr"
+  )
 ```
 
 ###
 
-<!-- XX: Make sure your plotting code is good! This will take some time. You had better have a subtitle which provides the take-away message of the plot. AI sometimes gives you too much code, lots of `theme()` stuff and so on. This is no good! In most cases, we are happy with concise, straightforward code. Insert a knowledge drop related to this project. -->
+Most real analyses will require at least a little tidying. You’ll begin by figuring out what the underlying variables and observations are. Sometimes this is easy; other times you’ll need to consult with the people who originally generated the data. Then, you’ll pivot your data into a tidy form, with variables in the columns and observations in the rows.
 
-````
-IMPORT remaining knowledge drops
-
-### 
-
-This tutorial covers [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn how to import data into your R project using [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) and related functions from the [**readr**](https://readr.tidyverse.org/) package. You will also learn how to write out data to files with functions like [`write_csv()`](https://readr.tidyverse.org/reference/write_delim.html).
-
-###
-
-There are functions which specify data: `col_logical()`, `col_double()`, `col_date()`, and so on.
-
-###
-
-The "quotation trick" allows `read_csv()` and related functions to read data directly from a quoted string, rather than a file. 
-It produces the same tibble as if the character string were in a separate file.
-
-### 
-
-Here are the other 5 column types from **readr**.
-
-* `col_factor()`, `col_date()`, and `col_datetime()` create factors, dates, and date-times respectively.
-
-* `col_number()` is a permissive numeric parser that will ignore non-numeric components, and is particularly useful for currencies.
-
-* `col_skip()` skips a column so it’s not included in the result, which can be useful for speeding up reading the data if you have a large CSV file and you only want to use some of the columns.
-````
 
 ## Summary
 ###
 
 This section covered key concepts from [Chapter 1: Data visualization](https://r4ds.hadley.nz/data-visualize.html), [Chapter 3: Data transformation](https://r4ds.hadley.nz/data-transform.html), [Chapter 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html), and [Chapter 7: Data import](https://r4ds.hadley.nz/data-import.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
 
-You learned about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), and [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-
+You will learn about importing, organizing, and visualizing data using core packages such as **[readr](https://readr.tidyverse.org/)**, **[dplyr](https://dplyr.tidyverse.org/)**, and **[ggplot2](https://ggplot2.tidyverse.org/)**. Important functions include: [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html), [`filter()`](https://dplyr.tidyverse.org/reference/filter.html), [`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), and [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Exercise 1
 
@@ -1685,14 +1834,14 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+When creating a data science project, plots are essential to visualize data and show trends to the audience. They catch the eye and are much more attractive than a big block of text.
 
 ### Exercise 2
 
 Publish your rendered QMD to GitHub Pages. In the Terminal --- not the Console! --- run:
 
 ````
-quarto publish gh-pages XX.qmd
+quarto publish gh-pages analysis.qmd
 ````
 
 Copy/paste the resulting URL below.
@@ -1708,7 +1857,7 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: Insert a knowledge drop related to this project. -->
+Publishing the QMD allows for there to be a link on the internet that anyone can access to view the rendered project.
 
 ### Exercise 3
 
@@ -1725,7 +1874,12 @@ question_text(NULL,
 
 ### 
 
-<!-- XX: The tutorial is now over. Add any necessary acknowledgements and/or provide a link to further high quality readings, ideally readings which you mentioned in at least one knowledge drop above. -->
+Github repositories are where people can view the code you used to create your project.
+
+###
+
+`pivot_longer()` and `pivot_wider()` are complicated and unique functions, and you can learn more about how they work step by step with the book we used to create this tutorial. The sections for [`pivot_longer()`](https://r4ds.hadley.nz/data-tidy.html#how-does-pivoting-work) and [`pivot_wider()`](https://r4ds.hadley.nz/data-tidy.html#how-does-pivot_wider-work) will explain in depth.
+
 
 ```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
 ```
