@@ -69,11 +69,6 @@ options(tutorial.exercise.timelimit = 60,
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
-<!-- DK: Add in the knowledge drops. DONE -->
-
-<!-- DK: Delete all XX comments. Of course you should read/follow them first. DONE -->
-
-<!-- DK: Introduction / Summary DONE (except for summary knowledge drops) -->
 
 
 ## Introduction
@@ -171,7 +166,7 @@ question_text(NULL,
 
 You should practice moving from QMD World to Console World and back.
 
-Notice how **gplot2** is loaded with **tidyverse**.
+Notice how **ggplot2** is loaded with **tidyverse**.
 
 R has several systems for making graphs, but [**ggplot2**](https://ggplot2.tidyverse.org/index.html) is one of the most elegant and most versatile. **ggplot2** implements the *grammar of graphics*, a coherent system for describing and building graphs. With **ggplot2**, you can do more and faster by learning one system and applying it in many places.
 
@@ -213,7 +208,7 @@ You answer should look something like, although your path will be different.
 ## Billboards
 ###
 
-The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **Billboard** contains data of 317 songs and their weekly song rankings in the Billboard top 100 for 76 weeks after they were released. Almost all of the songs were released in the year 2000, with a few in late 1999, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
+The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) dataset is a built-in dataset from the package [tidyr](https://tidyr.tidyverse.org/index.html). **billboard** contains data from 317 songs and their weekly rankings in the Billboard top 100 for 76 weeks after they were released. Almost all of the songs were released in the year 2000, with a few in late 1999, and it was originally obtained from [The "Whitburn" project](https://waxy.org/2008/05/the_whitburn_project/).
 
 We will use these following functions and more for this section:
 [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html)
@@ -283,8 +278,6 @@ question_text(NULL,
 
 ###
 
-Our code:
-
 ```{r billboards-2-test, echo = TRUE}
 ggplot(billboard, aes(x = wk1, y = wk2)) +
   geom_point()
@@ -350,7 +343,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-4-test, echo = TRUE}
 ggplot(billboard, aes(x = wk1, y = wk2)) +
@@ -385,7 +378,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-5-test, echo = TRUE}
 ggplot(billboard, aes(x = wk1, y = wk2)) +
@@ -429,7 +422,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-6-test, echo = TRUE}
 billboard |>
@@ -445,8 +438,6 @@ billboard |>
 ```
 
 ###
-
-<!-- LL: is a knowledge drop this in depth about pipes necessary or has it been covered by the introduction tutorial? -->
 
 The code that the AI produced like contained the symbol `%>%` or `|>`, which are pipe operators. We aim to use the `|>` operator because it is a base R function, leading to fewer dependencies and potentially better performance for these simple cases. If your code has `%>%`, replace it with `|>`.
 
@@ -512,8 +503,6 @@ question_text(NULL,
 
 ###
 
-<!-- DK: Change to create an object and then save the object. DONE -->
-
 ```{r billboards-8-test, echo = TRUE}
 line_graph <- billboard |>
   filter(track %in% c("Dancing Queen", "Loser", "Try Again")) |>
@@ -559,7 +548,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-9-test, echo = TRUE}
 billboard |>
@@ -575,8 +564,6 @@ billboard |>
 ```
 
 ###
-
-<!-- LL: this is too long. How should I shorten? -->
 
 To visualize the relationship between a numerical and a categorical variable we can use side-by-side box plots. A boxplot is a type of visual shorthand for measures of position (percentiles) that describe a distribution. It is also useful for identifying potential outliers. 
 
@@ -609,7 +596,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-10-test, echo = TRUE}
 billboard |>
@@ -652,7 +639,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-11-test, echo = TRUE}
 billboard |>
@@ -687,7 +674,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-12-test, echo = TRUE}
 billboard |>
@@ -720,7 +707,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-13-test, echo = TRUE}
 billboard |>
@@ -759,7 +746,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-14-test, echo = TRUE}
 billboard |>
@@ -813,7 +800,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r billboards-15-test, echo = TRUE}
 billboard |>
@@ -829,8 +816,6 @@ billboard |>
 `rename()` changes the names of the columns with no impact on the other variables.
 
 You can also rename variables as you `select()` them by using `=`. The new name appears on the left hand side of the `=`, and the old variable appears on the right hand side. 
-
-<!-- LL: should I add an exercise for group_by() even if we would rather only use the .by argument in summarize() in the future? -->
 
 ### Exercise 16
 
@@ -966,7 +951,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo = TRUE}
 billboard_clean <- billboard |>
@@ -998,7 +983,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo=TRUE}
 billboard_clean
@@ -1037,7 +1022,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo=TRUE}
 ggplot(billboard_clean, aes(x = improvement)) +
@@ -1057,7 +1042,7 @@ ggplot(billboard_clean, aes(x = improvement)) +
 
 ###
 
-<!-- LL: I want to include theme() so that students get used to making their plots look nice. Or should I drop the theme()? -->
+<!-- DK: Change this knowledge drop to just tell me the  most important things to know about theme(). -->
 
 A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
 
@@ -1132,7 +1117,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-2-hint-1, echo = TRUE, eval = FALSE}
 read_csv("data/music.csv")
@@ -1177,7 +1162,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-3-test, echo = TRUE}
 read_csv("data/music.csv", skip = 5)
@@ -1208,7 +1193,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-4-test, echo = TRUE}
 read_csv("data/music.csv", skip = 5, col_names = FALSE)
@@ -1249,7 +1234,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-5-test, echo = TRUE}
 read_csv("data/music.csv", skip = 5, 
@@ -1266,6 +1251,8 @@ The `col_names` argument is not just specific to `read_csv()`; it can be used in
 There are many other arguments to `cols`. Type `?cols` into your Console to explore!
 
 <!-- LL: in an email you said "no warnings about col_types". Does that mean no questions regarding the argument? Should we teach students how to debug if an automatically generated column type is incorrect? -->
+
+<!-- DK: Question which forces student to use show_col_types = FALSE argument to read_csv(). -->
 
 ### Exercise 6
 
@@ -1288,7 +1275,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-6-test, echo = TRUE}
 df <- read_csv(
@@ -1339,7 +1326,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-7-test, echo = TRUE}
 read_csv(
@@ -1389,7 +1376,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-8-test, echo = TRUE}
 tibble(
@@ -1411,8 +1398,6 @@ If your using a different AI, provide the previous code.
 
 Manually, using the same command, do the same for the `music_1` tibble.
 
-<!-- LL: is this too messy? -->
-
 Copy and paste the AI generated code into the appropriate place. Run `Cmd/Ctrl + S` to save the file. Place your cursor on the first line of code and run `Cmd/Ctrl + Enter`.
 
 CP/CR.
@@ -1427,8 +1412,6 @@ question_text(NULL,
 ```
 
 ###
-
-Our code:
 
 ```{r music-9-test, echo = TRUE}
 tibble(
@@ -1466,7 +1449,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-10-test, echo = TRUE}
 read_csv(c("data/music_1.csv", "data/music_fake.csv"), id = "file")
@@ -1481,8 +1464,6 @@ With `read_csv()` you can read these multiple CSV files in at once and stack the
 Now, delete all code regarding the CSV file.
 
 We will now move on to learn how to make our data tidy.
-
-<!-- LL: should I ask them to delete all previous code? They could reference it in the future but also it would be too messy.  -->
 
 ### Exercise 11
 
@@ -1505,7 +1486,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-11-test, echo = TRUE}
 billboard |>
@@ -1548,7 +1529,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-12-test, echo = TRUE}
 billboard |>
@@ -1588,7 +1569,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-13-test, echo = TRUE}
 household |>
@@ -1605,7 +1586,6 @@ We use `pivot_longer()` with a vector of column names for `names_to` to split th
 
 The special "`.value`" signal isn’t the name of a variable but a unique value that tells `pivot_longer()` to do something different. This overrides the usual `values_to` argument to use the first component of the pivoted column name as a variable name in the output.
 
-<!-- LL: Is it fine to use a different data frame for a better application of splitting column headers between variables and data? -->
 
 ### Exercise 14
 
@@ -1630,7 +1610,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r music-14-test, echo = TRUE}
 billboard |>
@@ -1706,7 +1686,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo = TRUE}
 billboard_longer <- billboard |>
@@ -1744,7 +1724,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo=TRUE}
 billboard_longer
@@ -1783,7 +1763,7 @@ question_text(NULL,
 
 ###
 
-Our code:
+
 
 ```{r, echo=TRUE}
 billboard_longer |>
