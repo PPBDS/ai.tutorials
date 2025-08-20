@@ -1022,9 +1022,48 @@ question_text(NULL,
 
 ###
 
-
-
 ```{r, echo=TRUE}
+ggplot(billboard_clean, aes(x = improvement)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black") + 
+  labs(
+	title = "Distribution of Billboard Top 100 Song Ranking Improvements From Week 1 to Week 2",
+	subtitle = "Most songs either had no improvement or improved their ranking by up to 20 places",
+	x = "Song Rank Improvement",
+	y = "Count",
+	caption = "Source: Song rankings for Billboard top 100 in the year 2000"
+  )
+```
+
+###
+
+A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
+
+An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution.
+
+### Exercise 22
+
+Ask AI: continue the code for the plot with `theme()` in order to make the plot look nice. Make the `title` and `subtitle` fit on the graph. If necessary, manually edit the sizes. Place this code as a continuation of the graph code, in the end the chunk should just have the final graph. Run `Cmd/Ctrl + Shift + K` to ensure that everything works. 
+
+In the Console, run:
+
+```         
+show_file("analysis.qmd", chunk = "Last")
+```
+
+CP/CR.
+
+```{r billboards-22}
+question_text(NULL,
+	answer(NULL, correct = TRUE),
+	allow_retry = TRUE,
+	try_again_button = "Edit Answer",
+	incorrect = NULL,
+	rows = 5)
+```
+
+###
+
+```{r billboards-22-test, echo = TRUE}
 ggplot(billboard_clean, aes(x = improvement)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black") + 
   labs(
@@ -1042,11 +1081,11 @@ ggplot(billboard_clean, aes(x = improvement)) +
 
 ###
 
-<!-- DK: Change this knowledge drop to just tell me the  most important things to know about theme(). -->
+There exist many `theme_*()` functions within **ggplot2** that create different appearance themes for plots while not affecting the data display. Click this [link](https://ggplot2.tidyverse.org/reference/ggtheme.html) to find out the different themes.
 
-A histogram divides the x-axis into equally spaced bins and then uses the height of a bar to display the number of observations that fall in each bin. You can set the width of the intervals in a histogram with the `binwidth` argument, which is measured in the units of the x variable. 
+The function `theme()` is only used if you just need to tweak the display of an existing theme, like the sizes of the `title` and `subtitle`.
 
-An alternative visualization for distributions of numerical variables is a density plot. A density plot is a smoothed-out version of a histogram and a practical alternative, particularly for continuous data that comes from an underlying smooth distribution. 
+<!-- DK: Change this knowledge drop to just tell me the  most important things to know about theme(). DONE --> 
 
 
 ## Music
