@@ -3,15 +3,11 @@
 
 Goal for the week: Finish ai.tutorials
 
-As a student, complete r4ds-4, email me HTML answers.
+Make 1 and 3 perfect. (Consistent with the skeleton, especially 3.)
 
-As a student, complete r4ds-5, email me HTML answers.
+Then, go back and submit separate pull request which fix typos in 4.
 
-In above, keep track of errors and comments on a piece of paper, probably by just noting the phrase or exercise number.
 
-Then, go back and submit separate pull requests which fix mistakes, and leave comments, in 4 and 5. Add you name as author.
-
-Think about what we need to do to standardize across the tutorials.
 
 
 
