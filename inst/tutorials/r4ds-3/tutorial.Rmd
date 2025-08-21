@@ -411,7 +411,7 @@ question_text(NULL,
 
 ### 
 
-To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. This is called a lazy table, which is a representation of a database table or query result that is not immediately materialized in R's memory. Instead, `dbplyr` translates `dplyr` operations performed on this lazy table into SQL queries. These queries are then sent to the database and executed there, with the results only being retrieved into R when explicitly requested (e.g., using collect()). 
+To use `dbplyr`, you must first use `tbl()` to create an object that represents a database table. This is called a lazy table, which is a representation of a database table or query result that is not immediately materialized in R's memory. Instead, `dbplyr` translates `dplyr` operations performed on this lazy table into SQL queries. These queries are then sent to the database and executed there, with the results only being retrieved into R when explicitly requested (e.g., using `collect()`). 
 
 ### Exercise 7
 
@@ -796,13 +796,13 @@ This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.
 
 Key functions you'll learn: 
 
-[parse_number()](https://readr.tidyverse.org/reference/parse_number.html) - Parses the first number it finds
+[`parse_number()`](https://readr.tidyverse.org/reference/parse_number.html) - Parses the first number it finds
 
-[is.na()](https://rdrr.io/r/base/NA.html) - Indicates which elements are missing
+[`is.na()`](https://rdrr.io/r/base/NA.html) - Indicates which elements are missing
 
-[str_detect()](https://stringr.tidyverse.org/reference/str_detect.html) - Returns a logical vector with TRUE for each element of string that matches pattern
+[`str_detect()`](https://stringr.tidyverse.org/reference/str_detect.html) - Returns a logical vector with TRUE for each element of string that matches pattern
 
-[pmax()](https://rdrr.io/r/base/Extremes.html) - return a single vector giving the maxima of the argument vectors
+[`pmax()`](https://rdrr.io/r/base/Extremes.html) - return a single vector giving the maxima of the argument vectors
 
 We will also learn about integer division and moduluo.
 

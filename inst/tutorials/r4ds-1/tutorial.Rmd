@@ -212,15 +212,15 @@ The [**billboard**](https://tidyr.tidyverse.org/reference/billboard.html) datase
 
 Key functions you'll learn:
 
-[ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html) - Initializes a ggplot object and can be used to declare the input data frame for a graph
+[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html) - Initializes a ggplot object and can be used to declare the input data frame for a graph
 
-[facet_wrap()](https://ggplot2.tidyverse.org/reference/facet_wrap.html) - Wraps a 1d sequence of panels into 2d
+[`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html) - Wraps a 1d sequence of panels into 2d
 
-[filter()](https://dplyr.tidyverse.org/reference/filter.html) - Subses a data frame, retaining all rows that satisfy your conditions
+[`filter()`](https://dplyr.tidyverse.org/reference/filter.html) - Subses a data frame, retaining all rows that satisfy your conditions
 
-[mutate()](https://dplyr.tidyverse.org/reference/mutate.html) - Creates new columns that are functions of existing variables
+[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) - Creates new columns that are functions of existing variables
 
-[summarize()](https://dplyr.tidyverse.org/reference/summarise.html) - Creates a new data frame and returns one row for each combination of grouping variables
+[`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html) - Creates a new data frame and returns one row for each combination of grouping variables
 
 ### Exercise 1
 
@@ -1096,15 +1096,15 @@ The **music** CSV file comes from the [**Million Song Dataset**](https://corgis-
 
 Key functions you'll learn:
 
-[read_csv()](https://readr.tidyverse.org/reference/read_delim.html) - Reads and loads CSV files
+[`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) - Reads and loads CSV files
 
-[tibble()](https://tibble.tidyverse.org/reference/tibble.html) - Creates a tibble
+[`tibble()`](https://tibble.tidyverse.org/reference/tibble.html) - Creates a tibble
 
-[write_csv()](https://readr.tidyverse.org/reference/write_delim.html) - Writes a CSV file
+[`write_csv()`](https://readr.tidyverse.org/reference/write_delim.html) - Writes a CSV file
 
-[pivot_longer()](https://tidyr.tidyverse.org/reference/pivot_longer.html) - Transforms data from a "wide" to a "long" format
+[`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) - Transforms data from a "wide" to a "long" format
 
-[pivot_wider()](https://tidyr.tidyverse.org/reference/pivot_wider.html) - Transforms data from a "long" to a "wide" format
+[`pivot_wider()`](https://tidyr.tidyverse.org/reference/pivot_wider.html) - Transforms data from a "long" to a "wide" format
 
 
 ### Exercise 1
@@ -1567,7 +1567,7 @@ billboard |>
 
 ###
 
-[]`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) "lengthens" data, increasing the number of rows and decreasing the number of columns.
+[`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) "lengthens" data, increasing the number of rows and decreasing the number of columns.
 
 There are three key arguments:
 
