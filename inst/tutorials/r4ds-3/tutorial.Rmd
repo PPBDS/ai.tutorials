@@ -240,7 +240,7 @@ show_file("analysis.qmd", chunk = "Last")
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-2-hint-1, echo = TRUE, eval = FALSE}
 con_names <- DBI::dbConnect(
@@ -304,7 +304,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-4-test, echo = TRUE}
 
@@ -392,7 +392,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-7-test, echo = TRUE}
  dbplyr_names |>
@@ -428,7 +428,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-8-test, echo = TRUE}
  dbplyr_names |>
@@ -462,7 +462,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-9-test, echo = TRUE}
   dbplyr_names |>
@@ -500,7 +500,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-10-test, echo = TRUE}
  dbplyr_names |>
@@ -576,7 +576,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-12-test, echo = TRUE}
  x <-  dbplyr_names |>
@@ -608,7 +608,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-13-test, echo = TRUE}
 x
@@ -648,7 +648,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r baby-names-14-test, echo = TRUE}
 top_a_2009 <-  dbplyr_names |>
@@ -701,7 +701,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 ```{r baby-names-15-test, fig.keep = FALSE, echo = TRUE}
 ggplot(x, aes(x = year, y = total, color = length_class)) +
   geom_line(size = 1.2) +
@@ -803,7 +803,7 @@ CP/CR.
 
 ### 
 
-Our code:
+
 
 ```{r flights-2-test, echo = TRUE, eval = FALSE}
 con_air <- DBI::dbConnect(
@@ -867,7 +867,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-4-test, echo = TRUE}
  dbplyr_fly <- tbl(con_air, "flights")
@@ -901,7 +901,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-5-test, echo = TRUE}
 class(flights$tailnum)
@@ -932,7 +932,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-6-test, echo = TRUE}
 departure_data <- flights |>
@@ -965,7 +965,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-7-test, echo = TRUE}
 flights |> 
@@ -1035,7 +1035,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-9-test, echo = TRUE}
 departure_data |>
@@ -1073,7 +1073,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-10-test, echo = TRUE}
 departure_data |>
@@ -1110,7 +1110,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-11-test, echo = TRUE}
 departure_data |>
@@ -1221,7 +1221,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-14-test, echo = TRUE}
 x
@@ -1256,7 +1256,7 @@ question_text(NULL,
 
 ### 
 
-Our code:
+
 
 ```{r flights-15-test, echo = TRUE}
 ggplot(x, aes(x = sched_hour, y = dep_hour, fill = total_delay)) +
