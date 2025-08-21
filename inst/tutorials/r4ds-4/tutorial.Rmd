@@ -1514,12 +1514,6 @@ This begins our comprehensive data cleaning pipeline with numeric conversion of 
 
 ### Exercise 12
 
-Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
-
-Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
-
-CP/CR.
-
 Ask AI to write R code that continues our pipeline and adds text cleaning using `mutate()` with `across()`. Remove newline characters from all character columns using `str_replace_all(.x, "\\n", "")`, then in a second `mutate()`, trim whitespace from character columns using `str_trim()`. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
