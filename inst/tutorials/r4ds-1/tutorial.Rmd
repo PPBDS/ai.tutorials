@@ -84,7 +84,7 @@ Create a Github repo called `r4ds-1`. Make sure to click the "Add a README file"
 
 Connect the repo to a project on your computer using `File -> New Folder from Git ...`.  Make sure to select the "Open in a new window" box. 
 
-You need two Positon windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
+You need two Positron windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
 
 In the new window, select `File -> New File -> Quarto Document ...`. Provide a title -- `"Analyzing the Billboard"` -- and an author (you). Render the document and save it as `analysis.qmd`.
 
@@ -193,7 +193,7 @@ question_text(NULL,
 
 ###
 
-You answer should look something like, although your path will be different.
+Your answer should look something like, although your path will be different.
 
 ````
 > getwd()
