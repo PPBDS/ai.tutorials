@@ -149,7 +149,7 @@ Create a Github repo called `r4ds-4`. Make sure to click the "Add a README file"
 
 Connect the repo to a project on your computer using `File -> New Folder from Git ...`. Make sure to select the "Open in a new window" box.
 
-You need two Positon windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
+You need two Positron windows: this one for running the tutorial and the one you just created for writing your code and interacting with the Console.
 
 In the new window, select `File -> New File -> Quarto Document ...`. Provide a title -- `"XX"` -- and an author (you). Render the document and save it as `analysis.qmd`.
 
@@ -254,7 +254,7 @@ question_text(NULL,
 
 ### 
 
-You answer should look something like, although your path will be different.
+Your answer should look something like, although your path will be different.
 
 ```         
 > getwd()
@@ -276,7 +276,7 @@ This section focuses on analyzing NBA game data using **[arrow](https://arrow.ap
 
 Key functions include [`open_dataset()`](https://arrow.apache.org/docs/r/reference/open_dataset.html) for reading parquet files, [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd.html) for parsing datetime strings, [`factor()`](https://forcats.tidyverse.org/reference/fct.html) for creating categorical variables, [`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) for combining datasets, and [`replace_na()`](https://tidyr.tidyverse.org/reference/replace_na.html) for handling missing data.
 
-The [NBA Database](https://www.kaggle.com/datasets/wyattowalsh/basketball) is a **Kaggle** dataset compiled by “wyattowalsh.” It provides a comprehensive, daily-updated collection of NBA game data—including 64,000+ games, 4,800+ players, and all 30 teams, plus box scores, play-by-play data, and more. Our parquet files `data/game.parquet` and `data/line_score.parquet` contain two files (`game.csv` and `line_score.csv`) from this dataset converted into parquet format for the pupose of this tutorial.
+The [NBA Database](https://www.kaggle.com/datasets/wyattowalsh/basketball) is a **Kaggle** dataset compiled by “wyattowalsh.” It provides a comprehensive, daily-updated collection of NBA game data—including 64,000+ games, 4,800+ players, and all 30 teams, plus box scores, play-by-play data, and more. Our parquet files `data/game.parquet` and `data/line_score.parquet` contain two files (`game.csv` and `line_score.csv`) from this dataset converted into parquet format for the purpose of this tutorial.
 
 ### Exercise 1
 
@@ -384,7 +384,7 @@ Our code:
 
 ### 
 
-This tibble shows that the most amount of NBA games occur on Friday and Wedesday, while the least amount occurs on Monday.
+This tibble shows that the most amount of NBA games occur on Friday and Wednesday, while the least amount occurs on Monday.
 
 `ymd()` and friends create dates. To create a date-time, add an underscore and one or more of “h”, “m”, and “s” to the name of the parsing function
 
@@ -563,7 +563,7 @@ When using these three formats (ymd, mdy, dmy)  we need to identify the order in
 
 ### Exercise 8
 
-We are going to use the number of wins and points to determine if the game was considered a close win, a moderatley close win, or a absolute blowout win then count how many of each type of win occured in the early era of the NBA.
+We are going to use the number of wins and points to determine if the game was considered a close win, a moderately close win, or an absolute blowout win then count how many of each type of win occurred in the early era of the NBA.
 
 Ask AI to continue our pipe from the last exercise and categorize `margin_category` based on the absolute point difference using `case_when()`, then order it with `factor()` and `fct_relevel()`. Create an `era` factor using `game_year` with `case_when()` and `fct_relevel()`. Compute `month_start` with `floor_date()`, `days_since_jan1` by subtracting `floor_date(game_date, "year")` from `game_date`, and `next_week` by adding `days(7)`. Finally, arrange the dataset by `game_date` with `arrange()`, limit to 1000 rows with `slice_head()`, and count games by `era` and `margin_category` using `count()`.
 
@@ -1514,12 +1514,6 @@ This begins our comprehensive data cleaning pipeline with numeric conversion of 
 
 ### Exercise 12
 
-Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
-
-Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
-
-CP/CR.
-
 Ask AI to write R code that continues our pipeline and adds text cleaning using `mutate()` with `across()`. Remove newline characters from all character columns using `str_replace_all(.x, "\\n", "")`, then in a second `mutate()`, trim whitespace from character columns using `str_trim()`. Add this code as a continuation of your current pipe in the same code chunk in the same QMD.
 
 Place your cursor at the beginning of the line where it says `data/fifa.parquet` and run `Cmd/Ctrl + Enter`.
@@ -1964,7 +1958,7 @@ question_text(NULL,
 
 ### 
 
-We recommend using `curl::multi_download()` to get very large files as it’s built for exactly this purpose: it gives you a progress bar and it can resume the download if its interrupted. 
+We recommend using `curl::multi_download()` to get very large files as it’s built for exactly this purpose: it gives you a progress bar and it can resume the download if it's interrupted. 
 
 ### Exercise 3
 

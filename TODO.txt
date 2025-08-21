@@ -3,7 +3,7 @@
 
 Goal for the week: Finish ai.tutorials
 
-Make 1 and 3 perfect. (Consistent with the skeleton, especially 3.)
+Make 1 and 3 perfect. (Consistent with the skeleton, especially 3.) DONE
 
 Then, go back and submit separate pull request which fix typos in 4. 
 
