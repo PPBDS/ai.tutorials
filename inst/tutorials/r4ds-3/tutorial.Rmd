@@ -217,9 +217,13 @@ In this section we are going to focus on generating code to create a graph based
 Key functions you'll learn:
 
 `DBI::dbConnect()` - Creates a connection to a database
+
 `dbReadTable()` - Reads a complete table from a database into a data frame
+
 `as_tibble()` - Converts data frames to tibbles for better printing and consistency
+
 `tbl()` - Creates a lazy reference to a database table for use with dbplyr
+
 `dbGetQuery()` - Executes a SQL query and returns the results as a data frame
 
  <!--SG: Should I list them out like this? -->
@@ -788,7 +792,19 @@ Commit/push everything.
 ## Flights
 ### 
 
-This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) and [Chapter 15: Regular Expressions](https://r4ds.hadley.nz/regexps.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of working with numeric data and text patterns using core Tidyverse packages: readr, dplyr, and stringr. Important functions you'll learn about include: [parse_number()](https://readr.tidyverse.org/reference/parse_number.html) [is.na()](https://rdrr.io/r/base/NA.html) [str_detect()](https://stringr.tidyverse.org/reference/str_detect.html) [pmax()](https://rdrr.io/r/base/Extremes.html) We will also learn about integer division and moduluo.
+This section covers key concepts from [Chapter 13: Numbers](https://r4ds.hadley.nz/numbers.html) and [Chapter 15: Regular Expressions](https://r4ds.hadley.nz/regexps.html) from [*R for Data Science (2e)*](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund. You will learn about some of the power of working with numeric data and text patterns using core Tidyverse packages: readr, dplyr, and stringr. 
+
+Key functions you'll learn: 
+
+[parse_number()](https://readr.tidyverse.org/reference/parse_number.html) - Parses the first number it finds
+
+[is.na()](https://rdrr.io/r/base/NA.html) - Indicates which elements are missing
+
+[str_detect()](https://stringr.tidyverse.org/reference/str_detect.html) - Returns a logical vector with TRUE for each element of string that matches pattern
+
+[pmax()](https://rdrr.io/r/base/Extremes.html) - return a single vector giving the maxima of the argument vectors
+
+We will also learn about integer division and moduluo.
 
 In this section we are going to focus on generating code to create a graph based on a dataset called `nycflights13`. The `nycflights13` is a dataset which contains information about all flights departing from New York City airports in 2013. We will be using AI to generate the code for us and then we will break down the functions within the code and how they work. 
 
