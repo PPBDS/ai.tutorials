@@ -15,15 +15,11 @@ description:  'This tutorial for "R for Data Science" covers Chapter 23: Hierarc
 library(learnr)
 library(tutorial.helpers)
 
+library(tidyverse)
 library(leaflet)
-library(rvest)        
-library(dplyr)  
-library(tidyr) 
-library(stringr)      
-library(readr)      
-library(ggplot2) 
-library(purrr)
-library(lubridate)
+library(rvest)   
+library(ggrepel)     
+library(httr2)
 
 knitr::opts_chunk$set(echo = FALSE)
 options(tutorial.exercise.timelimit = 60, 
@@ -177,6 +173,7 @@ top_movies <- request("https://web.archive.org/web/20220201012049/https://www.im
 ```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
 ```
 
+<!-- DK: Package takes too long to compile, especially earthquake stuff. -->
 
 ## Introduction
 ###
@@ -230,13 +227,8 @@ In your QMD, paste the following `library()` commands in a new code chunk.
 library(tidyverse)
 library(leaflet)
 library(rvest)        
-library(dplyr)  
-library(tidyr) 
-library(stringr)      
-library(readr)      
-library(ggplot2) 
-library(purrr)
-library(lubridate)
+library(httr2)
+library(ggrepel)   
 ```
 Render the file using `Cmd/Ctrl + Shift + K`.
 
@@ -2098,11 +2090,13 @@ question_text(NULL,
 
 Our code:
 
+<!-- DK: Revisit this graph. Need to color something . . . -->
+
 ```{r top-movies-18-test, echo=TRUE}
 top_movies |>
 filter(year >= 1990, year <= 2010) |>
  ggplot(aes(x = year, y = rating)) +
-  geom_point(aes(size = number/1000, color = rating_category), 
+  geom_point(aes(size = number/1000), 
              alpha = 0.8, stroke = 0.5) +
   geom_smooth(method = "loess", se = TRUE, color = "navy", 
               linewidth = 1.2, alpha = 0.3) +
@@ -2114,11 +2108,6 @@ filter(year >= 1990, year <= 2010) |>
                        range = c(2, 12), 
                        breaks = c(500, 1000, 1500, 2000, 2500),
                        labels = c("500", "1,000", "1,500", "2,000", "2,500")) +
-  scale_color_manual(name = "Rating Category",
-                    values = c("Masterpiece (9.0+)" = "#FFD700",
-                              "Excellent (8.5-8.9)" = "#4169E1", 
-                              "Great (8.0-8.4)" = "#DC143C",
-                              "Good (<8.0)" = "#708090")) +
   scale_x_continuous(breaks = seq(1990, 2010, 2)) +
   scale_y_continuous(breaks = seq(8.0, 9.2, 0.2), limits = c(7.9, 9.3)) +
   labs(

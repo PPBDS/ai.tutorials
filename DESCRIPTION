@@ -24,6 +24,8 @@ Suggests:
     DBI,
     dbplyr,
     duckdb,
+    ggrepel,
+    httr2,
     leaflet,
     nycflights13,
     plotly,
